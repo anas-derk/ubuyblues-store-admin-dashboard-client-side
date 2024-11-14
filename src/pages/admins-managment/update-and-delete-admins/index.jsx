@@ -219,6 +219,7 @@ export default function UpdateAndDeleteAdmins() {
     }
 
     const changeAdminData = (adminIndex, fieldName, newValue) => {
+        setSelectedAdminIndex(-1);
         allAdminsInsideThePage[adminIndex][fieldName] = newValue;
     }
 
