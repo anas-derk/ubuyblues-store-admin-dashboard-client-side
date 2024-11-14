@@ -190,7 +190,7 @@ export default function AddNewCoupon() {
                                 type="text"
                                 className={`form-control p-2 border-2 discount-percentage-field ${formValidationErrors["discountPercentage"] ? "border-danger mb-3" : "mb-4"}`}
                                 placeholder="Please Enter Discount Percentage"
-                                onChange={(e) => setCouponDetails({ ...couponDetails, discountPercentage: e.target.value.trim() })}
+                                onChange={(e) => setCouponDetails({ ...couponDetails, discountPercentage: Number(e.target.value.trim()) })}
                                 value={couponDetails.discountPercentage}
                             />
                             {formValidationErrors["discountPercentage"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
