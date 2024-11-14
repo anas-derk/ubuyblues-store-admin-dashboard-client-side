@@ -185,7 +185,6 @@ export default function UpdateAndDeleteAds() {
             }
         }
         catch (err) {
-            console.log(err)
             if (err?.response?.status === 401) {
                 localStorage.removeItem(process.env.adminTokenNameInLocalStorage);
                 await router.replace("/login");
