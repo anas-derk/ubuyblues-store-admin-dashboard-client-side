@@ -228,7 +228,7 @@ export default function UpdateAndDeleteCategories() {
                 setWaitMsg("Please Wait To Updating ...");
                 const result = (await axios.put(`${process.env.BASE_API_URL}/categories/${allCategoriesInsideThePage[categoryIndex]._id}?language=${process.env.defaultLanguage}`, {
                     name: allCategoriesInsideThePage[categoryIndex].name,
-                    parent: allCategoriesInsideThePage[categoryIndex].parent?.name !== "No Parent" ? allCategoriesInsideThePage[categoryIndex].parent._id : null,
+                    parent: allCategoriesInsideThePage[categoryIndex].parent?._id ? allCategoriesInsideThePage[categoryIndex].parent?._id : null,
                 }, {
                     headers: {
                         Authorization: localStorage.getItem(process.env.adminTokenNameInLocalStorage),
@@ -364,7 +364,7 @@ export default function UpdateAndDeleteCategories() {
                                                     {category.filteredCategories.length > 0 ? <>
                                                         <li onClick={() => handleSelectCategoryParent(categoryIndex, {})}>No Parent</li>
                                                         {category.filteredCategories.map((category) => (
-                                                            <li key={category} onClick={() => handleSelectCategoryParent(categoryIndex, category)}>{category.name}</li>
+                                                            <li key={category._id} onClick={() => handleSelectCategoryParent(categoryIndex, category)}>{category.name}</li>
                                                         ))}
                                                     </> : <li>Sorry, Can't Find Any Category Parent Match This Name !!</li>}
                                                 </ul>
