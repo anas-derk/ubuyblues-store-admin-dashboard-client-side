@@ -156,6 +156,7 @@ export default function AddNewCategory() {
             }
         }
         catch (err) {
+            console.log(err)
             if (err?.response?.status === 401) {
                 localStorage.removeItem(process.env.adminTokenNameInLocalStorage);
                 await router.replace("/login");

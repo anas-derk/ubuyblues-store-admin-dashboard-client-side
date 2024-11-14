@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
-import ubuybluesLogo from "../../../public/images/UbuyBlues_Logo_merged_Purple.jpg";
+import ubuybluesLogo from "../../../public/images/UbuyBlues_Logo_merged_Purple.webp";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { BiSolidUser } from "react-icons/bi";
 import { FiLogIn } from "react-icons/fi";
