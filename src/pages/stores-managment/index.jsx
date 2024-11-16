@@ -55,7 +55,7 @@ export default function StoresManagment() {
 
     const [storeAction, setStoreAction] = useState("");
 
-    const [selectedStoreId, setSelectedStoreId] = useState("");
+    const [selectedStore, setSelectedStore] = useState("");
 
     const router = useRouter();
 
@@ -203,9 +203,9 @@ export default function StoresManagment() {
         }
     }
 
-    const handleDisplayChangeStoreStatusBox = (storeId, storeAction) => {
+    const handleDisplayChangeStoreStatusBox = (storeDetails, storeAction) => {
         setStoreAction(storeAction);
-        setSelectedStoreId(storeId);
+        setSelectedStore(storeDetails);
         setIsDisplayChangeStoreStatusBox(true);
     }
 
@@ -258,8 +258,8 @@ export default function StoresManagment() {
                         Authorization: localStorage.getItem(process.env.adminTokenNameInLocalStorage),
                     }
                 })).data;
+                setWaitMsg("");
                 if (!result.error) {
-                    setWaitMsg("");
                     setSuccessMsg("Updating Successfull !!");
                     let successTimeout = setTimeout(() => {
                         setSuccessMsg(false);
@@ -282,10 +282,10 @@ export default function StoresManagment() {
                 await router.replace("/login");
                 return;
             }
-            setWaitMsg(false);
-            setErrorMsg(true);
+            setWaitMsg("");
+            setErrorMsg(err?.message === "Network Error" ? "Network Error" : "Sorry, Someting Went Wrong, Please Repeate The Process !!");
             let errorTimeout = setTimeout(() => {
-                setErrorMsg(false);
+                setErrorMsg("");
                 setSelectedStoreIndex(-1);
                 clearTimeout(errorTimeout);
             }, 3000);
@@ -332,10 +332,10 @@ export default function StoresManagment() {
                 await router.replace("/login");
                 return;
             }
-            setWaitMsg(false);
-            setErrorMsg(true);
+            setWaitMsg("");
+            setErrorMsg(err?.message === "Network Error" ? "Network Error" : "Sorry, Someting Went Wrong, Please Repeate The Process !!");
             let errorTimeout = setTimeout(() => {
-                setErrorMsg(false);
+                setErrorMsg("");
                 setSelectedStoreIndex(-1);
                 clearTimeout(errorTimeout);
             }, 3000);
@@ -398,7 +398,7 @@ export default function StoresManagment() {
                 {isDisplayChangeStoreStatusBox && <ChangeStoreStatusBox
                     setIsDisplayChangeStoreStatusBox={setIsDisplayChangeStoreStatusBox}
                     setStoreAction={setStoreAction}
-                    storeId={selectedStoreId}
+                    selectedStore={selectedStore}
                     storeAction={storeAction}
                     handleChangeStoreStatus={handleChangeStoreStatus}
                 />}
@@ -550,28 +550,11 @@ export default function StoresManagment() {
                                                 {store.status}
                                             </td>
                                             <td>
-                                                {
-                                                    !waitMsg &&
-                                                    !successMsg &&
-                                                    !errorMsg &&
-                                                    <button
-                                                        className="btn btn-info d-block mx-auto mb-3 global-button"
-                                                        onClick={() => updateStoreData(storeIndex)}
-                                                    >
-                                                        Update
-                                                    </button>
-                                                }
-                                                {waitMsg && storeIndex === selectedStoreIndex && <button
+                                                {storeIndex !== selectedStoreIndex && <button
                                                     className="btn btn-info d-block mx-auto mb-3 global-button"
-                                                    disabled
+                                                    onClick={() => updateStoreData(storeIndex)}
                                                 >
-                                                    Updating ...
-                                                </button>}
-                                                {successMsg && storeIndex === selectedStoreIndex && <button
-                                                    className="btn btn-success d-block mx-auto mb-3 global-button"
-                                                    disabled
-                                                >
-                                                    Success
+                                                    Update
                                                 </button>}
                                                 {store._id !== adminInfo.storeId && <>
                                                     {
@@ -602,7 +585,7 @@ export default function StoresManagment() {
                                                         store.status === "pending" &&
                                                         <button
                                                             className="btn btn-success d-block mx-auto mb-3 global-button"
-                                                            onClick={() => handleDisplayChangeStoreStatusBox(store._id, "approving")}
+                                                            onClick={() => handleDisplayChangeStoreStatusBox(store, "approving")}
                                                         >
                                                             Approve
                                                         </button>
@@ -614,7 +597,7 @@ export default function StoresManagment() {
                                                         store.status === "pending" &&
                                                         <button
                                                             className="btn btn-danger d-block mx-auto mb-3 global-button"
-                                                            onClick={() => handleDisplayChangeStoreStatusBox(store._id, "rejecting")}
+                                                            onClick={() => handleDisplayChangeStoreStatusBox(store, "rejecting")}
                                                         >
                                                             Reject
                                                         </button>
@@ -626,7 +609,7 @@ export default function StoresManagment() {
                                                         store.status === "pending" || store.status === "approving" &&
                                                         <button
                                                             className="btn btn-danger d-block mx-auto mb-3 global-button"
-                                                            onClick={() => handleDisplayChangeStoreStatusBox(store._id, "blocking")}
+                                                            onClick={() => handleDisplayChangeStoreStatusBox(store, "blocking")}
                                                         >
                                                             Blocking
                                                         </button>
@@ -638,7 +621,7 @@ export default function StoresManagment() {
                                                         store.status === "blocking" &&
                                                         <button
                                                             className="btn btn-danger d-block mx-auto mb-3 global-button"
-                                                            onClick={() => handleDisplayChangeStoreStatusBox(store._id, "cancel-blocking")}
+                                                            onClick={() => handleDisplayChangeStoreStatusBox(store, "cancel-blocking")}
                                                         >
                                                             Cancel Blocking
                                                         </button>

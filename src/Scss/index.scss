@@ -27,7 +27,7 @@ a{
     text-decoration: none;
 }
 
-input, textarea, select, checkbox{
+input, textarea, select{
     background: transparent;
     border: 1px solid #FFF;
     border-radius: 3px;
@@ -159,46 +159,6 @@ input, textarea, select, checkbox{
     animation: rotation 1s linear infinite;
 }
 
-.navigate-to-up-button {
-    position: fixed;
-    right: 20px;
-    bottom: 20px;
-    z-index: 2;
-    width: 50px;
-    height: 50px;
-    line-height: 50px;
-    font-size: 25px;
-    background-color: var(--main-color-two);
-    cursor: pointer;
-    border-radius: 50%;
-    text-align: center;
-    &:hover{
-        background-color: #000;
-        color: #FFF;
-    }
-}
-
-.contact-icons-box{
-    position: fixed;
-    left: 30px;
-    bottom: 30px;
-    cursor: pointer;
-    .contact-icons-list{
-        .contact-icon-item{
-            width: 60px;
-            height: 60px;
-            text-align: center;
-            line-height: 60px;
-            border-radius: 50%;
-            background-color: var(--main-color-two);
-        }
-    }
-    .contact-icon, .close-icon, .whatsapp-icon, .mail-icon{
-        font-size: 35px;
-        color: #000;
-    }
-}
-
 .form-field-error-box{
     border-radius: 3px;
 }
@@ -298,23 +258,6 @@ input, textarea, select, checkbox{
         width: 150px;
         .language-item{
             cursor: pointer;
-        }
-    }
-}
-
-.customer-favorite-products-list, .customer-wallet-products-list{
-    .favorite-products-list-for-user, .wallet-products-list-for-user{
-        .favorite-products-table-for-user, .wallet-products-table-for-user{
-            .managment-favorite-products-icon, .managment-wallet-products-icon{
-                font-size: 20px;
-                cursor: pointer;
-            }
-        }
-    }
-    .not-found-any-favorite-products-for-user, .not-found-any-wallet-products-for-user{
-        color: #FFF;
-        .sorry-icon{
-            font-size: 100px;
         }
     }
 }
@@ -438,40 +381,47 @@ input, textarea, select, checkbox{
     animation: rotation 2s linear infinite;
 }
 
-@keyframes rotation {
-    0% {
-        transform: rotate(0deg);
+.popup-box {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba($color: #000, $alpha: 0.5);
+    z-index: 3;
+    .content-box{
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        background-color: var(--main-color-one);
+        box-shadow: 1px 1px 10px #000;
+        width: 90%;
+        height: 60%;
+        &.share-icons-box{
+            .row{
+                @media (max-width: 767px) {
+                    gap: 20px;
+                }
+            }
+        }
+        .login-btn{
+            width: 50%;
+            margin: 0 auto;
+            font-size: 13px;
+            @media (max-width: 767px) {
+                width: 100%;
+            }
+        }
     }
-    100% {
-        transform: rotate(360deg);
+    .close-popup-box-icon{
+        position: absolute;
+        right: -20px;
+        top: -20px;
+        font-size: 40px;
+        background-color: red;
+        cursor: pointer;
+        border-radius: 50%;
+        padding: 5px;
     }
-} 
-
-@keyframes bounce {
-    0% , 50% , 100%{
-        transform: translate(-50%, 0px);
-        height: 20px;
-    }
-    20% {
-        transform: translate(-25%, 85px);
-        height: 28px;
-    }
-    25% {
-        transform: translate(-25%, 110px);
-        height: 12px;
-    }
-    70% {
-        transform: translate(-75%, 85px);
-        height: 28px;
-    }
-    75% {
-        transform: translate(-75%, 108px);
-        height: 12px;
-    }
-}
-
-@keyframes rotate {
-    0% , 50% , 100%{ transform: rotate(0deg)}
-    25% { transform: rotate(90deg)}
-    75%{ transform: rotate(-90deg)}
 }

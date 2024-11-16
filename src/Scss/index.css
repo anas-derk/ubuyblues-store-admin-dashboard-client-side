@@ -29,7 +29,7 @@ a {
   text-decoration: none;
 }
 
-input, textarea, select, checkbox {
+input, textarea, select {
   background: transparent;
   border: 1px solid #FFF;
   border-radius: 3px;
@@ -38,11 +38,11 @@ input, textarea, select, checkbox {
   font-size: 11px !important;
 }
 
-input::placeholder, textarea::placeholder, select::placeholder, checkbox::placeholder {
+input::placeholder, textarea::placeholder, select::placeholder {
   color: #FFF;
 }
 
-input:focus, textarea:focus, select:focus, checkbox:focus {
+input:focus, textarea:focus, select:focus {
   outline: none;
   border-color: #00F;
 }
@@ -214,47 +214,6 @@ input:focus, textarea:focus, select:focus, checkbox:focus {
   animation: rotation 1s linear infinite;
 }
 
-.navigate-to-up-button {
-  position: fixed;
-  right: 20px;
-  bottom: 20px;
-  z-index: 2;
-  width: 50px;
-  height: 50px;
-  line-height: 50px;
-  font-size: 25px;
-  background-color: var(--main-color-two);
-  cursor: pointer;
-  border-radius: 50%;
-  text-align: center;
-}
-
-.navigate-to-up-button:hover {
-  background-color: #000;
-  color: #FFF;
-}
-
-.contact-icons-box {
-  position: fixed;
-  left: 30px;
-  bottom: 30px;
-  cursor: pointer;
-}
-
-.contact-icons-box .contact-icons-list .contact-icon-item {
-  width: 60px;
-  height: 60px;
-  text-align: center;
-  line-height: 60px;
-  border-radius: 50%;
-  background-color: var(--main-color-two);
-}
-
-.contact-icons-box .contact-icon, .contact-icons-box .close-icon, .contact-icons-box .whatsapp-icon, .contact-icons-box .mail-icon {
-  font-size: 35px;
-  color: #000;
-}
-
 .form-field-error-box {
   border-radius: 3px;
 }
@@ -358,19 +317,6 @@ input:focus, textarea:focus, select:focus, checkbox:focus {
 
 .select-language-box .languages-list .language-item {
   cursor: pointer;
-}
-
-.customer-favorite-products-list .favorite-products-list-for-user .favorite-products-table-for-user .managment-favorite-products-icon, .customer-favorite-products-list .favorite-products-list-for-user .favorite-products-table-for-user .managment-wallet-products-icon, .customer-favorite-products-list .favorite-products-list-for-user .wallet-products-table-for-user .managment-favorite-products-icon, .customer-favorite-products-list .favorite-products-list-for-user .wallet-products-table-for-user .managment-wallet-products-icon, .customer-favorite-products-list .wallet-products-list-for-user .favorite-products-table-for-user .managment-favorite-products-icon, .customer-favorite-products-list .wallet-products-list-for-user .favorite-products-table-for-user .managment-wallet-products-icon, .customer-favorite-products-list .wallet-products-list-for-user .wallet-products-table-for-user .managment-favorite-products-icon, .customer-favorite-products-list .wallet-products-list-for-user .wallet-products-table-for-user .managment-wallet-products-icon, .customer-wallet-products-list .favorite-products-list-for-user .favorite-products-table-for-user .managment-favorite-products-icon, .customer-wallet-products-list .favorite-products-list-for-user .favorite-products-table-for-user .managment-wallet-products-icon, .customer-wallet-products-list .favorite-products-list-for-user .wallet-products-table-for-user .managment-favorite-products-icon, .customer-wallet-products-list .favorite-products-list-for-user .wallet-products-table-for-user .managment-wallet-products-icon, .customer-wallet-products-list .wallet-products-list-for-user .favorite-products-table-for-user .managment-favorite-products-icon, .customer-wallet-products-list .wallet-products-list-for-user .favorite-products-table-for-user .managment-wallet-products-icon, .customer-wallet-products-list .wallet-products-list-for-user .wallet-products-table-for-user .managment-favorite-products-icon, .customer-wallet-products-list .wallet-products-list-for-user .wallet-products-table-for-user .managment-wallet-products-icon {
-  font-size: 20px;
-  cursor: pointer;
-}
-
-.customer-favorite-products-list .not-found-any-favorite-products-for-user, .customer-favorite-products-list .not-found-any-wallet-products-for-user, .customer-wallet-products-list .not-found-any-favorite-products-for-user, .customer-wallet-products-list .not-found-any-wallet-products-for-user {
-  color: #FFF;
-}
-
-.customer-favorite-products-list .not-found-any-favorite-products-for-user .sorry-icon, .customer-favorite-products-list .not-found-any-wallet-products-for-user .sorry-icon, .customer-wallet-products-list .not-found-any-favorite-products-for-user .sorry-icon, .customer-wallet-products-list .not-found-any-wallet-products-for-user .sorry-icon {
-  font-size: 100px;
 }
 
 .admin-dashboard {
@@ -520,46 +466,52 @@ input:focus, textarea:focus, select:focus, checkbox:focus {
   animation: rotation 2s linear infinite;
 }
 
-@keyframes rotation {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
+.popup-box {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 3;
+}
+
+.popup-box .content-box {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--main-color-one);
+  box-shadow: 1px 1px 10px #000;
+  width: 90%;
+  height: 60%;
+}
+
+@media (max-width: 767px) {
+  .popup-box .content-box.share-icons-box .row {
+    gap: 20px;
   }
 }
 
-@keyframes bounce {
-  0%, 50%, 100% {
-    transform: translate(-50%, 0px);
-    height: 20px;
-  }
-  20% {
-    transform: translate(-25%, 85px);
-    height: 28px;
-  }
-  25% {
-    transform: translate(-25%, 110px);
-    height: 12px;
-  }
-  70% {
-    transform: translate(-75%, 85px);
-    height: 28px;
-  }
-  75% {
-    transform: translate(-75%, 108px);
-    height: 12px;
+.popup-box .content-box .login-btn {
+  width: 50%;
+  margin: 0 auto;
+  font-size: 13px;
+}
+
+@media (max-width: 767px) {
+  .popup-box .content-box .login-btn {
+    width: 100%;
   }
 }
 
-@keyframes rotate {
-  0%, 50%, 100% {
-    transform: rotate(0deg);
-  }
-  25% {
-    transform: rotate(90deg);
-  }
-  75% {
-    transform: rotate(-90deg);
-  }
+.popup-box .close-popup-box-icon {
+  position: absolute;
+  right: -20px;
+  top: -20px;
+  font-size: 40px;
+  background-color: red;
+  cursor: pointer;
+  border-radius: 50%;
+  padding: 5px;
 }

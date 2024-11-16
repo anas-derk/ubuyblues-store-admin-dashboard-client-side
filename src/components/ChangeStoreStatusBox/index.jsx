@@ -9,7 +9,7 @@ import { inputValuesValidation } from "../../../public/global_functions/validati
 export default function ChangeStoreStatusBox({
     setIsDisplayChangeStoreStatusBox,
     setStoreAction,
-    storeId,
+    selectedStore,
     storeAction,
     handleChangeStoreStatus,
 }) {
@@ -249,7 +249,7 @@ export default function ChangeStoreStatusBox({
             <div className="content-box d-flex align-items-center justify-content-center text-white flex-column p-4 text-center">
                 {!waitMsg && !errorMsg && !successMsg && <GrFormClose className="close-popup-box-icon" onClick={handleClosePopupBox} />}
                 <h2 className="mb-5 pb-3 border-bottom border-white">Change Store Status</h2>
-                <h4 className="mb-4">Are You Sure From: {storeAction} Store: ( {storeId} ) ?</h4>
+                <h4 className="mb-4">Are You Sure From: {storeAction} Store: ( {selectedStore.name} ) ?</h4>
                 <form className="change-store-status-form w-50" onSubmit={(e) => e.preventDefault()}>
                     {storeAction === "blocking" && <section className="change-store-status mb-4">
                         <input
@@ -294,7 +294,7 @@ export default function ChangeStoreStatusBox({
                         storeAction === "approving" &&
                         <button
                             className="btn btn-success d-block mx-auto mb-4 global-button"
-                            onClick={() => approveStoreCreate(storeId)}
+                            onClick={() => approveStoreCreate(selectedStore._id)}
                         >
                             Approve
                         </button>
@@ -306,7 +306,7 @@ export default function ChangeStoreStatusBox({
                         storeAction === "rejecting" &&
                         <button
                             className="btn btn-success d-block mx-auto mb-4 global-button"
-                            onClick={() => rejectStoreCreate(storeId)}
+                            onClick={() => rejectStoreCreate(selectedStore._id)}
                         >
                             Reject
                         </button>
@@ -318,7 +318,7 @@ export default function ChangeStoreStatusBox({
                         storeAction === "blocking" &&
                         <button
                             className="btn btn-success d-block mx-auto mb-4 global-button"
-                            onClick={() => blockingStore(storeId, changeStatusReason)}
+                            onClick={() => blockingStore(selectedStore._id, changeStatusReason)}
                         >
                             Block
                         </button>
@@ -330,7 +330,7 @@ export default function ChangeStoreStatusBox({
                         storeAction === "cancel-blocking" &&
                         <button
                             className="btn btn-success d-block mx-auto mb-4 global-button"
-                            onClick={() => cancelBlockingStore(storeId)}
+                            onClick={() => cancelBlockingStore(selectedStore._id)}
                         >
                             Cancel Blocking
                         </button>
