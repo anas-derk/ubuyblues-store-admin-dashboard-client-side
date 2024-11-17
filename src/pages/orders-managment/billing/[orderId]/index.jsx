@@ -8,6 +8,7 @@ import { getAdminInfo, getStoreDetails, getOrderDetails, handleSelectUserLanguag
 import { useRouter } from "next/router";
 import AdminPanelHeader from "@/components/AdminPanelHeader";
 import { getCurrencyNameByCountry, getUSDPriceAgainstCurrency } from "../../../../../public/global_functions/prices";
+import NotFoundError from "@/components/NotFoundError";
 
 export default function ShowBilling({ orderIdAsProperty, countryAsProperty }) {
 
@@ -127,8 +128,8 @@ export default function ShowBilling({ orderIdAsProperty, countryAsProperty }) {
             {!isLoadingPage && !errorMsgOnLoadingThePage && <>
                 <AdminPanelHeader isWebsiteOwner={adminInfo.isWebsiteOwner} isMerchant={adminInfo.isMerchant} />
                 <div className="page-content p-4 bg-white">
-                    <h1 className="welcome-msg text-center mb-5">{t("Your Order Billing From Store")}: {storeDetails.name}</h1>
-                    {Object.keys(orderDetails).length > 0 ? <section className="order-total border border-3 border-dark p-4 ps-md-5 pe-md-5 text-center" id="order-total">
+                    {Object.keys(orderDetails).length > 0 && orderDetails?.checkoutStatus === "Checkout Successfull" && <section className="order-total border border-3 border-dark p-4 ps-md-5 pe-md-5 text-center" id="order-total">
+                        <h1 className="welcome-msg text-center mb-4 fw-bold border-bottom border-4 border-dark w-fit mx-auto pb-2">{t("Your Order Billing From Store")}: {storeDetails.name}</h1>
                         <h5 className="fw-bold mb-4 text-center">{t("Your Request")}</h5>
                         <div className="order-id-and-number border border-2 border-dark p-4 mb-5">
                             <h5 className="mb-4 text-center">{t("Order Id")}: {orderDetails._id}</h5>
@@ -190,6 +191,38 @@ export default function ShowBilling({ orderIdAsProperty, countryAsProperty }) {
                                 {t("Total Price After Discount")}
                             </div>
                             <div className={`col-md-9 fw-bold p-0 ${i18n.language !== "ar" ? "text-md-end" : "text-md-start"}`}>
+                                {(orderDetails.totalPriceAfterDiscount * usdPriceAgainstCurrency).toFixed(2)} {t(currencyNameByCountry)}
+                            </div>
+                        </div>
+                        <div className="row shipping-cost-for-local-products total pb-3 mb-5">
+                            <div className="col-md-3 fw-bold p-0">
+                                {t("Shipping Cost For Local Products")}
+                            </div>
+                            <div className={`col-md-9 fw-bold p-0 ${i18n.language !== "ar" ? "text-md-end" : "text-md-start"}`}>
+                                {(orderDetails.shippingCost.forLocalProducts * usdPriceAgainstCurrency).toFixed(2)} {t(currencyNameByCountry)}
+                            </div>
+                        </div>
+                        <div className="row shipping-cost-for-local-products total pb-3 mb-5">
+                            <div className="col-md-3 fw-bold p-0">
+                                {t("Shipping Cost For International Products")}
+                            </div>
+                            <div className={`col-md-9 fw-bold p-0 ${i18n.language !== "ar" ? "text-md-end" : "text-md-start"}`}>
+                                {(orderDetails.shippingCost.forInternationalProducts * usdPriceAgainstCurrency).toFixed(2)} {t(currencyNameByCountry)}
+                            </div>
+                        </div>
+                        <div className="row total-shipping-cost total pb-3 mb-5">
+                            <div className="col-md-3 fw-bold p-0">
+                                {t("Total Shipping Cost")}
+                            </div>
+                            <div className={`col-md-9 fw-bold p-0 ${i18n.language !== "ar" ? "text-md-end" : "text-md-start"}`}>
+                                {((orderDetails.shippingCost.forLocalProducts + orderDetails.shippingCost.forInternationalProducts) * usdPriceAgainstCurrency).toFixed(2)} {t(currencyNameByCountry)}
+                            </div>
+                        </div>
+                        <div className="row total-amount total pb-3 mb-5">
+                            <div className="col-md-3 fw-bold p-0">
+                                {t("Total Amount")}
+                            </div>
+                            <div className={`col-md-9 fw-bold p-0 ${i18n.language !== "ar" ? "text-md-end" : "text-md-start"}`}>
                                 {(orderDetails.orderAmount * usdPriceAgainstCurrency).toFixed(2)} {t(currencyNameByCountry)}
                             </div>
                         </div>
@@ -199,7 +232,9 @@ export default function ShowBilling({ orderIdAsProperty, countryAsProperty }) {
                         <h4 className="mb-4">
                             {t("Thanks For Purchase From Store")} {storeDetails.name}
                         </h4>
-                    </section> : <p className="alert alert-danger">Sorry, This Order Is Not Found !!</p>}
+                    </section>}
+                    {Object.keys(orderDetails).length > 0 && orderDetails?.checkoutStatus !== "Checkout Successfull" && <NotFoundError errorMsg="Sorry, This Order Is Not Completed !!" />}
+                    {Object.keys(orderDetails).length === 0 && <NotFoundError errorMsg="Sorry, This Order Is Not Found !!" />}
                 </div>
             </>}
             {isLoadingPage && !errorMsgOnLoadingThePage && <LoaderPage />}
