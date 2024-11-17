@@ -5,22 +5,20 @@ import axios from "axios";
 import LoaderPage from "@/components/LoaderPage";
 import ErrorOnLoadingThePage from "@/components/ErrorOnLoadingThePage";
 import AdminPanelHeader from "@/components/AdminPanelHeader";
-import { getAdminInfo, getAllCategoriesWithHierarechy, getProductInfo } from "../../../../../public/global_functions/popular";
+import { getAdminInfo, getProductInfo } from "../../../../../public/global_functions/popular";
 import { useRouter } from "next/router";
 import { HiOutlineBellAlert } from "react-icons/hi2";
-import NotFoundError from "@/components/NotFoundError";
-import CategoriesTree from "@/components/CategoryTree";
 import { inputValuesValidation } from "../../../../../public/global_functions/validations";
+import { countries } from "countries-list";
+import { IoIosCloseCircleOutline } from "react-icons/io";
 
-export default function UpdateProductCategories({ productIdAsProperty }) {
+export default function UpdateProductCountries({ productIdAsProperty }) {
 
     const [isLoadingPage, setIsLoadingPage] = useState(true);
 
     const [errorMsgOnLoadingThePage, setErrorMsgOnLoadingThePage] = useState("");
 
     const [adminInfo, setAdminInfo] = useState({});
-
-    const [allCategories, setAllCategories] = useState([]);
 
     const [productData, setProductData] = useState({});
 
@@ -35,6 +33,12 @@ export default function UpdateProductCategories({ productIdAsProperty }) {
     });
 
     const [formValidationErrors, setFormValidationErrors] = useState({});
+
+    const allCountries = Object.keys(countries)
+
+    const [countryList, setCountryList] = useState(allCountries);
+
+    const [filteredCountryList, setFilteredCountryList] = useState(allCountries);
 
     const router = useRouter();
 
@@ -56,7 +60,6 @@ export default function UpdateProductCategories({ productIdAsProperty }) {
                             const tempFilters = { ...filters, storeId: adminDetails.storeId };
                             setFilters(tempFilters);
                             setProductData((await getProductInfo(productIdAsProperty)).data.productDetails);
-                            setAllCategories((await getAllCategoriesWithHierarechy(getFilteringString(tempFilters))).data);
                             setIsLoadingPage(false);
                         }
                     }
@@ -74,24 +77,17 @@ export default function UpdateProductCategories({ productIdAsProperty }) {
         } else router.replace("/login");
     }, []);
 
-    const getFilteringString = (filters) => {
-        let filteringString = "";
-        if (filters.storeId) filteringString += `storeId=${filters.storeId}&`;
-        if (filteringString) filteringString = filteringString.substring(0, filteringString.length - 1);
-        return filteringString;
-    }
-
-    const updateProductCategories = async (e) => {
+    const updateProductCountries = async (e) => {
         try {
             e.preventDefault();
             setFormValidationErrors({});
             const errorsObject = inputValuesValidation([
                 {
-                    name: "categories",
-                    value: productData.categories,
+                    name: "countries",
+                    value: productData.countries,
                     rules: {
                         isRequired: {
-                            msg: "Sorry, This Field Can't Be Empty !!",
+                            msg: "Sorry, Can't Find Any Countries Added To The Selected Countries List !!",
                         },
                     },
                 },
@@ -100,7 +96,7 @@ export default function UpdateProductCategories({ productIdAsProperty }) {
             if (Object.keys(errorsObject).length == 0) {
                 setWaitMsg("Please Wait To Updating ...");
                 const result = (await axios.put(`${process.env.BASE_API_URL}/products/${productData._id}?language=${process.env.defaultLanguage}`, {
-                    categories: productData.categories,
+                    countries: productData.countries,
                 }, {
                     headers: {
                         Authorization: localStorage.getItem(process.env.adminTokenNameInLocalStorage),
@@ -138,37 +134,70 @@ export default function UpdateProductCategories({ productIdAsProperty }) {
         }
     }
 
-    const handleSelectCategory = (categoryId, isChecked) => {
+    const handleSearchOfCountry = (e) => {
+        const searchedCountry = e.target.value;
+        if (searchedCountry) {
+            setFilteredCountryList(filteredCountryList.filter((country) => countries[country].name.toLowerCase().startsWith(searchedCountry.toLowerCase())));
+        } else {
+            setFilteredCountryList(countryList);
+        }
+    }
+
+    const handleSelectCountry = (countryCode) => {
+        setCountryList(countryList.filter((country) => country !== countryCode));
+        setFilteredCountryList(filteredCountryList.filter((country) => country !== countryCode));
         setProductData((data) => {
-            return isChecked ? { ...data, categories: [...productData.categories, categoryId] } : { ...data, categories: productData.categories.filter((id) => id !== categoryId) };
+            return { ...data, countries: [...productData.countries, countryCode] };
+        });
+    }
+
+    const handleRemoveCountryFromCountryList = (countryCode) => {
+        setCountryList([...countryList, countryCode]);
+        setFilteredCountryList([...filteredCountryList, countryCode]);
+        setProductData((data) => {
+            return { ...data, countries: productData.countries.filter((country) => country !== countryCode) };
         });
     }
 
     return (
-        <div className="update-product-categories admin-dashboard">
+        <div className="update-product-countries admin-dashboard">
             <Head>
-                <title>{process.env.storeName} Admin Dashboard - Update Product Categories</title>
+                <title>{process.env.storeName} Admin Dashboard - Update Product Countries</title>
             </Head>
             {!isLoadingPage && !errorMsgOnLoadingThePage && <>
                 <AdminPanelHeader isWebsiteOwner={adminInfo.isWebsiteOwner} isMerchant={adminInfo.isMerchant} />
                 <div className="page-content d-flex justify-content-center align-items-center flex-column pt-5 pb-5 p-4">
                     <h1 className="fw-bold w-fit pb-2 mb-3">
                         <PiHandWavingThin className="me-2" />
-                        Hi, Mr {adminInfo.firstName + " " + adminInfo.lastName} In Your Update Product Categories Page
+                        Hi, Mr {adminInfo.firstName + " " + adminInfo.lastName} In Your Update Product Countries Page
                     </h1>
-                    {allCategories.length > 0 ? <form className="update-product-categories-form admin-dashbboard-form" onSubmit={updateProductCategories}>
-                        <section className="category mb-4 overflow-auto">
-                            <h6 className="mb-3 fw-bold">Please Select Categories</h6>
-                            <CategoriesTree
-                                categories={allCategories}
-                                handleSelectCategory={handleSelectCategory}
-                                selectedCategories={productData.categories}
+                    <form className="update-product-categories-form admin-dashbboard-form" onSubmit={updateProductCountries}>
+                        <h6 className="mb-3 fw-bold">Please Select Countries</h6>
+                        <div className="select-country-box select-box mb-4">
+                            <input
+                                type="text"
+                                className="search-box form-control p-2 border-2 mb-4"
+                                placeholder="Please Enter Your Country Name Or Part Of This"
+                                onChange={handleSearchOfCountry}
                             />
-                            {formValidationErrors["categories"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                <span>{formValidationErrors["categories"]}</span>
-                            </p>}
-                        </section>
+                            <ul className="countries-list options-list bg-white border border-dark">
+                                {filteredCountryList.length > 0 ? filteredCountryList.map((countryCode) => (
+                                    <li key={countryCode} onClick={() => handleSelectCountry(countryCode)}>{countries[countryCode].name}</li>
+                                )) : <li>Sorry, Can't Find Any Counties Match This Name !!</li>}
+                            </ul>
+                        </div>
+                        {productData.countries.length > 0 && <div className="selected-countries row mb-4">
+                            {productData.countries.map((countryCode) => <div className="col-md-4 mb-3" key={countryCode}>
+                                <div className="selected-country-box bg-white p-2 border border-2 border-dark text-center">
+                                    <span className="me-2 country-name">{countries[countryCode].name}</span>
+                                    <IoIosCloseCircleOutline className="remove-icon" onClick={() => handleRemoveCountryFromCountryList(countryCode)} />
+                                </div>
+                            </div>)}
+                        </div>}
+                        {formValidationErrors["countries"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
+                            <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
+                            <span>{formValidationErrors["countries"]}</span>
+                        </p>}
                         {!waitMsg && !successMsg && !errorMsg && <button
                             type="submit"
                             className="btn btn-success w-50 d-block mx-auto p-2 global-button"
@@ -196,7 +225,7 @@ export default function UpdateProductCategories({ productIdAsProperty }) {
                         >
                             {successMsg}
                         </button>}
-                    </form> : <NotFoundError errorMsg="Sorry, Not Found Any Categories !!, Please Enter At Least One Category ..." />}
+                    </form>
                 </div>
             </>}
             {isLoadingPage && !errorMsgOnLoadingThePage && <LoaderPage />}
