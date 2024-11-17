@@ -18,11 +18,8 @@ import {
     getAllCategoriesWithHierarechy
 } from "../../../../public/global_functions/popular";
 import Link from "next/link";
-import { countries } from "countries-list";
-import { IoIosCloseCircleOutline } from "react-icons/io";
 import NotFoundError from "@/components/NotFoundError";
 import TableLoader from "@/components/TableLoader";
-import CategoriesTree from "@/components/CategoryTree";
 
 export default function UpdateAndDeleteProducts() {
 
@@ -71,8 +68,6 @@ export default function UpdateAndDeleteProducts() {
 
     const pageSize = 10;
 
-    const allCountries = Object.keys(countries);
-
     useEffect(() => {
         const adminToken = localStorage.getItem(process.env.adminTokenNameInLocalStorage);
         if (adminToken) {
@@ -94,13 +89,7 @@ export default function UpdateAndDeleteProducts() {
                             setAllCategories((await getAllCategoriesWithHierarechy(getFilteringString(tempFilters))).data);
                             result = await getProductsCount(getFilteringString(tempFilters));
                             if (result.data > 0) {
-                                const tempAllProductsInsideThePage = (await getAllProductsInsideThePage(1, pageSize, getFilteringString(tempFilters))).data.products
-                                tempAllProductsInsideThePage.forEach((product) => {
-                                    const filteredCountryListForProduct = allCountries.filter((country) => !product.countries.includes(country));
-                                    product.filteredCountryList = filteredCountryListForProduct;
-                                    product.allCountriesWithoutOriginalCountries = filteredCountryListForProduct;
-                                });
-                                setAllProductsInsideThePage(tempAllProductsInsideThePage);
+                                setAllProductsInsideThePage((await getAllProductsInsideThePage(1, pageSize, getFilteringString(tempFilters))).data.products);
                                 setTotalPagesCount(Math.ceil(result.data / pageSize));
                             }
                             setIsLoadingPage(false);
@@ -125,13 +114,7 @@ export default function UpdateAndDeleteProducts() {
             setIsGetProducts(true);
             setErrorMsgOnGetProductsData("");
             const newCurrentPage = currentPage - 1;
-            const tempAllProductsInsideThePage = (await getAllProductsInsideThePage(newCurrentPage, pageSize, getFilteringString(filters))).data.products
-            tempAllProductsInsideThePage.forEach((product) => {
-                const filteredCountryListForProduct = allCountries.filter((country) => !product.countries.includes(country));
-                product.filteredCountryList = filteredCountryListForProduct;
-                product.allCountriesWithoutOriginalCountries = filteredCountryListForProduct;
-            });
-            setAllProductsInsideThePage(tempAllProductsInsideThePage);
+            setAllProductsInsideThePage((await getAllProductsInsideThePage(newCurrentPage, pageSize, getFilteringString(filters))).data.products);
             setCurrentPage(newCurrentPage);
             setIsGetProducts(false);
         }
@@ -151,13 +134,7 @@ export default function UpdateAndDeleteProducts() {
             setIsGetProducts(true);
             setErrorMsgOnGetProductsData("");
             const newCurrentPage = currentPage + 1;
-            const tempAllProductsInsideThePage = (await getAllProductsInsideThePage(newCurrentPage, pageSize, getFilteringString(filters))).data.products
-            tempAllProductsInsideThePage.forEach((product) => {
-                const filteredCountryListForProduct = allCountries.filter((country) => !product.countries.includes(country));
-                product.filteredCountryList = filteredCountryListForProduct;
-                product.allCountriesWithoutOriginalCountries = filteredCountryListForProduct;
-            });
-            setAllProductsInsideThePage(tempAllProductsInsideThePage);
+            setAllProductsInsideThePage((await getAllProductsInsideThePage(newCurrentPage, pageSize, getFilteringString(filters))).data.products);
             setCurrentPage(newCurrentPage);
             setIsGetProducts(false);
         }
@@ -176,13 +153,7 @@ export default function UpdateAndDeleteProducts() {
         try {
             setIsGetProducts(true);
             setErrorMsgOnGetProductsData("");
-            const tempAllProductsInsideThePage = (await getAllProductsInsideThePage(pageNumber, pageSize, getFilteringString(filters))).data.products
-            tempAllProductsInsideThePage.forEach((product) => {
-                const filteredCountryListForProduct = allCountries.filter((country) => !product.countries.includes(country));
-                product.filteredCountryList = filteredCountryListForProduct;
-                product.allCountriesWithoutOriginalCountries = filteredCountryListForProduct;
-            });
-            setAllProductsInsideThePage(tempAllProductsInsideThePage);
+            setAllProductsInsideThePage((await getAllProductsInsideThePage(pageNumber, pageSize, getFilteringString(filters))).data.products);
             setCurrentPage(pageNumber);
             setIsGetProducts(false);
         }
@@ -248,34 +219,6 @@ export default function UpdateAndDeleteProducts() {
         let productsDataTemp = allProductsInsideThePage.map(product => product);
         productsDataTemp[productIndex][fieldName] = tempNewValue;
         setAllProductsInsideThePage(productsDataTemp);
-    }
-
-    const handleSearchOfCountry = (productIndex, e) => {
-        const searchedCountry = e.target.value;
-        const tempAllProductsInsideThePage = allProductsInsideThePage.map((product) => product);
-        if (searchedCountry) {
-            tempAllProductsInsideThePage[productIndex].filteredCountryList = tempAllProductsInsideThePage[productIndex].filteredCountryList.filter((country) => countries[country].name.toLowerCase().startsWith(searchedCountry.toLowerCase()));
-            setAllProductsInsideThePage(tempAllProductsInsideThePage);
-        } else {
-            tempAllProductsInsideThePage[productIndex].filteredCountryList = tempAllProductsInsideThePage[productIndex].allCountriesWithoutOriginalCountries;
-            setAllProductsInsideThePage(tempAllProductsInsideThePage);
-        }
-    }
-
-    const handleSelectCountry = (productIndex, countryCode) => {
-        let tempAllProductsInsideThePage = allProductsInsideThePage.map((product) => product);
-        tempAllProductsInsideThePage[productIndex].allCountriesWithoutOriginalCountries = tempAllProductsInsideThePage[productIndex].allCountriesWithoutOriginalCountries.filter((country) => country !== countryCode);
-        tempAllProductsInsideThePage[productIndex].filteredCountryList = tempAllProductsInsideThePage[productIndex].filteredCountryList.filter((country) => country !== countryCode);
-        tempAllProductsInsideThePage[productIndex].countries = [...tempAllProductsInsideThePage[productIndex].countries, countryCode];
-        setAllProductsInsideThePage(tempAllProductsInsideThePage);
-    }
-
-    const handleRemoveCountryFromCountryList = (productIndex, countryCode) => {
-        let tempAllProductsInsideThePage = allProductsInsideThePage.map((product) => product);
-        tempAllProductsInsideThePage[productIndex].allCountriesWithoutOriginalCountries = [...tempAllProductsInsideThePage[productIndex].allCountriesWithoutOriginalCountries, countryCode];
-        tempAllProductsInsideThePage[productIndex].filteredCountryList = [...tempAllProductsInsideThePage[productIndex].filteredCountryList, countryCode];
-        tempAllProductsInsideThePage[productIndex].countries = tempAllProductsInsideThePage[productIndex].countries.filter((country) => country !== countryCode);
-        setAllProductsInsideThePage(tempAllProductsInsideThePage);
     }
 
     const updateProductImage = async (productIndex) => {
@@ -580,9 +523,7 @@ export default function UpdateAndDeleteProducts() {
                                     <th>Name</th>
                                     <th>Price</th>
                                     <th>Quantity</th>
-                                    <th>Countries</th>
                                     <th>Description</th>
-                                    <th>Category</th>
                                     <th>Discount</th>
                                     <th>Image</th>
                                     <th>Processes</th>
@@ -638,34 +579,6 @@ export default function UpdateAndDeleteProducts() {
                                                 </p>}
                                             </section>
                                         </td>
-                                        <td className="product-country-cell">
-                                            <section className="product-country mb-4">
-                                                {product.countries.map((country) =>
-                                                    <div className="row align-items-center mb-3" key={country}>
-                                                        <div className={product.countries.length > 1 ? "col-md-10" : "col-md-12"}>
-                                                            <h6 className="bg-info p-2 fw-bold m-0">{countries[country].name}</h6>
-                                                        </div>
-                                                        {product.countries.length > 1 && <div className="col-md-2">
-                                                            <IoIosCloseCircleOutline className="remove-icon" onClick={() => handleRemoveCountryFromCountryList(productIndex, country)} />
-                                                        </div>}
-                                                    </div>
-                                                )}
-                                                <hr />
-                                                <div className="select-country-box select-box mb-4">
-                                                    <input
-                                                        type="text"
-                                                        className="search-box form-control p-2 border-2 mb-4"
-                                                        placeholder="Please Enter Your Country Name Or Part Of This"
-                                                        onChange={(e) => handleSearchOfCountry(productIndex, e)}
-                                                    />
-                                                    <ul className="countries-list options-list bg-white border border-dark">
-                                                        {product.filteredCountryList.length > 0 ? product.filteredCountryList.map((countryCode) => (
-                                                            <li key={countryCode} onClick={() => handleSelectCountry(productIndex, countryCode)}>{countries[countryCode].name}</li>
-                                                        )) : <li>Sorry, Can't Find Any Counties Match This Name !!</li>}
-                                                    </ul>
-                                                </div>
-                                            </section>
-                                        </td>
                                         <td className="product-description-cell" width="400">
                                             <section className="product-description mb-4">
                                                 <textarea
@@ -679,17 +592,6 @@ export default function UpdateAndDeleteProducts() {
                                                     <span>{formValidationErrors["description"]}</span>
                                                 </p>}
                                             </section>
-                                        </td>
-                                        <td className="product-category-cell">
-                                            <CategoriesTree
-                                                categories={allCategories}
-                                                handleSelectCategory={
-                                                    (categoryId, isChecked) => {
-                                                        changeProductData(productIndex, "categories", isChecked ? [ ...allProductsInsideThePage[productIndex].categories, categoryId ] : allProductsInsideThePage[productIndex].categories.filter((id) => id !== categoryId));
-                                                    }
-                                                }
-                                                selectedCategories={product.categories}
-                                            />
                                         </td>
                                         <td className="product-price-discount-cell">
                                             <section className="product-price-discount mb-4">
@@ -796,6 +698,9 @@ export default function UpdateAndDeleteProducts() {
                                                 <Link href={`/products-managment/add-new-gallery-images/${product._id}`}
                                                     className="btn btn-success d-block mb-3 mx-auto global-button"
                                                 >Add New Image To Gallery</Link>
+                                                <Link href={`/products-managment/update-and-delete-product-categories/${product._id}`}
+                                                    className="btn btn-success d-block mb-3 mx-auto global-button"
+                                                >Show Categories</Link>
                                                 <hr />
                                                 <button
                                                     className="btn btn-success d-block mb-3 mx-auto global-button"

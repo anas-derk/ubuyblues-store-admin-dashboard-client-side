@@ -176,6 +176,15 @@ const handleSelectUserLanguage = (userLanguage, changeLanguageFunc) => {
     document.body.lang = userLanguage;
 }
 
+const getProductInfo = async (productId) => {
+    try {
+        return (await axios.get(`${process.env.BASE_API_URL}/products/product-info/${productId}?language=${process.env.defaultLanguage}`)).data;
+    }
+    catch (err) {
+        throw Error(err);
+    }
+}
+
 export {
     getProductsCount,
     getAllProductsInsideThePage,
@@ -194,5 +203,6 @@ export {
     calcTotalOrderPriceAfterDiscount,
     getAdminInfo,
     getOrderDetails,
-    handleSelectUserLanguage
+    handleSelectUserLanguage,
+    getProductInfo
 }
