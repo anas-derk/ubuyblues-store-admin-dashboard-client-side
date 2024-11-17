@@ -467,7 +467,11 @@ export default function OrdersManagment() {
                                         <tr key={order._id}>
                                             <td>{order.orderNumber}</td>
                                             <td>{order._id}</td>
-                                            <td>{order.checkoutStatus}</td>
+                                            <td>
+                                                <div className={`p-2 text-white ${order.checkoutStatus === "Checkout Successfull" ? "bg-success" : "bg-danger"}`}>
+                                                    {order.checkoutStatus}
+                                                </div>
+                                            </td>
                                             <td>
                                                 <h6 className="fw-bold">{order.status}</h6>
                                                 {order.checkoutStatus === "Checkout Successfull" && <>
