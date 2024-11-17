@@ -194,7 +194,7 @@ export default function UpdateProductCountries({ productIdAsProperty }) {
                                 </div>
                             </div>)}
                         </div>}
-                        {formValidationErrors["countries"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
+                        {formValidationErrors["countries"] && <p className="bg-danger p-2 form-field-error-box mb-4 text-white">
                             <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
                             <span>{formValidationErrors["countries"]}</span>
                         </p>}
