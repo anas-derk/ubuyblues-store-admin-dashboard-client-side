@@ -202,7 +202,7 @@ export default function ShowBilling({ orderIdAsProperty, countryAsProperty }) {
                                 {(orderDetails.shippingCost.forLocalProducts * usdPriceAgainstCurrency).toFixed(2)} {t(currencyNameByCountry)}
                             </div>
                         </div>
-                        <div className="row shipping-cost-for-local-products total pb-3 mb-5">
+                        <div className="row shipping-cost-for-international-products total pb-3 mb-5">
                             <div className="col-md-3 fw-bold p-0">
                                 {t("Shipping Cost For International Products")}
                             </div>
