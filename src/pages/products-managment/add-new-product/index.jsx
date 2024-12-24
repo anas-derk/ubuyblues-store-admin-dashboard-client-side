@@ -36,6 +36,7 @@ export default function AddNewProduct() {
         quantity: "",
         image: null,
         galleryImages: [],
+        threeDImage: null,
     });
 
     const [waitMsg, setWaitMsg] = useState("");
@@ -51,6 +52,8 @@ export default function AddNewProduct() {
     const [formValidationErrors, setFormValidationErrors] = useState({});
 
     const productImageFileElementRef = useRef();
+
+    const threeDProductImageFileElementRef = useRef();
 
     const productGalleryImagesFilesElementRef = useRef();
 
@@ -173,15 +176,6 @@ export default function AddNewProduct() {
                         }
                     },
                 },
-                // {
-                //     name: "countries",
-                //     value: selectedCountriesList,
-                //     rules: {
-                //         isRequired: {
-                //             msg: "Sorry, This Field Can't Be Empty !!",
-                //         },
-                //     },
-                // },
                 {
                     name: "image",
                     value: productData.image,
@@ -206,6 +200,18 @@ export default function AddNewProduct() {
                         },
                     },
                 },
+                {
+                    name: "3DImage",
+                    value: productData.threeDImage,
+                    rules: {
+                        isRequired: {
+                            msg: "Sorry, This Field Can't Be Empty !!",
+                        },
+                        isImage: {
+                            msg: "Sorry, Invalid Image Type, Please Upload JPG Or PNG Or WEBP Image File !!",
+                        },
+                    },
+                },
             ]);
             setFormValidationErrors(errorsObject);
             if (Object.keys(errorsObject).length == 0) {
@@ -222,6 +228,7 @@ export default function AddNewProduct() {
                     formData.append("countries[]", country);
                 }
                 formData.append("productImage", productData.image);
+                formData.append("threeDImage", productData.threeDImage);
                 for (let galleryImage of productData.galleryImages) {
                     formData.append("galleryImages", galleryImage);
                 }
@@ -243,9 +250,11 @@ export default function AddNewProduct() {
                             description: "",
                             discount: "",
                             image: null,
+                            threeDImage: null,
                             galleryImages: [],
                         });
                         productImageFileElementRef.current.value = "";
+                        threeDProductImageFileElementRef.current.value = "";
                         productGalleryImagesFilesElementRef.current.value = "";
                         clearTimeout(successTimeout);
                     }, 1500);
@@ -430,6 +439,21 @@ export default function AddNewProduct() {
                             {formValidationErrors["image"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
                                 <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
                                 <span>{formValidationErrors["image"]}</span>
+                            </p>}
+                        </section>
+                        <h6 className="mb-3 fw-bold">Please Select 3D Product Image</h6>
+                        <section className="3d-image mb-4">
+                            <input
+                                type="file"
+                                className={`form-control p-2 border-2 product-image-field ${formValidationErrors["3DImage"] ? "border-danger mb-3" : "mb-4"}`}
+                                placeholder="Please Enter 3D Product Image"
+                                onChange={(e) => setProductData({ ...productData, threeDImage: e.target.files[0] })}
+                                ref={threeDProductImageFileElementRef}
+                                value={threeDProductImageFileElementRef.current?.value}
+                            />
+                            {formValidationErrors["3DImage"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
+                                <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
+                                <span>{formValidationErrors["3DImage"]}</span>
                             </p>}
                         </section>
                         <h6 className="mb-3 fw-bold">Please Select Product Gallery Images</h6>
