@@ -68,11 +68,9 @@ export default function UpdateAndDeleteAdmins() {
                             setAdminInfo(adminDetails);
                             const tempFilters = { ...filters, storeId: adminDetails.storeId };
                             setFilters(tempFilters);
-                            result = await getAdminsCount();
-                            if (result.data > 0) {
-                                setAllAdminsInsideThePage((await getAllAdminsInsideThePage(1, pageSize, getFilteringString(tempFilters))).data);
-                                setTotalPagesCount(Math.ceil(result.data / pageSize));
-                            }
+                            result = (await getAllAdminsInsideThePage(1, pageSize, getFilteringString(tempFilters))).data;
+                            setAllAdminsInsideThePage(result.admins);
+                            setTotalPagesCount(Math.ceil(result.adminsCount / pageSize));
                             setIsLoadingPage(false);
                         }
                     }
@@ -89,19 +87,6 @@ export default function UpdateAndDeleteAdmins() {
                 });
         } else router.replace("/login");
     }, []);
-
-    const getAdminsCount = async (filters) => {
-        try {
-            return (await axios.get(`${process.env.BASE_API_URL}/admins/admins-count?language=${process.env.defaultLanguage}&${filters ? filters : ""}`, {
-                headers: {
-                    Authorization: localStorage.getItem(process.env.adminTokenNameInLocalStorage)
-                }
-            })).data;
-        }
-        catch (err) {
-            throw err;
-        }
-    }
 
     const getAllAdminsInsideThePage = async (pageNumber, pageSize, filters) => {
         try {
@@ -121,7 +106,7 @@ export default function UpdateAndDeleteAdmins() {
             setIsGetAdmins(true);
             setErrorMsgOnGetAdminsData("");
             const newCurrentPage = currentPage - 1;
-            setAllAdminsInsideThePage((await getAllAdminsInsideThePage(newCurrentPage, pageSize, getFilteringString(filters))).data);
+            setAllAdminsInsideThePage((await getAllAdminsInsideThePage(newCurrentPage, pageSize, getFilteringString(filters))).data.admins);
             setCurrentPage(newCurrentPage);
             setIsGetAdmins(false);
         }
@@ -141,7 +126,7 @@ export default function UpdateAndDeleteAdmins() {
             setIsGetAdmins(true);
             setErrorMsgOnGetAdminsData("");
             const newCurrentPage = currentPage + 1;
-            setAllAdminsInsideThePage((await getAllAdminsInsideThePage(newCurrentPage, pageSize, getFilteringString(filters))).data);
+            setAllAdminsInsideThePage((await getAllAdminsInsideThePage(newCurrentPage, pageSize, getFilteringString(filters))).data.admins);
             setCurrentPage(newCurrentPage);
             setIsGetAdmins(false);
         }
@@ -160,7 +145,7 @@ export default function UpdateAndDeleteAdmins() {
         try {
             setIsGetAdmins(true);
             setErrorMsgOnGetAdminsData("");
-            setAllAdminsInsideThePage((await getAllAdminsInsideThePage(pageNumber, pageSize, getFilteringString(filters))).data);
+            setAllAdminsInsideThePage((await getAllAdminsInsideThePage(pageNumber, pageSize, getFilteringString(filters))).data.admins);
             setCurrentPage(pageNumber);
             setIsGetAdmins(false);
         }
@@ -190,17 +175,10 @@ export default function UpdateAndDeleteAdmins() {
         try {
             setIsGetAdmins(true);
             setCurrentPage(1);
-            const filteringString = getFilteringString(filters);
-            const result = await getAdminsCount(filteringString);
-            if (result.data > 0) {
-                setAllAdminsInsideThePage((await getAllAdminsInsideThePage(1, pageSize, filteringString)).data);
-                setTotalPagesCount(Math.ceil(result.data / pageSize));
-                setIsGetAdmins(false);
-            } else {
-                setAllAdminsInsideThePage([]);
-                setTotalPagesCount(0);
-                setIsGetAdmins(false);
-            }
+            const result = (await getAllAdminsInsideThePage(1, pageSize, getFilteringString(filters))).data;
+            setAllAdminsInsideThePage(result.admins);
+            setTotalPagesCount(Math.ceil(result.adminsCount / pageSize));
+            setIsGetAdmins(false);
         }
         catch (err) {
             if (err?.response?.status === 401) {
@@ -328,12 +306,7 @@ export default function UpdateAndDeleteAdmins() {
                     setSuccessMsg("");
                     setSelectedAdminIndex(-1);
                     setIsGetAdmins(true);
-                    result = await getAdminsCount();
-                    if (result.data > 0) {
-                        setAllAdminsInsideThePage((await getAllAdminsInsideThePage(currentPage, pageSize)).data);
-                        setTotalPagesCount(Math.ceil(result.data / pageSize));
-                    }
-                    setCurrentPage(1);
+                    setAllAdminsInsideThePage(allAdminsInsideThePage.filter((admin, index) => index !== adminIndex));
                     setIsGetAdmins(false);
                     clearTimeout(successTimeout);
                 }, 3000);
