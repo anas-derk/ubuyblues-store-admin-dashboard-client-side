@@ -75,11 +75,9 @@ export default function UpdateAndDeleteBrands() {
                             setAdminInfo(adminDetails);
                             const tempFilters = { ...filters, storeId: adminDetails.storeId };
                             setFilters(tempFilters);
-                            result = await getBrandsCount(getFilteringString(tempFilters));
-                            if (result.data > 0) {
-                                setAllBrandsInsideThePage((await getAllBrandsInsideThePage(1, pageSize, getFilteringString(tempFilters))).data);
-                                setTotalPagesCount(Math.ceil(result.data / pageSize));
-                            }
+                            result = (await getAllBrandsInsideThePage(1, pageSize, getFilteringString(tempFilters))).data;
+                            setAllBrandsInsideThePage(result.brands);
+                            setTotalPagesCount(Math.ceil(result.brandsCount / pageSize));
                             setIsLoadingPage(false);
                         }
                     }
@@ -104,15 +102,6 @@ export default function UpdateAndDeleteBrands() {
         return filteringString;
     }
 
-    const getBrandsCount = async (filters) => {
-        try {
-            return (await axios.get(`${process.env.BASE_API_URL}/brands/brands-count?language=${process.env.defaultLanguage}&${filters ? filters : ""}`)).data;
-        }
-        catch (err) {
-            throw err;
-        }
-    }
-
     const getAllBrandsInsideThePage = async (pageNumber, pageSize, filters) => {
         try {
             return (await axios.get(`${process.env.BASE_API_URL}/brands/all-brands-inside-the-page?pageNumber=${pageNumber}&pageSize=${pageSize}&language=${process.env.defaultLanguage}&${filters ? filters : ""}`)).data;
@@ -127,7 +116,7 @@ export default function UpdateAndDeleteBrands() {
             setIsGetBrands(true);
             setErrorMsgOnGetBrandsData("");
             const newCurrentPage = currentPage - 1;
-            setAllBrandsInsideThePage((await getAllBrandsInsideThePage(newCurrentPage, pageSize, getFilteringString(filters))).data);
+            setAllBrandsInsideThePage((await getAllBrandsInsideThePage(newCurrentPage, pageSize, getFilteringString(filters))).data.brands);
             setCurrentPage(newCurrentPage);
             setIsGetBrands(false);
         }
@@ -147,7 +136,7 @@ export default function UpdateAndDeleteBrands() {
             setIsGetBrands(true);
             setErrorMsgOnGetBrandsData("");
             const newCurrentPage = currentPage + 1;
-            setAllBrandsInsideThePage((await getAllBrandsInsideThePage(newCurrentPage, pageSize, getFilteringString(filters))).data);
+            setAllBrandsInsideThePage((await getAllBrandsInsideThePage(newCurrentPage, pageSize, getFilteringString(filters))).data.brands);
             setCurrentPage(newCurrentPage);
             setIsGetBrands(false);
         }
@@ -166,7 +155,7 @@ export default function UpdateAndDeleteBrands() {
         try {
             setIsGetBrands(true);
             setErrorMsgOnGetBrandsData("");
-            setAllBrandsInsideThePage((await getAllBrandsInsideThePage(pageNumber, pageSize, getFilteringString(filters))).data);
+            setAllBrandsInsideThePage((await getAllBrandsInsideThePage(pageNumber, pageSize, getFilteringString(filters))).data.brands);
             setCurrentPage(pageNumber);
             setIsGetBrands(false);
         }

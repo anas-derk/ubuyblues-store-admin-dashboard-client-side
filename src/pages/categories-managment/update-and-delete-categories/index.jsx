@@ -70,19 +70,16 @@ export default function UpdateAndDeleteCategories() {
                             const tempFilters = { storeId: adminDetails.storeId };
                             setFilters(tempFilters);
                             const filtersAsQuery = getFiltersAsQuery(tempFilters);
-                            result = await getCategoriesCount(filtersAsQuery);
-                            if (result.data > 0) {
-                                const tempAllCategories = (await getAllCategories(1, pageSize, filtersAsQuery)).data;
-                                const tempAllCategoriesInsideThePage = (await getAllCategoriesInsideThePage(1, pageSize, filtersAsQuery)).data;
-                                tempAllCategoriesInsideThePage.forEach((categoryData) => {
-                                    const filteredCategories = tempAllCategories.filter((category) => category._id !== categoryData._id);
-                                    categoryData.filteredCategories = filteredCategories;
-                                    categoryData.allCategoriesWithoutOriginalCategory = filteredCategories;
-                                });
-                                setAllCategories(tempAllCategories);
-                                setAllCategoriesInsideThePage(tempAllCategoriesInsideThePage);
-                                setTotalPagesCount(Math.ceil(result.data / pageSize));
-                            }
+                            const tempAllCategories = (await getAllCategories(1, pageSize, filtersAsQuery)).data;
+                            result = (await getAllCategoriesInsideThePage(1, pageSize, filtersAsQuery)).data;
+                            result.categories.forEach((categoryData) => {
+                                const filteredCategories = tempAllCategories.filter((category) => category._id !== categoryData._id);
+                                categoryData.filteredCategories = filteredCategories;
+                                categoryData.allCategoriesWithoutOriginalCategory = filteredCategories;
+                            });
+                            setAllCategories(tempAllCategories);
+                            setAllCategoriesInsideThePage(result.categories);
+                            setTotalPagesCount(Math.ceil(result.categoriesCount / pageSize));
                             setIsLoadingPage(false);
                         }
                     }
@@ -112,7 +109,7 @@ export default function UpdateAndDeleteCategories() {
             setIsGetCategories(true);
             setErrorMsgOnGetCategoriesData("");
             const newCurrentPage = currentPage - 1;
-            const tempAllCategoriesInsideThePage = (await getAllCategoriesInsideThePage(newCurrentPage, pageSize, getFiltersAsQuery(filters))).data;
+            const tempAllCategoriesInsideThePage = (await getAllCategoriesInsideThePage(newCurrentPage, pageSize, getFiltersAsQuery(filters))).data.categories;
             tempAllCategoriesInsideThePage.forEach((categoryData) => {
                 const filteredCategories = allCategories.filter((category) => category._id !== categoryData._id);
                 categoryData.filteredCategories = filteredCategories;
@@ -138,7 +135,7 @@ export default function UpdateAndDeleteCategories() {
             setIsGetCategories(true);
             setErrorMsgOnGetCategoriesData("");
             const newCurrentPage = currentPage + 1;
-            const tempAllCategoriesInsideThePage = (await getAllCategoriesInsideThePage(newCurrentPage, pageSize, getFiltersAsQuery(filters))).data;
+            const tempAllCategoriesInsideThePage = (await getAllCategoriesInsideThePage(newCurrentPage, pageSize, getFiltersAsQuery(filters))).data.categories;
             tempAllCategoriesInsideThePage.forEach((categoryData) => {
                 const filteredCategories = allCategories.filter((category) => category._id !== categoryData._id);
                 categoryData.filteredCategories = filteredCategories;
@@ -163,7 +160,7 @@ export default function UpdateAndDeleteCategories() {
         try {
             setIsGetCategories(true);
             setErrorMsgOnGetCategoriesData("");
-            const tempAllCategoriesInsideThePage = (await getAllCategoriesInsideThePage(pageNumber, pageSize, getFiltersAsQuery(filters))).data;
+            const tempAllCategoriesInsideThePage = (await getAllCategoriesInsideThePage(pageNumber, pageSize, getFiltersAsQuery(filters))).data.categories;
             tempAllCategoriesInsideThePage.forEach((categoryData) => {
                 const filteredCategories = allCategories.filter((category) => category._id !== categoryData._id);
                 categoryData.filteredCategories = filteredCategories;
