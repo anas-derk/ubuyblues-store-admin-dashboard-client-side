@@ -24,6 +24,10 @@ export default function AddNewAd() {
 
     const [adImage, setAdImage] = useState(null);
 
+    const [searchedProducts, setSearchedProducts] = useState([]);
+
+    const [relatedProduct, setRelatedProduct] = useState(null);
+
     const adImageFileRef = useRef();
 
     const [waitMsg, setWaitMsg] = useState("");
@@ -67,6 +71,19 @@ export default function AddNewAd() {
                 });
         } else router.replace("/login");
     }, []);
+
+    const handleGetProductsByName = async () => {
+        try {
+            let result = await getProductsCount(getFilteringString(tempFilters));
+            if (result.data > 0) {
+                setAllProductsInsideThePage((await getAllProductsInsideThePage(1, pageSize, getFilteringString(tempFilters))).data.products);
+                setTotalPagesCount(Math.ceil(result.data / pageSize));
+            }
+        }
+        catch (err) {
+
+        }
+    }
 
     const addNewAd = async (e) => {
         try {
@@ -216,6 +233,30 @@ export default function AddNewAd() {
                                 <span>{formValidationErrors["adImage"]}</span>
                             </p>}
                         </section>}
+                        <section className="related-product mb-4 overflow-auto">
+                            <h6 className="mb-3 fw-bold">Please Select Related Product</h6>
+                            <input
+                                type="text"
+                                className="search-box form-control p-2 border-2 mb-4"
+                                placeholder="Please Enter Product Name Or Part Of This"
+                                onChange={handleGetProductsByName}
+                            />
+                            <ul className={`products-list options-list bg-white border ${formValidationErrors["relatedProduct"] ? "border-danger mb-4" : "border-dark"}`}>
+                                {searchedProducts.length > 0 && searchedProducts.map((product) => (
+                                    <li key={product._id} onClick={() => setRelatedProduct(product._id)}>{product.name}</li>
+                                ))
+                                }
+                            </ul>
+                            {filteredCategories.length === 0 && searchedCategoryParent && <p className="alert alert-danger mt-4">Sorry, Can't Find Any Category Parent Match This Name !!</p>}
+                            {formValidationErrors["categoryParent"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
+                                <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
+                                <span>{formValidationErrors["categoryParent"]}</span>
+                            </p>}
+                            {formValidationErrors["relatedProduct"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
+                                <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
+                                <span>{formValidationErrors["relatedProduct"]}</span>
+                            </p>}
+                        </section>
                         {!waitMsg && !successMsg && !errorMsg && <button
                             type="submit"
                             className="btn btn-success w-50 d-block mx-auto p-2 global-button"

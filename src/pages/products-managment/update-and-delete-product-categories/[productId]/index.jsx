@@ -162,7 +162,7 @@ export default function UpdateProductCategories({ productIdAsProperty }) {
                             <CategoriesTree
                                 categories={allCategories}
                                 handleSelectCategory={handleSelectCategory}
-                                selectedCategories={productData.categories}
+                                selectedCategories={productData.categories.map((selectedCategory) => selectedCategory._id)}
                             />
                             {formValidationErrors["categories"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
                                 <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
