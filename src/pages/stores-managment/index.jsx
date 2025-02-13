@@ -75,11 +75,9 @@ export default function StoresManagment() {
                         const adminDetails = result.data;
                         if (adminDetails.isWebsiteOwner) {
                             setAdminInfo(adminDetails);
-                            result = await getStoresCount();
-                            if (result.data > 0) {
-                                setAllStoresInsideThePage((await getAllStoresInsideThePage(1, pageSize)).data);
-                                setTotalPagesCount(Math.ceil(result.data / pageSize));
-                            }
+                            result = (await getAllStoresInsideThePage(1, pageSize)).data;
+                            setAllStoresInsideThePage(result.stores);
+                            setTotalPagesCount(Math.ceil(result.storesCount / pageSize));
                             setIsLoadingPage(false);
                         } else {
                             await router.replace("/");
@@ -104,7 +102,7 @@ export default function StoresManagment() {
             setIsGetStores(true);
             setErrorMsgOnGetStoresData("");
             const newCurrentPage = currentPage - 1;
-            setAllStoresInsideThePage((await getAllStoresInsideThePage(newCurrentPage, pageSize, getFilteringString(filters))).data);
+            setAllStoresInsideThePage((await getAllStoresInsideThePage(newCurrentPage, pageSize, getFilteringString(filters))).data.stores);
             setCurrentPage(newCurrentPage);
             setIsGetStores(false);
         }
@@ -124,7 +122,7 @@ export default function StoresManagment() {
             setIsGetStores(true);
             setErrorMsgOnGetStoresData("");
             const newCurrentPage = currentPage + 1;
-            setAllStoresInsideThePage((await getAllStoresInsideThePage(newCurrentPage, pageSize, getFilteringString(filters))).data);
+            setAllStoresInsideThePage((await getAllStoresInsideThePage(newCurrentPage, pageSize, getFilteringString(filters))).data.stores);
             setCurrentPage(newCurrentPage);
             setIsGetStores(false);
         }
@@ -143,7 +141,7 @@ export default function StoresManagment() {
         try {
             setIsGetStores(true);
             setErrorMsgOnGetStoresData("");
-            setAllStoresInsideThePage((await getAllStoresInsideThePage(pageNumber, pageSize, getFilteringString(filters))).data);
+            setAllStoresInsideThePage((await getAllStoresInsideThePage(pageNumber, pageSize, getFilteringString(filters))).data.stores);
             setCurrentPage(pageNumber);
             setIsGetStores(false);
         }
@@ -175,16 +173,10 @@ export default function StoresManagment() {
             setIsGetStores(true);
             setCurrentPage(1);
             const filteringString = getFilteringString(filters);
-            const result = await getStoresCount(filteringString);
-            if (result.data > 0) {
-                setAllStoresInsideThePage((await getAllStoresInsideThePage(1, pageSize, filteringString)).data);
-                setTotalPagesCount(Math.ceil(result.data / pageSize));
-                setIsGetStores(false);
-            } else {
-                setAllStoresInsideThePage([]);
-                setTotalPagesCount(0);
-                setIsGetStores(false);
-            }
+            const result = (await getAllStoresInsideThePage(1, pageSize, filteringString)).data;
+            setAllStoresInsideThePage(result.stores);
+            setTotalPagesCount(Math.ceil(result.storesCount / pageSize));
+            setIsGetStores(false);
         }
         catch (err) {
             if (err?.response?.status === 401) {
@@ -307,14 +299,7 @@ export default function StoresManagment() {
                 let successTimeout = setTimeout(async () => {
                     setSuccessMsg("Deleting Successfull !!");
                     setSelectedStoreIndex(-1);
-                    setIsGetStores(true);
-                    result = await getStoresCount();
-                    if (result.data > 0) {
-                        setAllStoresInsideThePage((await getAllStoresInsideThePage(1, pageSize)).data);
-                        setTotalPagesCount(Math.ceil(result.data / pageSize));
-                    }
-                    setCurrentPage(1);
-                    setIsGetStores(false);
+                    setAllStoresInsideThePage(allStoresInsideThePage.filter((store, index) => index !== storeIndex));
                     clearTimeout(successTimeout);
                 }, 3000);
             } else {
@@ -347,28 +332,21 @@ export default function StoresManagment() {
             switch (newStatus) {
                 case "approving": {
                     setIsGetStores(true);
-                    const filteringString = getFilteringString(filters);
-                    setAllStoresInsideThePage((await getAllStoresInsideThePage(1, pageSize, filteringString)).data);
+                    setAllStoresInsideThePage((await getAllStoresInsideThePage(1, pageSize, getFilteringString(filters))).data.stores);
                     setCurrentPage(currentPage);
                     setIsGetStores(false);
                     return;
                 }
                 case "rejecting": {
                     setIsGetStores(true);
-                    const filteringString = getFilteringString(filters);
-                    const result = await getStoresCount(filteringString);
-                    if (result.data > 0) {
-                        setAllStoresInsideThePage((await getAllStoresInsideThePage(1, pageSize)).data);
-                        setTotalPagesCount(Math.ceil(result.data / pageSize));
-                    }
+                    setAllStoresInsideThePage(allStoresInsideThePage.filter((store, index) => index !== storeIndex));
                     setCurrentPage(1);
                     setIsGetStores(false);
                     return;
                 }
                 case "blocking": {
                     setIsGetStores(true);
-                    const filteringString = getFilteringString(filters);
-                    setAllStoresInsideThePage((await getAllStoresInsideThePage(1, pageSize, filteringString)).data);
+                    setAllStoresInsideThePage((await getAllStoresInsideThePage(1, pageSize, getFilteringString(filters))).data.stores);
                     setCurrentPage(currentPage);
                     setIsGetStores(false);
                     return;

@@ -87,11 +87,9 @@ export default function UpdateAndDeleteProducts() {
                             const tempFilters = { ...filters, storeId: adminDetails.storeId };
                             setFilters(tempFilters);
                             setAllCategories((await getAllCategoriesWithHierarechy(getFilteringString(tempFilters))).data);
-                            result = await getProductsCount(getFilteringString(tempFilters));
-                            if (result.data > 0) {
-                                setAllProductsInsideThePage((await getAllProductsInsideThePage(1, pageSize, getFilteringString(tempFilters))).data.products);
-                                setTotalPagesCount(Math.ceil(result.data / pageSize));
-                            }
+                            result = (await getAllProductsInsideThePage(1, pageSize, getFilteringString(tempFilters))).data;
+                            setAllProductsInsideThePage(result.products);
+                            setTotalPagesCount(Math.ceil(result.productsCount / pageSize));
                             setIsLoadingPage(false);
                         }
                     }
@@ -180,17 +178,10 @@ export default function UpdateAndDeleteProducts() {
         try {
             setIsGetProducts(true);
             setCurrentPage(1);
-            let filteringString = getFilteringString(filters);
-            const result = await getProductsCount(filteringString);
-            if (result.data > 0) {
-                setAllProductsInsideThePage((await getAllProductsInsideThePage(1, pageSize, filteringString)).data.products);
-                setTotalPagesCount(Math.ceil(result.data / pageSize));
-                setIsGetProducts(false);
-            } else {
-                setAllProductsInsideThePage([]);
-                setTotalPagesCount(0);
-                setIsGetProducts(false);
-            }
+            const result = (await getAllProductsInsideThePage(1, pageSize, getFilteringString(filters))).data;
+            setAllProductsInsideThePage(result.products);
+            setTotalPagesCount(Math.ceil(result.productsCount / pageSize));
+            setIsGetProducts(false);
         }
         catch (err) {
             if (err?.response?.status === 401) {
@@ -433,16 +424,7 @@ export default function UpdateAndDeleteProducts() {
                 let successTimeout = setTimeout(async () => {
                     setSuccessMsg("");
                     setSelectedProductIndex(-1);
-                    setIsGetProducts(true);
-                    const result = await getProductsCount(getFilteringString(filters));
-                    if (result.data > 0) {
-                        setAllProductsInsideThePage((await getAllProductsInsideThePage(currentPage, pageSize, getFilteringString(filters))).data);
-                        setTotalPagesCount(Math.ceil(result.data / pageSize));
-                    } else {
-                        setAllProductsInsideThePage([]);
-                        setTotalPagesCount(0);
-                    }
-                    setIsGetProducts(false);
+                    setAllProductsInsideThePage(allProductsInsideThePage.filter((product, index) => index !== productIndex));
                     clearTimeout(successTimeout);
                 }, 1500);
             } else {
