@@ -286,8 +286,8 @@ export default function AddNewProduct() {
         }
     }
 
-    const handleSelectCategory = (categoryId, isChecked) => {
-        setSelectedCategories(isChecked ? [ ...selectedCategories, categoryId ] : selectedCategories.filter((id) => id !== categoryId));
+    const handleSelectCategory = (category, isChecked) => {
+        setSelectedCategories(isChecked ? [...selectedCategories, category._id] : selectedCategories.filter((selectedCategory) => selectedCategory !== category._id));
     }
 
     const handleSearchOfCountry = (e) => {
@@ -367,8 +367,8 @@ export default function AddNewProduct() {
                             <h6 className="mb-3 fw-bold">Please Select Categories</h6>
                             <CategoriesTree
                                 categories={allCategories}
-                                handleSelectCategory={handleSelectCategory}
                                 selectedCategories={selectedCategories}
+                                handleSelectCategory={handleSelectCategory}
                             />
                             {formValidationErrors["category"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
                                 <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
