@@ -90,7 +90,6 @@ export default function AddNewCategory() {
         const searchedCategoryParent = e.target.value;
         setSearchedCategoryParent(searchedCategoryParent);
         if (searchedCategoryParent) {
-            console.log(filteredCategories.filter((category) => category.name.toLowerCase().startsWith(searchedCategoryParent.toLowerCase())))
             setFilteredCategories(filteredCategories.filter((category) => category.name.toLowerCase().startsWith(searchedCategoryParent.toLowerCase())));
         } else {
             setFilteredCategories(allCategories);
@@ -210,8 +209,8 @@ export default function AddNewCategory() {
                                 <ul className={`categories-list options-list bg-white border ${formValidationErrors["categoryParent"] ? "border-danger mb-4" : "border-dark"}`}>
                                     <li onClick={() => handleSelectCategoryParent("")}>No Parent</li>
                                     {filteredCategories.length > 0 && filteredCategories.map((category) => (
-                                            <li key={category} onClick={() => handleSelectCategoryParent(category)}>{category.name}</li>
-                                        ))
+                                        <li key={category} onClick={() => handleSelectCategoryParent(category)}>{category.name}</li>
+                                    ))
                                     }
                                 </ul>
                                 {filteredCategories.length === 0 && searchedCategoryParent && <p className="alert alert-danger mt-4">Sorry, Can't Find Any Category Parent Match This Name !!</p>}

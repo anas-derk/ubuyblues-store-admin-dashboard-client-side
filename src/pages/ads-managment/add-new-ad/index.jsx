@@ -8,7 +8,7 @@ import AdminPanelHeader from "@/components/AdminPanelHeader";
 import { HiOutlineBellAlert } from "react-icons/hi2";
 import { useRouter } from "next/router";
 import { inputValuesValidation } from "../../../../public/global_functions/validations";
-import { getAdminInfo } from "../../../../public/global_functions/popular";
+import { getAdminInfo, getAllProductsInsideThePage } from "../../../../public/global_functions/popular";
 
 export default function AddNewAd() {
 
@@ -24,9 +24,11 @@ export default function AddNewAd() {
 
     const [adImage, setAdImage] = useState(null);
 
+    const [searchedProduct, setSearchedProductName] = useState("");
+
     const [searchedProducts, setSearchedProducts] = useState([]);
 
-    const [relatedProduct, setRelatedProduct] = useState(null);
+    const [selectedRelatedProduct, setSelectedRelatedProduct] = useState(null);
 
     const adImageFileRef = useRef();
 
@@ -72,17 +74,30 @@ export default function AddNewAd() {
         } else router.replace("/login");
     }, []);
 
-    const handleGetProductsByName = async () => {
+    const handleGetProductsByName = async (e) => {
         try {
-            let result = await getProductsCount(getFilteringString(tempFilters));
-            if (result.data > 0) {
-                setAllProductsInsideThePage((await getAllProductsInsideThePage(1, pageSize, getFilteringString(tempFilters))).data.products);
-                setTotalPagesCount(Math.ceil(result.data / pageSize));
+            setWaitMsg("Please Waiting To Get Products ...");
+            const searchedProductName = e.target.value;
+            setSearchedProductName(searchedProductName);
+            if (searchedProductName) {
+                setSearchedProducts((await getAllProductsInsideThePage(1, 1000, `storeId=${adminInfo.storeId}&name=${searchedProductName}`)).data.products);
+            } else {
+                setSearchedProducts([]);
             }
+            setWaitMsg("");
         }
         catch (err) {
-
+            setWaitMsg("");
+            setErrorMsg(err?.message === "Network Error" ? "Network Error On Search !!" : "Sorry, Someting Went Wrong, Please Repeate The Search !!");
+            let errorTimeout = setTimeout(() => {
+                setErrorMsg("");
+                clearTimeout(errorTimeout);
+            }, 1500);
         }
+    }
+
+    const handleSelectRelatedProduct = (product) => {
+        setSelectedRelatedProduct(product);
     }
 
     const addNewAd = async (e) => {
@@ -95,6 +110,15 @@ export default function AddNewAd() {
                     {
                         name: "adContent",
                         value: adContent,
+                        rules: {
+                            isRequired: {
+                                msg: "Sorry, This Field Can't Be Empty !!",
+                            },
+                        },
+                    },
+                    {
+                        name: "relatedProduct",
+                        value: selectedRelatedProduct,
                         rules: {
                             isRequired: {
                                 msg: "Sorry, This Field Can't Be Empty !!",
@@ -116,23 +140,32 @@ export default function AddNewAd() {
                             },
                         },
                     },
+                    {
+                        name: "relatedProduct",
+                        value: selectedRelatedProduct,
+                        rules: {
+                            isRequired: {
+                                msg: "Sorry, This Field Can't Be Empty !!",
+                            },
+                        },
+                    },
                 ];
             }
             const errorsObject = inputValuesValidation(validationInputs);
             setFormValidationErrors(errorsObject);
             if (Object.keys(errorsObject).length == 0) {
+                setWaitMsg("Please Waiting To Add New Advertisement ...");
                 let advertisementData = {};
                 if (advertisementType === "text") {
                     advertisementData = {
                         content: adContent,
-                        storeId: adminInfo.storeId
+                        product: selectedRelatedProduct._id,
                     };
                 } else {
                     advertisementData = new FormData();
                     advertisementData.append("adImage", adImage);
-                    advertisementData.append("storeId", adminInfo.storeId);
+                    advertisementData.append("product", selectedRelatedProduct._id);
                 }
-                setWaitMsg("Please Waiting To Add New Advertisement ...");
                 const result = (await axios.post(`${process.env.BASE_API_URL}/ads/add-new-${advertisementType}-ad?language=${process.env.defaultLanguage}`, advertisementData, {
                     headers: {
                         Authorization: localStorage.getItem(process.env.adminTokenNameInLocalStorage),
@@ -235,27 +268,33 @@ export default function AddNewAd() {
                         </section>}
                         <section className="related-product mb-4 overflow-auto">
                             <h6 className="mb-3 fw-bold">Please Select Related Product</h6>
-                            <input
-                                type="text"
-                                className="search-box form-control p-2 border-2 mb-4"
-                                placeholder="Please Enter Product Name Or Part Of This"
-                                onChange={handleGetProductsByName}
-                            />
-                            <ul className={`products-list options-list bg-white border ${formValidationErrors["relatedProduct"] ? "border-danger mb-4" : "border-dark"}`}>
-                                {searchedProducts.length > 0 && searchedProducts.map((product) => (
-                                    <li key={product._id} onClick={() => setRelatedProduct(product._id)}>{product.name}</li>
-                                ))
-                                }
-                            </ul>
-                            {filteredCategories.length === 0 && searchedCategoryParent && <p className="alert alert-danger mt-4">Sorry, Can't Find Any Category Parent Match This Name !!</p>}
-                            {formValidationErrors["categoryParent"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                <span>{formValidationErrors["categoryParent"]}</span>
-                            </p>}
-                            {formValidationErrors["relatedProduct"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                <span>{formValidationErrors["relatedProduct"]}</span>
-                            </p>}
+                            <div className="select-related-product-box select-box mb-4">
+                                <input
+                                    type="text"
+                                    className="search-box form-control p-2 border-2 mb-4"
+                                    placeholder="Please Enter Product Name Or Part Of This"
+                                    onChange={handleGetProductsByName}
+                                />
+                                <ul className={`products-list options-list bg-white border ${formValidationErrors["relatedProduct"] ? "border-danger mb-4" : "border-dark"}`}>
+                                    <li className="text-center fw-bold border-bottom border-2 border-dark">Seached Products List</li>
+                                    {searchedProducts.length > 0 && searchedProducts.map((product) => (
+                                        <li key={product._id} onClick={() => handleSelectRelatedProduct(product)}>{product.name}</li>
+                                    ))}
+                                </ul>
+                                {searchedProducts.length === 0 && searchedProduct && <p className="alert alert-danger mt-4">Sorry, Can't Find Any Related Products Match This Name !!</p>}
+                                {formValidationErrors["relatedProduct"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
+                                    <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
+                                    <span>{formValidationErrors["relatedProduct"]}</span>
+                                </p>}
+                            </div>
+                            {selectedRelatedProduct && <div className="selected-related-product row mb-4">
+                                <h6 className="fw-bold text-center mb-3">Selected Related Product Is :</h6>
+                                <div className="col-md-12 mb-3">
+                                    <div className="selected-related-product-box bg-white p-2 border border-2 border-dark text-center">
+                                        <span className="me-2 selected-product-name">{selectedRelatedProduct.name}</span>
+                                    </div>
+                                </div>
+                            </div>}
                         </section>
                         {!waitMsg && !successMsg && !errorMsg && <button
                             type="submit"
@@ -263,14 +302,14 @@ export default function AddNewAd() {
                         >
                             Add Now
                         </button>}
-                        {waitMsg && <button
+                        {waitMsg === "Please Waiting To Add New Advertisement ..." && <button
                             type="button"
                             className="btn btn-danger w-50 d-block mx-auto p-2 global-button"
                             disabled
                         >
                             {waitMsg}
                         </button>}
-                        {errorMsg && <button
+                        {!["Network Error On Search !!", "Sorry, Someting Went Wrong, Please Repeate The Search !!", ""].includes(errorMsg) && <button
                             type="button"
                             className="btn btn-danger w-50 d-block mx-auto p-2 global-button"
                             disabled
