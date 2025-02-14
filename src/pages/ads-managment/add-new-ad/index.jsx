@@ -116,15 +116,6 @@ export default function AddNewAd() {
                             },
                         },
                     },
-                    {
-                        name: "relatedProduct",
-                        value: selectedRelatedProduct,
-                        rules: {
-                            isRequired: {
-                                msg: "Sorry, This Field Can't Be Empty !!",
-                            },
-                        },
-                    },
                 ];
             } else {
                 validationInputs = [
@@ -159,7 +150,6 @@ export default function AddNewAd() {
                 if (advertisementType === "text") {
                     advertisementData = {
                         content: adContent,
-                        product: selectedRelatedProduct._id,
                     };
                 } else {
                     advertisementData = new FormData();
@@ -266,7 +256,7 @@ export default function AddNewAd() {
                                 <span>{formValidationErrors["adImage"]}</span>
                             </p>}
                         </section>}
-                        <section className="related-product mb-4 overflow-auto">
+                        {advertisementType === "image" && <section className="related-product mb-4 overflow-auto">
                             <h6 className="mb-3 fw-bold">Please Select Related Product</h6>
                             <div className="select-related-product-box select-box mb-4">
                                 <input
@@ -295,7 +285,7 @@ export default function AddNewAd() {
                                     </div>
                                 </div>
                             </div>}
-                        </section>
+                        </section>}
                         {!waitMsg && !successMsg && !errorMsg && <button
                             type="submit"
                             className="btn btn-success w-50 d-block mx-auto p-2 global-button"
