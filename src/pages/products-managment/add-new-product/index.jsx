@@ -224,7 +224,7 @@ export default function AddNewProduct() {
                 formData.append("price", productData.price);
                 formData.append("description", productData.description);
                 for (let category of selectedCategories) {
-                    formData.append("categories[]", category);
+                    formData.append("categories[]", category._id);
                 }
                 formData.append("discount", productData.discount);
                 formData.append("quantity", productData.quantity);
