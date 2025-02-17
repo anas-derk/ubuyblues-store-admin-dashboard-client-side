@@ -24,7 +24,7 @@ export default function AddNewAd() {
 
     const [adImage, setAdImage] = useState(null);
 
-    const [searchedProduct, setSearchedProductName] = useState("");
+    const [searchedProductName, setSearchedProductName] = useState("");
 
     const [searchedProducts, setSearchedProducts] = useState([]);
 
@@ -271,7 +271,7 @@ export default function AddNewAd() {
                                         <li key={product._id} onClick={() => handleSelectRelatedProduct(product)}>{product.name}</li>
                                     ))}
                                 </ul>
-                                {searchedProducts.length === 0 && searchedProduct && <p className="alert alert-danger mt-4">Sorry, Can't Find Any Related Products Match This Name !!</p>}
+                                {searchedProducts.length === 0 && searchedProductName && <p className="alert alert-danger mt-4">Sorry, Can't Find Any Related Products Match This Name !!</p>}
                                 {formValidationErrors["relatedProduct"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
                                     <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
                                     <span>{formValidationErrors["relatedProduct"]}</span>

@@ -6,7 +6,7 @@ import LoaderPage from "@/components/LoaderPage";
 import ErrorOnLoadingThePage from "@/components/ErrorOnLoadingThePage";
 import AdminPanelHeader from "@/components/AdminPanelHeader";
 import { inputValuesValidation } from "../../../../public/global_functions/validations";
-import { getAdminInfo, getAllCategoriesWithHierarechy } from "../../../../public/global_functions/popular";
+import { getAdminInfo, getAllCategoriesInsideThePage, getAllCategoriesWithHierarechy } from "../../../../public/global_functions/popular";
 import { useRouter } from "next/router";
 import { HiOutlineBellAlert } from "react-icons/hi2";
 import { countries } from "countries-list";
@@ -23,8 +23,6 @@ export default function AddNewProduct() {
     const [adminInfo, setAdminInfo] = useState({});
 
     const [allCategories, setAllCategories] = useState([]);
-
-    const [selectedCategories, setSelectedCategories] = useState([]);
 
     const [productData, setProductData] = useState({
         name: "",
@@ -44,6 +42,12 @@ export default function AddNewProduct() {
     const [errorMsg, setErrorMsg] = useState("");
 
     const [successMsg, setSuccessMsg] = useState("");
+
+    const [searchedCategoryName, setSearchedCategoryName] = useState("");
+
+    const [searchedCategories, setSearchedCategories] = useState([]);
+
+    const [selectedCategories, setSelectedCategories] = useState([]);
 
     const [filters, setFilters] = useState({
         storeId: "",
@@ -286,8 +290,38 @@ export default function AddNewProduct() {
         }
     }
 
-    const handleSelectCategory = (category, isChecked) => {
-        setSelectedCategories(isChecked ? [...selectedCategories, category._id] : selectedCategories.filter((selectedCategory) => selectedCategory !== category._id));
+    const handleGetCategoriesByName = async (e) => {
+        try {
+            setWaitMsg("Please Waiting To Get Categories ...");
+            const searchedCategoryName = e.target.value;
+            setSearchedCategoryName(searchedCategoryName);
+            if (searchedCategoryName) {
+                setSearchedCategories((await getAllCategoriesInsideThePage(1, 1000, `storeId=${adminInfo.storeId}&name=${searchedCategoryName}`)).data.categories);
+            } else {
+                setSearchedCategories([]);
+            }
+            setWaitMsg("");
+        }
+        catch (err) {
+            setWaitMsg("");
+            setErrorMsg(err?.message === "Network Error" ? "Network Error On Search !!" : "Sorry, Someting Went Wrong, Please Repeate The Search !!");
+            let errorTimeout = setTimeout(() => {
+                setErrorMsg("");
+                clearTimeout(errorTimeout);
+            }, 1500);
+        }
+    }
+
+    const handleSelectCategory = (selectedCategory) => {
+        if ((selectedCategories.filter((category) => category._id !== selectedCategory._id)).length === selectedCategories.length) {
+            setSearchedCategories(searchedCategories.filter((category) => category._id !== selectedCategory._id));
+            setSelectedCategories([...selectedCategories, selectedCategory]);
+        }
+    }
+
+    const handleRemoveCategoryFromSelectedCategoriesList = (category) => {
+        setSelectedCategories(selectedCategories.filter((selectedCategory) => category._id !== selectedCategory._id));
+        if (searchedCategoryName) setSearchedCategories([...searchedCategories, category]);
     }
 
     const handleSearchOfCountry = (e) => {
@@ -365,16 +399,37 @@ export default function AddNewProduct() {
                         </section>
                         <section className="category mb-4 overflow-auto">
                             <h6 className="mb-3 fw-bold">Please Select Categories</h6>
-                            <CategoriesTree
-                                categories={allCategories}
-                                selectedCategories={selectedCategories}
-                                handleSelectCategory={handleSelectCategory}
-                            />
-                            {formValidationErrors["category"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                <span>{formValidationErrors["category"]}</span>
-                            </p>}
+                            <div className="select-categories-box select-box">
+                                <input
+                                    type="text"
+                                    className="search-box form-control p-2 border-2 mb-4"
+                                    placeholder="Please Enter Category Name Or Part Of This"
+                                    onChange={handleGetCategoriesByName}
+                                />
+                                <ul className={`categories-list options-list bg-white border ${formValidationErrors["categories"] ? "border-danger mb-4" : "border-dark"}`}>
+                                    <li className="text-center fw-bold border-bottom border-2 border-dark">Seached Categories List</li>
+                                    {searchedCategories.length > 0 && searchedCategories.map((category) => (
+                                        <li key={category._id} onClick={() => handleSelectCategory(category)}>{category.name}</li>
+                                    ))}
+                                </ul>
+                                {searchedCategories.length === 0 && searchedCategoryName && <p className="alert alert-danger mt-4">Sorry, Can't Find Any Related Categories Match This Name !!</p>}
+                                {formValidationErrors["categories"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
+                                    <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
+                                    <span>{formValidationErrors["categories"]}</span>
+                                </p>}
+                            </div>
                         </section>
+                        {selectedCategories.length > 0 ? <div className="selected-categories row mb-4">
+                            {selectedCategories.map((category) => <div className="col-md-4 mb-3" key={category._id}>
+                                <div className="selected-category-box bg-white p-2 border border-2 border-dark text-center">
+                                    <span className="me-2 category-name">{category.name}</span>
+                                    <IoIosCloseCircleOutline className="remove-icon" onClick={() => handleRemoveCategoryFromSelectedCategoriesList(category)} />
+                                </div>
+                            </div>)}
+                        </div> : <p className="bg-danger p-2 m-0 text-white mb-4">
+                            <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
+                            <span>Sorry, Can't Find Any Categories Added To The Selected Categories List !!</span>
+                        </p>}
                         <section className="discount mb-4">
                             <input
                                 type="text"
