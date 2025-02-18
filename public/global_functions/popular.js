@@ -11,7 +11,7 @@ const getProductsCount = async (filters) => {
 
 const getAllProductsInsideThePage = async (pageNumber, pageSize, filters, sortDetails) => {
     try {
-        return ( await axios.get(`${process.env.BASE_API_URL}/products/all-products-inside-the-page?pageNumber=${pageNumber}&pageSize=${pageSize}&language=${process.env.defaultLanguage}&${filters ? filters : ""}&${sortDetails ? sortDetails : ""}`)).data;
+        return (await axios.get(`${process.env.BASE_API_URL}/products/all-products-inside-the-page?pageNumber=${pageNumber}&pageSize=${pageSize}&language=${process.env.defaultLanguage}&${filters ? filters : ""}&${sortDetails ? sortDetails : ""}`)).data;
     }
     catch (err) {
         throw err;
@@ -150,14 +150,14 @@ const getDateInUTCFormat = (localTimeAndDateAsString) => {
 }
 
 async function getAdminInfo() {
-    try{
+    try {
         return (await axios.get(`${process.env.BASE_API_URL}/admins/user-info?language=${process.env.defaultLanguage}`, {
             headers: {
                 Authorization: localStorage.getItem(process.env.adminTokenNameInLocalStorage),
             },
         })).data;
     }
-    catch(err) {
+    catch (err) {
         throw err;
     }
 }

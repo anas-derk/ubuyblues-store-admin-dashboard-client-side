@@ -5,12 +5,11 @@ import axios from "axios";
 import LoaderPage from "@/components/LoaderPage";
 import ErrorOnLoadingThePage from "@/components/ErrorOnLoadingThePage";
 import AdminPanelHeader from "@/components/AdminPanelHeader";
-import { getAdminInfo, getAllCategoriesWithHierarechy, getProductInfo } from "../../../../../public/global_functions/popular";
+import { getAdminInfo, getAllCategoriesInsideThePage, getProductInfo } from "../../../../../public/global_functions/popular";
 import { useRouter } from "next/router";
 import { HiOutlineBellAlert } from "react-icons/hi2";
-import NotFoundError from "@/components/NotFoundError";
-import CategoriesTree from "@/components/CategoryTree";
 import { inputValuesValidation } from "../../../../../public/global_functions/validations";
+import { IoIosCloseCircleOutline } from "react-icons/io";
 
 export default function UpdateProductCategories({ productIdAsProperty }) {
 
@@ -20,7 +19,11 @@ export default function UpdateProductCategories({ productIdAsProperty }) {
 
     const [adminInfo, setAdminInfo] = useState({});
 
-    const [allCategories, setAllCategories] = useState([]);
+    const [searchedCategoryName, setSearchedCategoryName] = useState("");
+
+    const [searchedCategories, setSearchedCategories] = useState([]);
+
+    const [selectedCategories, setSelectedCategories] = useState([]);
 
     const [productData, setProductData] = useState({});
 
@@ -55,8 +58,8 @@ export default function UpdateProductCategories({ productIdAsProperty }) {
                             setAdminInfo(adminDetails);
                             const tempFilters = { ...filters, storeId: adminDetails.storeId };
                             setFilters(tempFilters);
-                            setProductData((await getProductInfo(productIdAsProperty)).data.productDetails);
-                            setAllCategories((await getAllCategoriesWithHierarechy(getFilteringString(tempFilters))).data);
+                            result = (await getProductInfo(productIdAsProperty)).data.productDetails;
+                            setProductData(result);
                             setIsLoadingPage(false);
                         }
                     }
@@ -73,13 +76,6 @@ export default function UpdateProductCategories({ productIdAsProperty }) {
                 });
         } else router.replace("/login");
     }, []);
-
-    const getFilteringString = (filters) => {
-        let filteringString = "";
-        if (filters.storeId) filteringString += `storeId=${filters.storeId}&`;
-        if (filteringString) filteringString = filteringString.substring(0, filteringString.length - 1);
-        return filteringString;
-    }
 
     const updateProductCategories = async (e) => {
         try {
@@ -138,10 +134,38 @@ export default function UpdateProductCategories({ productIdAsProperty }) {
         }
     }
 
-    const handleSelectCategory = (categoryId, isChecked) => {
-        setProductData((data) => {
-            return isChecked ? { ...data, categories: [...productData.categories, categoryId] } : { ...data, categories: productData.categories.filter((id) => id !== categoryId) };
-        });
+    const handleGetCategoriesByName = async (e) => {
+        try {
+            setWaitMsg("Please Waiting To Get Categories ...");
+            const searchedCategoryName = e.target.value;
+            setSearchedCategoryName(searchedCategoryName);
+            if (searchedCategoryName) {
+                setSearchedCategories((await getAllCategoriesInsideThePage(1, 1000, `storeId=${adminInfo.storeId}&name=${searchedCategoryName}`)).data.categories);
+            } else {
+                setSearchedCategories([]);
+            }
+            setWaitMsg("");
+        }
+        catch (err) {
+            setWaitMsg("");
+            setErrorMsg(err?.message === "Network Error" ? "Network Error On Search !!" : "Sorry, Someting Went Wrong, Please Repeate The Search !!");
+            let errorTimeout = setTimeout(() => {
+                setErrorMsg("");
+                clearTimeout(errorTimeout);
+            }, 1500);
+        }
+    }
+
+    const handleSelectCategory = (selectedCategory) => {
+        if ((productData.categories.filter((category) => category._id !== selectedCategory._id)).length === productData.categories.length) {
+            setSearchedCategories(searchedCategories.filter((category) => category._id !== selectedCategory._id));
+            setProductData({ ...productData, categories: [...productData.categories, selectedCategory] })
+        }
+    }
+
+    const handleRemoveCategoryFromSelectedCategoriesList = (category) => {
+        setProductData({ ...productData, categories: productData.categories.filter((selectedCategory) => category._id !== selectedCategory._id) });
+        if (searchedCategoryName) setSearchedCategories([...searchedCategories, category]);
     }
 
     return (
@@ -156,19 +180,40 @@ export default function UpdateProductCategories({ productIdAsProperty }) {
                         <PiHandWavingThin className="me-2" />
                         Hi, Mr {adminInfo.firstName + " " + adminInfo.lastName} In Your Update Product Categories Page
                     </h1>
-                    {allCategories.length > 0 ? <form className="update-product-categories-form admin-dashbboard-form" onSubmit={updateProductCategories}>
+                    <form className="update-product-categories-form admin-dashbboard-form" onSubmit={updateProductCategories}>
                         <section className="category mb-4 overflow-auto">
                             <h6 className="mb-3 fw-bold">Please Select Categories</h6>
-                            <CategoriesTree
-                                categories={allCategories}
-                                selectedCategories={productData.categories.map((selectedCategory) => selectedCategory._id)}
-                                handleSelectCategory={handleSelectCategory}
-                            />
-                            {formValidationErrors["categories"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                <span>{formValidationErrors["categories"]}</span>
-                            </p>}
+                            <div className="select-categories-box select-box">
+                                <input
+                                    type="text"
+                                    className="search-box form-control p-2 border-2 mb-4"
+                                    placeholder="Please Enter Category Name Or Part Of This"
+                                    onChange={handleGetCategoriesByName}
+                                />
+                                <ul className={`categories-list options-list bg-white border ${formValidationErrors["categories"] ? "border-danger mb-4" : "border-dark"}`}>
+                                    <li className="text-center fw-bold border-bottom border-2 border-dark">Seached Categories List</li>
+                                    {searchedCategories.length > 0 && searchedCategories.map((category) => (
+                                        <li key={category._id} onClick={() => handleSelectCategory(category)}>{category.name}</li>
+                                    ))}
+                                </ul>
+                                {searchedCategories.length === 0 && searchedCategoryName && <p className="alert alert-danger mt-4">Sorry, Can't Find Any Related Categories Match This Name !!</p>}
+                                {formValidationErrors["categories"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
+                                    <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
+                                    <span>{formValidationErrors["categories"]}</span>
+                                </p>}
+                            </div>
                         </section>
+                        {productData.categories.length > 0 ? <div className="selected-categories row mb-4">
+                            {productData.categories.map((category) => <div className="col-md-4 mb-3" key={category._id}>
+                                <div className="selected-category-box bg-white p-2 border border-2 border-dark text-center">
+                                    <span className="me-2 category-name">{category.name}</span>
+                                    <IoIosCloseCircleOutline className="remove-icon" onClick={() => handleRemoveCategoryFromSelectedCategoriesList(category)} />
+                                </div>
+                            </div>)}
+                        </div> : <p className="bg-danger p-2 m-0 text-white mb-4">
+                            <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
+                            <span>Sorry, Can't Find Any Categories Added To The Selected Categories List !!</span>
+                        </p>}
                         {!waitMsg && !successMsg && !errorMsg && <button
                             type="submit"
                             className="btn btn-success w-50 d-block mx-auto p-2 global-button"
@@ -196,7 +241,7 @@ export default function UpdateProductCategories({ productIdAsProperty }) {
                         >
                             {successMsg}
                         </button>}
-                    </form> : <NotFoundError errorMsg="Sorry, Not Found Any Categories !!, Please Enter At Least One Category ..." />}
+                    </form>
                 </div>
             </>}
             {isLoadingPage && !errorMsgOnLoadingThePage && <LoaderPage />}
