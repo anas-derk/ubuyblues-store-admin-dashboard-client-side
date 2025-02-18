@@ -7,10 +7,10 @@ import LoaderPage from "@/components/LoaderPage";
 import AdminPanelHeader from "@/components/AdminPanelHeader";
 import { HiOutlineBellAlert } from "react-icons/hi2";
 import { useRouter } from "next/router";
-import { inputValuesValidation } from "../../../../public/global_functions/validations";
-import { getAdminInfo, getAllCategoriesInsideThePage } from "../../../../public/global_functions/popular";
+import { inputValuesValidation } from "../../../../../public/global_functions/validations";
+import { getAdminInfo, getAllCategoriesInsideThePage } from "../../../../../public/global_functions/popular";
 
-export default function AddNewCategory() {
+export default function UpdateCategoryParent({ categoryIdAsProperty }) {
 
     const [isLoadingPage, setIsLoadingPage] = useState(true);
 
@@ -18,13 +18,11 @@ export default function AddNewCategory() {
 
     const [adminInfo, setAdminInfo] = useState({});
 
+    const [categoryInfo, setCategoryInfo] = useState({});
+
     const [searchedCategories, setSearchedCategories] = useState([]);
 
-    const [categoryName, setCategoryName] = useState("");
-
     const [searchedCategoryParent, setSearchedCategoryParent] = useState("");
-
-    const [selectedCategoryParent, setSelectedCategoryParent] = useState("");
 
     const [waitMsg, setWaitMsg] = useState(false);
 
@@ -57,6 +55,7 @@ export default function AddNewCategory() {
                             await router.replace("/login");
                         } else {
                             setAdminInfo(adminDetails);
+                            setCategoryInfo((await getCategoryInfo()).data);
                             setIsLoadingPage(false);
                         }
                     }
@@ -73,6 +72,15 @@ export default function AddNewCategory() {
                 });
         } else router.replace("/login");
     }, []);
+
+    const getCategoryInfo = async () => {
+        try {
+            return (await axios.get(`${process.env.BASE_API_URL}/categories/category-info/${categoryIdAsProperty}`)).data;
+        }
+        catch (err) {
+            throw err;
+        }
+    }
 
     const getFilteringString = (filters) => {
         let filteringString = "";
@@ -104,26 +112,23 @@ export default function AddNewCategory() {
     }
 
     const handleSelectCategoryParent = (categoryParent) => {
-        setSelectedCategoryParent(categoryParent ? categoryParent : { name: "No Parent", _id: "" });
+        if (categoryParent) {
+            if (categoryParent._id !== categoryInfo._id) {
+                setCategoryInfo({ ...categoryInfo, parent: categoryParent });
+            }
+        } else {
+            setCategoryInfo({ ...categoryInfo, parent: { name: "No Parent", _id: "" } });
+        }
     }
 
-    const addNewCategory = async (e) => {
+    const updateCategoryParent = async (e) => {
         try {
             e.preventDefault();
             setFormValidationErrors({});
             const errorsObject = inputValuesValidation([
                 {
-                    name: "categoryName",
-                    value: categoryName,
-                    rules: {
-                        isRequired: {
-                            msg: "Sorry, This Field Can't Be Empty !!",
-                        },
-                    },
-                },
-                {
                     name: "categoryParent",
-                    value: selectedCategoryParent,
+                    value: categoryInfo.parent,
                     rules: {
                         isRequired: {
                             msg: "Sorry, This Field Can't Be Empty !!",
@@ -133,10 +138,9 @@ export default function AddNewCategory() {
             ]);
             setFormValidationErrors(errorsObject);
             if (Object.keys(errorsObject).length == 0) {
-                setWaitMsg("Please Waiting To Add New Category ...");
-                const result = (await axios.post(`${process.env.BASE_API_URL}/categories/add-new-category?language=${process.env.defaultLanguage}`, {
-                    name: categoryName,
-                    parent: selectedCategoryParent._id,
+                setWaitMsg("Please Waiting To Update Category Parent ...");
+                const result = (await axios.put(`${process.env.BASE_API_URL}/categories/${categoryIdAsProperty}?language=${process.env.defaultLanguage}`, {
+                    parent: categoryInfo.parent?._id ? categoryInfo.parent?._id : null,
                 }, {
                     headers: {
                         Authorization: localStorage.getItem(process.env.adminTokenNameInLocalStorage),
@@ -147,15 +151,13 @@ export default function AddNewCategory() {
                     setSuccessMsg(result.msg);
                     let successTimeout = setTimeout(() => {
                         setSuccessMsg("");
-                        setCategoryName("");
-                        setSearchedCategories([...searchedCategories, result.data]);
+                        setSearchedCategories(searchedCategories.filter((category) => category._id !== categoryInfo.parent._id));
                         clearTimeout(successTimeout);
                     }, 1500);
                 } else {
                     setErrorMsg(result.msg);
                     let errorTimeout = setTimeout(() => {
                         setErrorMsg("");
-                        setCategoryName("");
                         clearTimeout(errorTimeout);
                     }, 1500);
                 }
@@ -180,32 +182,20 @@ export default function AddNewCategory() {
     return (
         <div className="add-new-cateogry admin-dashboard">
             <Head>
-                <title>{process.env.storeName} Admin Dashboard - Add New Category</title>
+                <title>{process.env.storeName} Admin Dashboard - Update Category Parent</title>
             </Head>
             {!isLoadingPage && !errorMsgOnLoadingThePage && <>
                 <AdminPanelHeader isWebsiteOwner={adminInfo.isWebsiteOwner} isMerchant={adminInfo.isMerchant} />
                 <div className="page-content d-flex justify-content-center align-items-center flex-column p-4">
                     <h1 className="fw-bold w-fit pb-2 mb-3">
                         <PiHandWavingThin className="me-2" />
-                        Hi, Mr {adminInfo.firstName + " " + adminInfo.lastName} In Your Add New Category Page
+                        Hi, Mr {adminInfo.firstName + " " + adminInfo.lastName} In Your Update Category Parent Page
                     </h1>
-                    <form className="add-new-category-form admin-dashbboard-form" onSubmit={addNewCategory}>
-                        <section className="category-name mb-4">
-                            <input
-                                type="text"
-                                className={`form-control p-2 border-2 category-name-field ${formValidationErrors["categoryName"] ? "border-danger mb-3" : "mb-4"}`}
-                                placeholder="Please Enter Category Name"
-                                onChange={(e) => setCategoryName(e.target.value)}
-                                value={categoryName}
-                            />
-                            {formValidationErrors["categoryName"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                <span>{formValidationErrors["categoryName"]}</span>
-                            </p>}
-                        </section>
+                    <h4 className="fw-bold mb-4 border border-3 border-dark p-3 bg-secondary text-white">Category Name: {categoryInfo.name}</h4>
+                    <form className="add-new-category-form admin-dashbboard-form" onSubmit={updateCategoryParent}>
                         <section className="category-parent mb-4">
-                            <h6 className="fw-bold mb-3">Please Select Category Parent</h6>
-                            {selectedCategoryParent.name && <h6 className="bg-secondary p-3 mb-4 text-white border border-2 border-dark">Category Parent: {selectedCategoryParent.name}</h6>}
+                            <h6 className="fw-bold mb-3">Please Select New Category Parent</h6>
+                            <h6 className="bg-secondary p-3 mb-4 text-white border border-2 border-dark">Category Parent: {categoryInfo.parent?.name ? categoryInfo.parent.name : "No Parent"}</h6>
                             <div className="select-category-box select-box mb-4">
                                 <input
                                     type="text"
@@ -217,8 +207,7 @@ export default function AddNewCategory() {
                                     <li onClick={() => handleSelectCategoryParent("")}>No Parent</li>
                                     {searchedCategories.length > 0 && searchedCategories.map((category) => (
                                         <li key={category._id} onClick={() => handleSelectCategoryParent(category)}>{category.name}</li>
-                                    ))
-                                    }
+                                    ))}
                                 </ul>
                                 {searchedCategories.length === 0 && searchedCategoryParent && <p className="alert alert-danger mt-4">Sorry, Can't Find Any Category Parent Match This Name !!</p>}
                                 {formValidationErrors["categoryParent"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
@@ -231,7 +220,7 @@ export default function AddNewCategory() {
                             type="submit"
                             className="btn btn-success w-50 d-block mx-auto p-2 global-button"
                         >
-                            Add Now
+                            Update Now
                         </button>}
                         {waitMsg && <button
                             type="button"
@@ -261,4 +250,22 @@ export default function AddNewCategory() {
             {errorMsgOnLoadingThePage && <ErrorOnLoadingThePage errorMsg={errorMsgOnLoadingThePage} />}
         </div>
     );
+}
+
+export async function getServerSideProps({ params }) {
+    const { categoryId } = params;
+    if (!categoryId) {
+        return {
+            redirect: {
+                permanent: false,
+                destination: "/products-managment/update-and-delete-products",
+            },
+        }
+    } else {
+        return {
+            props: {
+                categoryIdAsProperty: categoryId,
+            },
+        }
+    }
 }

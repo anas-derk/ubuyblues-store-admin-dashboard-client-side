@@ -12,6 +12,7 @@ import { getAdminInfo, getCategoriesCount, getAllCategoriesInsideThePage, getAll
 import { HiOutlineBellAlert } from "react-icons/hi2";
 import NotFoundError from "@/components/NotFoundError";
 import TableLoader from "@/components/TableLoader";
+import Link from "next/link";
 
 export default function UpdateAndDeleteCategories() {
 
@@ -188,23 +189,6 @@ export default function UpdateAndDeleteCategories() {
         setAllCategoriesInsideThePage(categoriesTemp);
     }
 
-    const handleSearchOfCategoryParent = (categoryIndex, categoryParent) => {
-        const tempAllCategoriesInsideThePage = allCategoriesInsideThePage.map((category) => category);
-        if (categoryParent) {
-            tempAllCategoriesInsideThePage[categoryIndex].filteredCategories = tempAllCategoriesInsideThePage[categoryIndex].filteredCategories.filter((category) => category.name.toLowerCase().startsWith(categoryParent.toLowerCase()));
-            setAllCategoriesInsideThePage(tempAllCategoriesInsideThePage);
-        } else {
-            tempAllCategoriesInsideThePage[categoryIndex].filteredCategories = tempAllCategoriesInsideThePage[categoryIndex].allCategoriesWithoutOriginalCategory;
-            setAllCategoriesInsideThePage(tempAllCategoriesInsideThePage);
-        }
-    }
-
-    const handleSelectCategoryParent = (categoryIndex, categoryParent) => {
-        let tempAllCategoriesInsideThePage = allCategoriesInsideThePage.map((category) => category);
-        tempAllCategoriesInsideThePage[categoryIndex].parent = categoryParent?.name ? categoryParent : { name: "No Parent", _id: "" };
-        setAllCategoriesInsideThePage(tempAllCategoriesInsideThePage);
-    }
-
     const updateCategory = async (categoryIndex) => {
         try {
             setFormValidationErrors({});
@@ -349,27 +333,7 @@ export default function UpdateAndDeleteCategories() {
                                             </section>
                                         </td>
                                         <td className="category-parent-cell">
-                                            {allCategoriesInsideThePage[categoryIndex].parent?._id ? <h6 className="bg-info p-2 fw-bold mb-4">{allCategoriesInsideThePage[categoryIndex].parent.name}</h6> : <h6 className="bg-danger p-2 mb-4 text-white">No Parent</h6>}
-                                            <div className="select-category-box select-box mb-4">
-                                                <input
-                                                    type="text"
-                                                    className="search-box form-control p-2 border-2 mb-4"
-                                                    placeholder="Please Enter Category Parent Name Or Part Of This"
-                                                    onChange={(e) => handleSearchOfCategoryParent(categoryIndex, e.target.value)}
-                                                />
-                                                <ul className={`categories-list options-list bg-white border ${formValidationErrors["categoryParent"] ? "border-danger mb-4" : "border-dark"}`}>
-                                                    {category.filteredCategories.length > 0 ? <>
-                                                        <li onClick={() => handleSelectCategoryParent(categoryIndex, {})}>No Parent</li>
-                                                        {category.filteredCategories.map((category) => (
-                                                            <li key={category._id} onClick={() => handleSelectCategoryParent(categoryIndex, category)}>{category.name}</li>
-                                                        ))}
-                                                    </> : <li>Sorry, Can't Find Any Category Parent Match This Name !!</li>}
-                                                </ul>
-                                                {formValidationErrors["categoryParent"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                                    <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                                    <span>{formValidationErrors["categoryParent"]}</span>
-                                                </p>}
-                                            </div>
+                                            {category.parent?._id ? <h6 className="bg-info p-2 fw-bold mb-4">{category.parent.name}</h6> : <h6 className="bg-danger p-2 mb-4 text-white">No Parent</h6>}
                                         </td>
                                         <td className="update-cell">
                                             {selectedCategoryIndex !== categoryIndex && <>
@@ -377,6 +341,12 @@ export default function UpdateAndDeleteCategories() {
                                                     className="btn btn-success d-block mb-3 mx-auto global-button"
                                                     onClick={() => updateCategory(categoryIndex)}
                                                 >Update</button>
+                                                <hr />
+                                                <Link
+                                                    href={`/categories-managment/update-category-parent/${category._id}`}
+                                                    className="btn btn-success d-block mb-3 mx-auto global-button"
+                                                    onClick={() => updateCategory(categoryIndex)}
+                                                >Change Parent</Link>
                                                 <hr />
                                                 <button
                                                     className="btn btn-danger global-button"
