@@ -6,7 +6,7 @@ import LoaderPage from "@/components/LoaderPage";
 import ErrorOnLoadingThePage from "@/components/ErrorOnLoadingThePage";
 import AdminPanelHeader from "@/components/AdminPanelHeader";
 import { inputValuesValidation } from "../../../../public/global_functions/validations";
-import { getAdminInfo, getAllCategoriesInsideThePage, getAllCategoriesWithHierarechy } from "../../../../public/global_functions/popular";
+import { getAdminInfo, getAllCategoriesInsideThePage, getAllCategoriesWithHierarechy, getCategoriesCount } from "../../../../public/global_functions/popular";
 import { useRouter } from "next/router";
 import { HiOutlineBellAlert } from "react-icons/hi2";
 import { countries } from "countries-list";
@@ -22,7 +22,7 @@ export default function AddNewProduct() {
 
     const [adminInfo, setAdminInfo] = useState({});
 
-    const [allCategories, setAllCategories] = useState([]);
+    const [categoriesCount, setCategoriesCount] = useState([]);
 
     const [productData, setProductData] = useState({
         name: "",
@@ -88,7 +88,7 @@ export default function AddNewProduct() {
                             setAdminInfo(adminDetails);
                             const tempFilters = { ...filters, storeId: adminDetails.storeId };
                             setFilters(tempFilters);
-                            setAllCategories((await getAllCategoriesWithHierarechy(getFilteringString(tempFilters))).data);
+                            setCategoriesCount((await getCategoriesCount(getFilteringString(tempFilters))).data);
                             setIsLoadingPage(false);
                         }
                     }
@@ -357,7 +357,7 @@ export default function AddNewProduct() {
                         <PiHandWavingThin className="me-2" />
                         Hi, Mr {adminInfo.firstName + " " + adminInfo.lastName} In Your Add New Product Page
                     </h1>
-                    {allCategories.length > 0 ? <form className="add-new-product-form admin-dashbboard-form" onSubmit={(e) => addNewProduct(e, productData)}>
+                    {categoriesCount > 0 ? <form className="add-new-product-form admin-dashbboard-form" onSubmit={(e) => addNewProduct(e, productData)}>
                         <section className="name mb-4">
                             <input
                                 type="text"

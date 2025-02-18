@@ -23,8 +23,6 @@ export default function UpdateProductCategories({ productIdAsProperty }) {
 
     const [searchedCategories, setSearchedCategories] = useState([]);
 
-    const [selectedCategories, setSelectedCategories] = useState([]);
-
     const [productData, setProductData] = useState({});
 
     const [waitMsg, setWaitMsg] = useState("");

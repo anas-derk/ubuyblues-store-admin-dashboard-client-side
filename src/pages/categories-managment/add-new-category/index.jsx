@@ -8,7 +8,7 @@ import AdminPanelHeader from "@/components/AdminPanelHeader";
 import { HiOutlineBellAlert } from "react-icons/hi2";
 import { useRouter } from "next/router";
 import { inputValuesValidation } from "../../../../public/global_functions/validations";
-import { getAdminInfo, getAllCategories } from "../../../../public/global_functions/popular";
+import { getAdminInfo, getAllCategories, getAllCategoriesInsideThePage } from "../../../../public/global_functions/popular";
 
 export default function AddNewCategory() {
 
@@ -18,9 +18,7 @@ export default function AddNewCategory() {
 
     const [adminInfo, setAdminInfo] = useState({});
 
-    const [allCategories, setAllCategories] = useState([]);
-
-    const [filteredCategories, setFilteredCategories] = useState([]);
+    const [searchedCategories, setSearchedCategories] = useState([]);
 
     const [categoryName, setCategoryName] = useState("");
 
@@ -54,9 +52,6 @@ export default function AddNewCategory() {
                         const adminDetails = result.data;
                         const tempFilters = { storeId: adminDetails.storeId };
                         setFilters(tempFilters);
-                        const tempAllCategories = (await getAllCategories(getFilteringString(tempFilters))).data;
-                        setAllCategories(tempAllCategories);
-                        setFilteredCategories(tempAllCategories);
                         if (adminDetails.isBlocked) {
                             localStorage.removeItem(process.env.adminTokenNameInLocalStorage);
                             await router.replace("/login");
@@ -86,13 +81,25 @@ export default function AddNewCategory() {
         return filteringString;
     }
 
-    const handleSearchOfCategoryParent = (e) => {
-        const searchedCategoryParent = e.target.value;
-        setSearchedCategoryParent(searchedCategoryParent);
-        if (searchedCategoryParent) {
-            setFilteredCategories(filteredCategories.filter((category) => category.name.toLowerCase().startsWith(searchedCategoryParent.toLowerCase())));
-        } else {
-            setFilteredCategories(allCategories);
+    const handleSearchOfCategoryParent = async (e) => {
+        try {
+            setWaitMsg("Please Waiting To Get Categories ...");
+            const searchedCategoryName = e.target.value;
+            setSearchedCategoryParent(searchedCategoryName);
+            if (searchedCategoryName) {
+                setSearchedCategories((await getAllCategoriesInsideThePage(1, 1000, getFilteringString(filters))).data.categories);
+            } else {
+                setSearchedCategories([]);
+            }
+            setWaitMsg("");
+        }
+        catch (err) {
+            setWaitMsg("");
+            setErrorMsg(err?.message === "Network Error" ? "Network Error On Search !!" : "Sorry, Someting Went Wrong, Please Repeate The Search !!");
+            let errorTimeout = setTimeout(() => {
+                setErrorMsg("");
+                clearTimeout(errorTimeout);
+            }, 1500);
         }
     }
 
@@ -141,7 +148,7 @@ export default function AddNewCategory() {
                     let successTimeout = setTimeout(() => {
                         setSuccessMsg("");
                         setCategoryName("");
-                        setAllCategories([...allCategories, result.data]);
+                        setSearchedCategories([...searchedCategories, result.data]);
                         clearTimeout(successTimeout);
                     }, 1500);
                 } else {
@@ -208,12 +215,12 @@ export default function AddNewCategory() {
                                 />
                                 <ul className={`categories-list options-list bg-white border ${formValidationErrors["categoryParent"] ? "border-danger mb-4" : "border-dark"}`}>
                                     <li onClick={() => handleSelectCategoryParent("")}>No Parent</li>
-                                    {filteredCategories.length > 0 && filteredCategories.map((category) => (
+                                    {searchedCategories.length > 0 && searchedCategories.map((category) => (
                                         <li key={category} onClick={() => handleSelectCategoryParent(category)}>{category.name}</li>
                                     ))
                                     }
                                 </ul>
-                                {filteredCategories.length === 0 && searchedCategoryParent && <p className="alert alert-danger mt-4">Sorry, Can't Find Any Category Parent Match This Name !!</p>}
+                                {searchedCategories.length === 0 && searchedCategoryParent && <p className="alert alert-danger mt-4">Sorry, Can't Find Any Category Parent Match This Name !!</p>}
                                 {formValidationErrors["categoryParent"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
                                     <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
                                     <span>{formValidationErrors["categoryParent"]}</span>
