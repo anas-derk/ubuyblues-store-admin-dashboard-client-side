@@ -8,7 +8,7 @@ import AdminPanelHeader from "@/components/AdminPanelHeader";
 import { useRouter } from "next/router";
 import PaginationBar from "@/components/PaginationBar";
 import { inputValuesValidation } from "../../../../public/global_functions/validations";
-import { getAdminInfo, getCategoriesCount, getAllCategoriesInsideThePage, getAllCategories } from "../../../../public/global_functions/popular";
+import { getAdminInfo, getAllCategoriesInsideThePage, getAllCategories } from "../../../../public/global_functions/popular";
 import { HiOutlineBellAlert } from "react-icons/hi2";
 import NotFoundError from "@/components/NotFoundError";
 import TableLoader from "@/components/TableLoader";
@@ -23,8 +23,6 @@ export default function UpdateAndDeleteCategories() {
     const [adminInfo, setAdminInfo] = useState({});
 
     const [isGetCategories, setIsGetCategories] = useState(false);
-
-    const [allCategories, setAllCategories] = useState([]);
 
     const [allCategoriesInsideThePage, setAllCategoriesInsideThePage] = useState([]);
 
@@ -70,15 +68,7 @@ export default function UpdateAndDeleteCategories() {
                             setAdminInfo(adminDetails);
                             const tempFilters = { storeId: adminDetails.storeId };
                             setFilters(tempFilters);
-                            const filtersAsQuery = getFiltersAsQuery(tempFilters);
-                            const tempAllCategories = (await getAllCategories(1, pageSize, filtersAsQuery)).data;
-                            result = (await getAllCategoriesInsideThePage(1, pageSize, filtersAsQuery)).data;
-                            result.categories.forEach((categoryData) => {
-                                const filteredCategories = tempAllCategories.filter((category) => category._id !== categoryData._id);
-                                categoryData.filteredCategories = filteredCategories;
-                                categoryData.allCategoriesWithoutOriginalCategory = filteredCategories;
-                            });
-                            setAllCategories(tempAllCategories);
+                            result = (await getAllCategoriesInsideThePage(1, pageSize, getFiltersAsQuery(tempFilters))).data;
                             setAllCategoriesInsideThePage(result.categories);
                             setTotalPagesCount(Math.ceil(result.categoriesCount / pageSize));
                             setIsLoadingPage(false);
@@ -110,13 +100,7 @@ export default function UpdateAndDeleteCategories() {
             setIsGetCategories(true);
             setErrorMsgOnGetCategoriesData("");
             const newCurrentPage = currentPage - 1;
-            const tempAllCategoriesInsideThePage = (await getAllCategoriesInsideThePage(newCurrentPage, pageSize, getFiltersAsQuery(filters))).data.categories;
-            tempAllCategoriesInsideThePage.forEach((categoryData) => {
-                const filteredCategories = allCategories.filter((category) => category._id !== categoryData._id);
-                categoryData.filteredCategories = filteredCategories;
-                categoryData.allCategoriesWithoutOriginalCategory = filteredCategories;
-            });
-            setAllCategoriesInsideThePage(tempAllCategoriesInsideThePage);
+            setAllCategoriesInsideThePage((await getAllCategoriesInsideThePage(newCurrentPage, pageSize, getFiltersAsQuery(filters))).data.categories);
             setCurrentPage(newCurrentPage);
             setIsGetCategories(false);
         }
@@ -136,13 +120,7 @@ export default function UpdateAndDeleteCategories() {
             setIsGetCategories(true);
             setErrorMsgOnGetCategoriesData("");
             const newCurrentPage = currentPage + 1;
-            const tempAllCategoriesInsideThePage = (await getAllCategoriesInsideThePage(newCurrentPage, pageSize, getFiltersAsQuery(filters))).data.categories;
-            tempAllCategoriesInsideThePage.forEach((categoryData) => {
-                const filteredCategories = allCategories.filter((category) => category._id !== categoryData._id);
-                categoryData.filteredCategories = filteredCategories;
-                categoryData.allCategoriesWithoutOriginalCategory = filteredCategories;
-            });
-            setAllCategoriesInsideThePage(tempAllCategoriesInsideThePage);
+            setAllCategoriesInsideThePage((await getAllCategoriesInsideThePage(newCurrentPage, pageSize, getFiltersAsQuery(filters))).data.categories);
             setCurrentPage(newCurrentPage);
             setIsGetCategories(false);
         }
@@ -161,13 +139,7 @@ export default function UpdateAndDeleteCategories() {
         try {
             setIsGetCategories(true);
             setErrorMsgOnGetCategoriesData("");
-            const tempAllCategoriesInsideThePage = (await getAllCategoriesInsideThePage(pageNumber, pageSize, getFiltersAsQuery(filters))).data.categories;
-            tempAllCategoriesInsideThePage.forEach((categoryData) => {
-                const filteredCategories = allCategories.filter((category) => category._id !== categoryData._id);
-                categoryData.filteredCategories = filteredCategories;
-                categoryData.allCategoriesWithoutOriginalCategory = filteredCategories;
-            });
-            setAllCategoriesInsideThePage(tempAllCategoriesInsideThePage);
+            setAllCategoriesInsideThePage((await getAllCategoriesInsideThePage(newCurrentPage, pageSize, getFiltersAsQuery(filters))).data.categories);
             setCurrentPage(pageNumber);
             setIsGetCategories(false);
         }
@@ -345,7 +317,6 @@ export default function UpdateAndDeleteCategories() {
                                                 <Link
                                                     href={`/categories-managment/update-category-parent/${category._id}`}
                                                     className="btn btn-success d-block mb-3 mx-auto global-button"
-                                                    onClick={() => updateCategory(categoryIndex)}
                                                 >Change Parent</Link>
                                                 <hr />
                                                 <button
