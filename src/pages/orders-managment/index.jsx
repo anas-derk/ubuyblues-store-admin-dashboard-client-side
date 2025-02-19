@@ -105,19 +105,6 @@ export default function OrdersManagment() {
         return filteringString;
     }
 
-    const getOrdersCount = async (filters) => {
-        try {
-            return (await axios.get(`${process.env.BASE_API_URL}/orders/orders-count?language=${process.env.defaultLanguage}&${filters ? filters : ""}`, {
-                headers: {
-                    Authorization: localStorage.getItem(process.env.adminTokenNameInLocalStorage)
-                }
-            })).data;
-        }
-        catch (err) {
-            throw err;
-        }
-    }
-
     const getAllOrdersInsideThePage = async (pageNumber, pageSize, filters) => {
         try {
             return (await axios.get(`${process.env.BASE_API_URL}/orders/all-orders-inside-the-page?pageNumber=${pageNumber}&pageSize=${pageSize}&language=${process.env.defaultLanguage}&${filters ? filters : ""}`, {

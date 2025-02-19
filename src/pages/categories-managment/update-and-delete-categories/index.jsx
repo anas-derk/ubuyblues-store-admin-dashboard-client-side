@@ -8,7 +8,7 @@ import AdminPanelHeader from "@/components/AdminPanelHeader";
 import { useRouter } from "next/router";
 import PaginationBar from "@/components/PaginationBar";
 import { inputValuesValidation } from "../../../../public/global_functions/validations";
-import { getAdminInfo, getAllCategoriesInsideThePage, getAllCategories } from "../../../../public/global_functions/popular";
+import { getAdminInfo, getAllCategoriesInsideThePage } from "../../../../public/global_functions/popular";
 import { HiOutlineBellAlert } from "react-icons/hi2";
 import NotFoundError from "@/components/NotFoundError";
 import TableLoader from "@/components/TableLoader";
@@ -42,6 +42,7 @@ export default function UpdateAndDeleteCategories() {
 
     const [filters, setFilters] = useState({
         storeId: "",
+        name: ""
     });
 
     const [formValidationErrors, setFormValidationErrors] = useState({});
@@ -91,6 +92,7 @@ export default function UpdateAndDeleteCategories() {
     const getFiltersAsQuery = (filters) => {
         let filteringString = "";
         if (filters.storeId) filteringString += `storeId=${filters.storeId}&`;
+        if (filters.name) filteringString += `name=${filters.name}&`;
         if (filteringString) filteringString = filteringString.substring(0, filteringString.length - 1);
         return filteringString;
     }
@@ -159,6 +161,36 @@ export default function UpdateAndDeleteCategories() {
         let categoriesTemp = allCategoriesInsideThePage.map(category => category);
         categoriesTemp[categoryIndex][fieldName] = newValue;
         setAllCategoriesInsideThePage(categoriesTemp);
+    }
+
+    const filterCategories = async (filters) => {
+        try {
+            setFormValidationErrors({});
+            const errorsObject = inputValuesValidation([]);
+            if (Object.keys(errorsObject).length == 0) {
+                setIsGetCategories(true);
+                setCurrentPage(1);
+                const result = (await getAllCategoriesInsideThePage(1, pageSize, getFiltersAsQuery(filters))).data;
+                setAllCategoriesInsideThePage(result.categories);
+                setTotalPagesCount(Math.ceil(result.categoriesCount / pageSize));
+                setIsGetCategories(false);
+            }
+        }
+        catch (err) {
+            console.log(err);
+            if (err?.response?.status === 401) {
+                localStorage.removeItem(process.env.adminTokenNameInLocalStorage);
+                await router.replace("/login");
+            }
+            else {
+                setIsGetCategories(false);
+                setErrorMsg(err?.message === "Network Error" ? "Network Error" : "Sorry, Someting Went Wrong, Please Repeate The Process !!");
+                let errorTimeout = setTimeout(() => {
+                    setErrorMsg("");
+                    clearTimeout(errorTimeout);
+                }, 1500);
+            }
+        }
     }
 
     const updateCategory = async (categoryIndex) => {
@@ -278,6 +310,37 @@ export default function UpdateAndDeleteCategories() {
                         <PiHandWavingThin className="me-2" />
                         Hi, Mr {adminInfo.firstName + " " + adminInfo.lastName} In Your Update / Delete Categories Page
                     </h1>
+                    <section className="filters mb-3 bg-white border-3 border-info p-3 text-start w-100">
+                        <h5 className="section-name fw-bold text-center">Filters: </h5>
+                        <hr />
+                        <div className="row mb-4">
+                            <div className="col-md-12">
+                                <h6 className="me-2 fw-bold text-center">Name</h6>
+                                <input
+                                    type="text"
+                                    className={`form-control p-2 border-2 category-name-field ${formValidationErrors["categoryName"] ? "border-danger mb-3" : ""}`}
+                                    placeholder="Please Enter Category Name"
+                                    onChange={(e) => setFilters({ ...filters, name: e.target.value })}
+                                />
+                                {formValidationErrors["categoryName"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
+                                    <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
+                                    <span>{formValidationErrors["categoryName"]}</span>
+                                </p>}
+                            </div>
+                        </div>
+                        {!isGetCategories && <button
+                            className="btn btn-success d-block w-25 mx-auto mt-2 global-button"
+                            onClick={async () => await filterCategories(filters)}
+                        >
+                            Filter
+                        </button>}
+                        {isGetCategories && <button
+                            className="btn btn-success d-block w-25 mx-auto mt-2 global-button"
+                            disabled
+                        >
+                            Filtering ...
+                        </button>}
+                    </section>
                     {allCategoriesInsideThePage.length > 0 && !isGetCategories && <section className="categories-box w-100">
                         <table className="users-table mb-4 managment-table bg-white w-100">
                             <thead>
