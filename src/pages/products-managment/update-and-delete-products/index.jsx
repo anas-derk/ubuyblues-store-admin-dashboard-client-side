@@ -33,8 +33,6 @@ export default function UpdateAndDeleteProducts() {
 
     const [isGetProducts, setIsGetProducts] = useState(false);
 
-    const [allCategories, setAllCategories] = useState([]);
-
     const [waitMsg, setWaitMsg] = useState("");
 
     const [selectedProducImageIndex, setSelectedProducImageIndex] = useState(-1);
@@ -59,7 +57,7 @@ export default function UpdateAndDeleteProducts() {
 
     const [filters, setFilters] = useState({
         storeId: "",
-        categoryId: "",
+        category: "",
         name: ""
     });
 
@@ -87,7 +85,6 @@ export default function UpdateAndDeleteProducts() {
                             setAdminInfo(adminDetails);
                             const tempFilters = { ...filters, storeId: adminDetails.storeId };
                             setFilters(tempFilters);
-                            setAllCategories((await getAllCategoriesWithHierarechy(getFilteringString(tempFilters))).data);
                             result = (await getAllProductsInsideThePage(1, pageSize, getFilteringString(tempFilters))).data;
                             setAllProductsInsideThePage(result.products);
                             setTotalPagesCount(Math.ceil(result.productsCount / pageSize));
@@ -169,7 +166,7 @@ export default function UpdateAndDeleteProducts() {
 
     const getFilteringString = (filters) => {
         let filteringString = "";
-        if (filters.categoryId) filteringString += `categoryId=${filters.categoryId}&`;
+        if (filters.category) filteringString += `category=${filters.category}&`;
         if (filters.storeId) filteringString += `storeId=${filters.storeId}&`;
         if (filters.name) filteringString += `name=${filters.name}&`;
         if (filteringString) filteringString = filteringString.substring(0, filteringString.length - 1);
@@ -473,22 +470,22 @@ export default function UpdateAndDeleteProducts() {
                         <div className="row mb-4">
                             <div className="col-md-6">
                                 <h6 className="me-2 fw-bold text-center">Category</h6>
-                                <select
-                                    className="select-product-category form-select"
-                                    onChange={(e) => setFilters({ ...filters, categoryId: e.target.value })}
-                                >
-                                    <option value="" hidden>Pleae Select Category</option>
-                                    <option value="">All</option>
-                                    {allCategories.map((category) => (
-                                        <option value={category._id} key={category._id}>{category.name}</option>
-                                    ))}
-                                </select>
+                                <input
+                                    type="text"
+                                    className={`form-control p-2 border-2 category-name-field ${formValidationErrors["categoryName"] ? "border-danger mb-3" : ""}`}
+                                    placeholder="Please Enter Category Name"
+                                    onChange={(e) => setFilters({ ...filters, category: e.target.value })}
+                                />
+                                {formValidationErrors["categoryName"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
+                                    <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
+                                    <span>{formValidationErrors["categoryName"]}</span>
+                                </p>}
                             </div>
                             <div className="col-md-6">
                                 <h6 className="me-2 fw-bold text-center">Name</h6>
                                 <input
                                     type="text"
-                                    className={`form-control p-2 border-2 category-name-field ${formValidationErrors["productName"] ? "border-danger mb-3" : ""}`}
+                                    className={`form-control p-2 border-2 product-name-field ${formValidationErrors["productName"] ? "border-danger mb-3" : ""}`}
                                     placeholder="Please Enter Product Name"
                                     onChange={(e) => setFilters({ ...filters, name: e.target.value })}
                                 />
