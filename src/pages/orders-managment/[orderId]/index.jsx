@@ -184,7 +184,8 @@ export default function OrderDetails({ orderIdAsProperty }) {
                                         <th>Quantity</th>
                                         <th>Name</th>
                                         <th>Unit Price</th>
-                                        <th>Discount</th>
+                                        <th>Unit Discount</th>
+                                        <th>Total Amount Before Discount</th>
                                         <th>Total</th>
                                         <th>Image</th>
                                         <th>Action</th>
@@ -222,7 +223,10 @@ export default function OrderDetails({ orderIdAsProperty }) {
                                                 />
                                             </td>
                                             <td>
-                                                {orderProduct.discount}
+                                                {orderProduct.totalAmountBeforeDiscount}
+                                            </td>
+                                            <td>
+                                                {orderProduct.unitDiscount}
                                             </td>
                                             <td>
                                                 {orderProduct.totalAmount}
