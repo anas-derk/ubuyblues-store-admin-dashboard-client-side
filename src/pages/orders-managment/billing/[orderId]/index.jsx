@@ -28,11 +28,6 @@ export default function ShowBilling({ orderIdAsProperty, countryAsProperty }) {
 
     const [orderDetails, setOrderDetails] = useState({});
 
-    const [pricesDetailsSummary, setPricesDetailsSummary] = useState({
-        totalPriceBeforeDiscount: 0,
-        totalDiscount: 0,
-    });
-
     const router = useRouter();
 
     const { t, i18n } = useTranslation();
@@ -76,10 +71,6 @@ export default function ShowBilling({ orderIdAsProperty, countryAsProperty }) {
                             result = await getOrderDetails(orderIdAsProperty);
                             if (!result.error) {
                                 setOrderDetails(result.data);
-                                setPricesDetailsSummary({
-                                    totalPriceBeforeDiscount: calcTotalOrderPriceBeforeDiscount(result.data.products),
-                                    totalDiscount: calcTotalOrderDiscount(result.data.products),
-                                });
                             }
                             setIsGetOrderDetails(false);
                         }
@@ -103,22 +94,6 @@ export default function ShowBilling({ orderIdAsProperty, countryAsProperty }) {
             setIsLoadingPage(false);
         }
     }, [isGetOrderDetails]);
-
-    const calcTotalOrderPriceBeforeDiscount = (allProductsData) => {
-        let tempTotalPriceBeforeDiscount = 0;
-        allProductsData.forEach((product) => {
-            tempTotalPriceBeforeDiscount += product.unitPrice * product.quantity;
-        });
-        return tempTotalPriceBeforeDiscount;
-    }
-
-    const calcTotalOrderDiscount = (allProductsData) => {
-        let tempTotalDiscount = 0;
-        allProductsData.forEach((product) => {
-            tempTotalDiscount += product.discount * product.quantity;
-        });
-        return tempTotalDiscount;
-    }
 
     return (
         <div className="billing admin-dashboard page">
@@ -163,10 +138,10 @@ export default function ShowBilling({ orderIdAsProperty, countryAsProperty }) {
                                     {(product.unitPrice * usdPriceAgainstCurrency).toFixed(2)} {t(currencyNameByCountry)}
                                 </div>
                                 <div className="col-md-3 fw-bold p-0">
-                                    {product.discount * usdPriceAgainstCurrency} {t(currencyNameByCountry)}
+                                    {product.unitDiscount * usdPriceAgainstCurrency} {t(currencyNameByCountry)}
                                 </div>
                                 <div className="col-md-3 fw-bold p-0">
-                                    {((product.unitPrice - product.discount) * product.quantity * usdPriceAgainstCurrency).toFixed(2)} {t(currencyNameByCountry)}
+                                    {((product.unitPrice - product.unitDiscount) * product.quantity * usdPriceAgainstCurrency).toFixed(2)} {t(currencyNameByCountry)}
                                 </div>
                             </div>
                         ))}
@@ -175,7 +150,7 @@ export default function ShowBilling({ orderIdAsProperty, countryAsProperty }) {
                                 {t("Total Price Before Discount")}
                             </div>
                             <div className={`col-md-9 fw-bold p-0 ${i18n.language !== "ar" ? "text-md-end" : "text-md-start"}`}>
-                                {(pricesDetailsSummary.totalPriceBeforeDiscount * usdPriceAgainstCurrency).toFixed(2)} {t(currencyNameByCountry)}
+                                {(orderDetails.totalPriceBeforeDiscount * usdPriceAgainstCurrency).toFixed(2)} {t(currencyNameByCountry)}
                             </div>
                         </div>
                         <div className="row total-price-discount total pb-3 mb-5">
@@ -183,7 +158,7 @@ export default function ShowBilling({ orderIdAsProperty, countryAsProperty }) {
                                 {t("Total Discount")}
                             </div>
                             <div className={`col-md-9 fw-bold p-0 ${i18n.language !== "ar" ? "text-md-end" : "text-md-start"}`}>
-                                {(pricesDetailsSummary.totalDiscount * usdPriceAgainstCurrency).toFixed(2)} {t(currencyNameByCountry)}
+                                {(orderDetails.totalDiscount * usdPriceAgainstCurrency).toFixed(2)} {t(currencyNameByCountry)}
                             </div>
                         </div>
                         <div className="row total-price-after-discount total pb-3 mb-5">

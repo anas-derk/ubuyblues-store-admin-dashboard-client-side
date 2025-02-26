@@ -223,13 +223,13 @@ export default function OrderDetails({ orderIdAsProperty }) {
                                                 />
                                             </td>
                                             <td>
-                                                {orderProduct.totalAmountBeforeDiscount}
-                                            </td>
-                                            <td>
                                                 {orderProduct.unitDiscount}
                                             </td>
                                             <td>
-                                                {orderProduct.totalAmount}
+                                                {orderProduct.unitPrice * orderProduct.quantity}
+                                            </td>
+                                            <td>
+                                                {(orderProduct.unitPrice - orderProduct.unitDiscount) * orderProduct.quantity}
                                             </td>
                                             <td>
                                                 <img
