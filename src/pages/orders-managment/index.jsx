@@ -452,19 +452,7 @@ export default function OrdersManagment() {
                                                 </>}
                                             </td>
                                             <td>
-                                                {order.checkoutStatus === "Checkout Successfull" ? <section className="order-total-amount mb-4">
-                                                    <input
-                                                        type="text"
-                                                        defaultValue={order.orderAmount}
-                                                        className={`form-control d-block mx-auto p-2 border-2 brand-title-field ${formValidationErrors["totalAmount"] && orderIndex === selectedOrderIndex ? "border-danger mb-3" : "mb-4"}`}
-                                                        placeholder="Pleae Enter Order Amount"
-                                                        onChange={(e) => changeOrderData(orderIndex, "orderAmount", e.target.value ? e.target.value : "")}
-                                                    />
-                                                    {formValidationErrors["totalAmount"] && orderIndex === selectedOrderIndex && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                                        <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                                        <span>{formValidationErrors["totalAmount"]}</span>
-                                                    </p>}
-                                                </section> : order.orderAmount}
+                                                {order.orderAmount}
                                             </td>
                                             <td>{getDateFormated(order.addedDate)}</td>
                                             <td>
