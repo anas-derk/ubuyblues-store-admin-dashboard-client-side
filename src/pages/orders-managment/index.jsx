@@ -230,49 +230,31 @@ export default function OrdersManagment() {
     const updateOrderData = async (orderIndex) => {
         try {
             setFormValidationErrors({});
-            const errorsObject = inputValuesValidation([
-                {
-                    name: "totalAmount",
-                    value: allOrdersInsideThePage[orderIndex].orderAmount,
-                    rules: {
-                        isRequired: {
-                            msg: "Sorry, This Field Can't Be Empty !!",
-                        },
-                        minNumber: {
-                            value: 1,
-                            msg: "Sorry, Min Number Is: 1 !!",
-                        },
-                    },
-                },
-            ]);
             setFormValidationErrors(errorsObject);
             setSelectedOrderIndex(orderIndex);
-            if (Object.keys(errorsObject).length == 0) {
-                setWaitMsg("Please Wait To Updating ...");
-                const result = (await axios.post(`${process.env.BASE_API_URL}/orders/update-order/${allOrdersInsideThePage[orderIndex]._id}?language=${process.env.defaultLanguage}${isSendEmailToTheCustomerList[orderIndex] && allOrdersInsideThePage[orderIndex].status !== "pending" ? "&isSendEmailToTheCustomer=true" : ""}`, {
-                    orderAmount: allOrdersInsideThePage[orderIndex].orderAmount,
-                    status: allOrdersInsideThePage[orderIndex].status,
-                }, {
-                    headers: {
-                        Authorization: localStorage.getItem(process.env.adminTokenNameInLocalStorage),
-                    }
-                })).data;
-                setWaitMsg("");
-                if (!result.error) {
-                    setSuccessMsg("Updating Successfull !!");
-                    let successTimeout = setTimeout(() => {
-                        setSuccessMsg("");
-                        setSelectedOrderIndex(-1);
-                        clearTimeout(successTimeout);
-                    }, 3000);
-                } else {
-                    setErrorMsg("Sorry, Someting Went Wrong, Please Repeate The Process !!");
-                    let errorTimeout = setTimeout(() => {
-                        setErrorMsg("");
-                        setSelectedOrderIndex(-1);
-                        clearTimeout(errorTimeout);
-                    }, 3000);
+            setWaitMsg("Please Wait To Updating ...");
+            const result = (await axios.post(`${process.env.BASE_API_URL}/orders/update-order/${allOrdersInsideThePage[orderIndex]._id}?language=${process.env.defaultLanguage}${isSendEmailToTheCustomerList[orderIndex] && allOrdersInsideThePage[orderIndex].status !== "pending" ? "&isSendEmailToTheCustomer=true" : ""}`, {
+                status: allOrdersInsideThePage[orderIndex].status,
+            }, {
+                headers: {
+                    Authorization: localStorage.getItem(process.env.adminTokenNameInLocalStorage),
                 }
+            })).data;
+            setWaitMsg("");
+            if (!result.error) {
+                setSuccessMsg("Updating Successfull !!");
+                let successTimeout = setTimeout(() => {
+                    setSuccessMsg("");
+                    setSelectedOrderIndex(-1);
+                    clearTimeout(successTimeout);
+                }, 3000);
+            } else {
+                setErrorMsg("Sorry, Someting Went Wrong, Please Repeate The Process !!");
+                let errorTimeout = setTimeout(() => {
+                    setErrorMsg("");
+                    setSelectedOrderIndex(-1);
+                    clearTimeout(errorTimeout);
+                }, 3000);
             }
         }
         catch (err) {

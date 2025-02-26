@@ -64,8 +64,11 @@ export default function OrderDetails({ orderIdAsProperty }) {
     }, []);
 
     const changeOrderProductData = (productIndex, fieldName, newValue) => {
-        let productsTemp = orderDetails.products;
+        let productsTemp = orderDetails.products.map((product) => product);
         productsTemp[productIndex][fieldName] = newValue;
+        if (fieldName === "quantity" || fieldName === "unitPrice") {
+            productsTemp[productIndex]["totalAmount"] = productsTemp[productIndex]["quantity"] * productsTemp[productIndex]["unitPrice"];
+        }
         setOrderDetails({ ...orderDetails, products: productsTemp });
     }
 
@@ -76,7 +79,6 @@ export default function OrderDetails({ orderIdAsProperty }) {
             const result = (await axios.put(`${process.env.BASE_API_URL}/orders/products/update-product/${orderDetails._id}/${orderDetails.products[orderProductIndex].productId}?language=${process.env.defaultLanguage}`, {
                 quantity: orderDetails.products[orderProductIndex].quantity,
                 name: orderDetails.products[orderProductIndex].name,
-                totalAmount: orderDetails.products[orderProductIndex].totalAmount,
                 unitPrice: orderDetails.products[orderProductIndex].unitPrice,
             }, {
                 headers: {
@@ -182,6 +184,7 @@ export default function OrderDetails({ orderIdAsProperty }) {
                                         <th>Quantity</th>
                                         <th>Name</th>
                                         <th>Unit Price</th>
+                                        <th>Discount</th>
                                         <th>Total</th>
                                         <th>Image</th>
                                         <th>Action</th>
@@ -219,13 +222,10 @@ export default function OrderDetails({ orderIdAsProperty }) {
                                                 />
                                             </td>
                                             <td>
-                                                <input
-                                                    type="text"
-                                                    className="form-control total-amount"
-                                                    defaultValue={orderProduct.totalAmount}
-                                                    onChange={(e) => changeOrderProductData(orderProductIndex, "totalAmount", e.target.value.trim())}
-                                                    disabled={orderDetails.isDeleted || orderDetails.checkoutStatus !== "Checkout Successfull"}
-                                                />
+                                                {orderProduct.discount}
+                                            </td>
+                                            <td>
+                                                {orderProduct.totalAmount}
                                             </td>
                                             <td>
                                                 <img
