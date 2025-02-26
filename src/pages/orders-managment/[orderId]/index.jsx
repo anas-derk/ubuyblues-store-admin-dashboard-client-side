@@ -66,9 +66,6 @@ export default function OrderDetails({ orderIdAsProperty }) {
     const changeOrderProductData = (productIndex, fieldName, newValue) => {
         let productsTemp = orderDetails.products.map((product) => product);
         productsTemp[productIndex][fieldName] = newValue;
-        if (fieldName === "quantity" || fieldName === "unitPrice") {
-            productsTemp[productIndex]["totalAmount"] = productsTemp[productIndex]["quantity"] * productsTemp[productIndex]["unitPrice"];
-        }
         setOrderDetails({ ...orderDetails, products: productsTemp });
     }
 
