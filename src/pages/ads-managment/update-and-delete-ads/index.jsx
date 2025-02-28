@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 import { inputValuesValidation } from "../../../../public/global_functions/validations";
 import { getAdminInfo } from "../../../../public/global_functions/popular";
 import { HiOutlineBellAlert } from "react-icons/hi2";
+import FormFieldErrorBox from "@/components/FormFieldErrorBox";
 
 export default function UpdateAndDeleteAds() {
 
@@ -41,6 +42,29 @@ export default function UpdateAndDeleteAds() {
     const [formValidationErrors, setFormValidationErrors] = useState({});
 
     const router = useRouter();
+
+    const adsContentInfoList = [
+        {
+            fullLanguageName: "Arabic",
+            internationalLanguageCode: "ar",
+            formField: "contentInAR"
+        },
+        {
+            fullLanguageName: "English",
+            internationalLanguageCode: "en",
+            formField: "contentInEN"
+        },
+        {
+            fullLanguageName: "Deutche",
+            internationalLanguageCode: "de",
+            formField: "contentInDE"
+        },
+        {
+            fullLanguageName: "Turkish",
+            internationalLanguageCode: "tr",
+            formField: "contentInTR"
+        }
+    ];
 
     useEffect(() => {
         const adminToken = localStorage.getItem(process.env.adminTokenNameInLocalStorage);
@@ -91,18 +115,18 @@ export default function UpdateAndDeleteAds() {
     }
 
     const getAllAds = async (filters) => {
-        try{
+        try {
             return (await axios.get(`${process.env.BASE_API_URL}/ads/all-ads?language=${process.env.defaultLanguage}&${filters ? filters : ""}`)).data;
         }
-        catch(err){
+        catch (err) {
             throw err;
         }
     }
 
-    const changeAdContent = (adIndex, newValue) => {
+    const changeAdContent = (adIndex, newValue, language) => {
         setSelectedAdIndex(-1);
-        let adsTemp = allTextAds;
-        adsTemp[adIndex].content = newValue;
+        let adsTemp = allTextAds.map((ad) => ad);
+        adsTemp[adIndex].content[language] = newValue;
         setAllTextAds(adsTemp);
     }
 
@@ -117,15 +141,15 @@ export default function UpdateAndDeleteAds() {
         try {
             setFormValidationErrors({});
             const errorsObject = inputValuesValidation(advertisementType === "text" ? [
-                {
-                    name: "adContent",
-                    value: allTextAds[adIndex].content,
+                ...["ar", "en", "de", "tr"].map((language) => ({
+                    name: `contentIn${language.toUpperCase()}`,
+                    value: allTextAds[adIndex].content[language],
                     rules: {
                         isRequired: {
                             msg: "Sorry, This Field Can't Be Empty !!",
                         },
                     },
-                },
+                }))
             ] : [
                 {
                     name: "adImage",
@@ -185,6 +209,7 @@ export default function UpdateAndDeleteAds() {
             }
         }
         catch (err) {
+            console.log(err)
             if (err?.response?.status === 401) {
                 localStorage.removeItem(process.env.adminTokenNameInLocalStorage);
                 await router.replace("/login");
@@ -262,7 +287,7 @@ export default function UpdateAndDeleteAds() {
                         Hi, Mr {adminInfo.firstName + " " + adminInfo.lastName} In Your Update / Delete Ads Page
                     </h1>
                     <section className="filters mb-3 bg-white border-3 border-info p-3 text-start w-100">
-                        <h5 className="section-name fw-bold text-center">Select Advertisement Type:</h5>
+                        <h5 className="section-name fw-bold text-center">Select Advertisement Type :</h5>
                         <hr />
                         <div className="row mb-4">
                             <div className="col-md-12">
@@ -292,16 +317,18 @@ export default function UpdateAndDeleteAds() {
                                     <tr key={ad._id}>
                                         <td className="ad-content-cell">
                                             <section className="ad-content mb-4">
-                                                <input
-                                                    type="text"
-                                                    className={`form-control d-block mx-auto p-2 border-2 ad-content-field ${formValidationErrors["adContent"] && adIndex === selectedAdIndex ? "border-danger mb-3" : "mb-4"}`}
-                                                    defaultValue={ad.content}
-                                                    onChange={(e) => changeAdContent(adIndex, e.target.value.trim())}
-                                                ></input>
-                                                {formValidationErrors["adContent"] && adIndex === selectedAdIndex && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                                    <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                                    <span>{formValidationErrors["adContent"]}</span>
-                                                </p>}
+                                                {adsContentInfoList.map((el) => (
+                                                    <div key={el.fullLanguageName}>
+                                                        <h6 className="fw-bold">In {el.fullLanguageName} :</h6>
+                                                        <input
+                                                            type="text"
+                                                            className={`form-control d-block mx-auto p-2 border-2 ad-content-field ${formValidationErrors[el.formField] && adIndex === selectedAdIndex ? "border-danger mb-3" : "mb-4"}`}
+                                                            defaultValue={ad.content[el.internationalLanguageCode]}
+                                                            onChange={(e) => changeAdContent(adIndex, e.target.value.trim(), el.internationalLanguageCode)}
+                                                        ></input>
+                                                        {formValidationErrors[el.formField] && adIndex === selectedAdIndex && <FormFieldErrorBox errorMsg={formValidationErrors[el.formField]} />}
+                                                    </div>
+                                                ))}
                                             </section>
                                         </td>
                                         <td className="update-cell">
