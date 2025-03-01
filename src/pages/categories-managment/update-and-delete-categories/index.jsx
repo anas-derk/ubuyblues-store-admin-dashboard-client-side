@@ -51,6 +51,29 @@ export default function UpdateAndDeleteCategories() {
 
     const pageSize = 10;
 
+    const languagesInfoList = [
+        {
+            fullLanguageName: "Arabic",
+            internationalLanguageCode: "ar",
+            formField: "contentInAR"
+        },
+        {
+            fullLanguageName: "English",
+            internationalLanguageCode: "en",
+            formField: "contentInEN"
+        },
+        {
+            fullLanguageName: "Deutche",
+            internationalLanguageCode: "de",
+            formField: "contentInDE"
+        },
+        {
+            fullLanguageName: "Turkish",
+            internationalLanguageCode: "tr",
+            formField: "contentInTR"
+        }
+    ];
+
     useEffect(() => {
         const adminToken = localStorage.getItem(process.env.adminTokenNameInLocalStorage);
         if (adminToken) {
@@ -156,10 +179,14 @@ export default function UpdateAndDeleteCategories() {
         }
     }
 
-    const changeCategoryData = (categoryIndex, fieldName, newValue) => {
+    const changeCategoryData = (categoryIndex, fieldName, newValue, language) => {
         setSelectedCategoryIndex(-1);
         let categoriesTemp = allCategoriesInsideThePage.map(category => category);
-        categoriesTemp[categoryIndex][fieldName] = newValue;
+        if (language) {
+            categoriesTemp[categoryIndex][fieldName][language] = newValue;
+        } else {
+            categoriesTemp[categoryIndex][fieldName] = newValue;
+        }
         setAllCategoriesInsideThePage(categoriesTemp);
     }
 
@@ -355,20 +382,22 @@ export default function UpdateAndDeleteCategories() {
                                     <tr key={category._id}>
                                         <td className="category-name-cell">
                                             <section className="category-name mb-4">
-                                                <input
-                                                    type="text"
-                                                    className={`form-control d-block mx-auto p-2 border-2 brand-title-field ${formValidationErrors["categoryName"] && categoryIndex === selectedCategoryIndex ? "border-danger mb-3" : "mb-4"}`}
-                                                    defaultValue={category.name}
-                                                    onChange={(e) => changeCategoryData(categoryIndex, "name", e.target.value.trim())}
-                                                ></input>
-                                                {formValidationErrors["categoryName"] && categoryIndex === selectedCategoryIndex && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                                    <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                                    <span>{formValidationErrors["categoryName"]}</span>
-                                                </p>}
+                                                {languagesInfoList.map((el) => (
+                                                    <div key={el.fullLanguageName}>
+                                                        <h6 className="fw-bold">In {el.fullLanguageName} :</h6>
+                                                        <input
+                                                            type="text"
+                                                            className={`form-control d-block mx-auto p-2 border-2 category-name-field ${formValidationErrors[el.formField] && categoryIndex === selectedCategoryIndex ? "border-danger mb-3" : "mb-4"}`}
+                                                            defaultValue={category.name[el.internationalLanguageCode]}
+                                                            onChange={(e) => changeCategoryData(categoryIndex, "name", e.target.value.trim(), el.internationalLanguageCode)}
+                                                        />
+                                                        {formValidationErrors[el.formField] && adIndex === selectedAdIndex && <FormFieldErrorBox errorMsg={formValidationErrors[el.formField]} />}
+                                                    </div>
+                                                ))}
                                             </section>
                                         </td>
                                         <td className="category-parent-cell">
-                                            {category.parent?._id ? <h6 className="bg-info p-2 fw-bold mb-4">{category.parent.name}</h6> : <h6 className="bg-danger p-2 mb-4 text-white">No Parent</h6>}
+                                            {category.parent?._id ? languagesInfoList.map((language) => <h6 className="bg-info p-2 fw-bold mb-4">In {language.fullLanguageName} : {category.parent.name[language.internationalLanguageCode]}</h6>) : <h6 className="bg-danger p-2 mb-4 text-white">No Parent</h6>}
                                         </td>
                                         <td className="update-cell">
                                             {selectedCategoryIndex !== categoryIndex && <>

@@ -43,7 +43,7 @@ export default function UpdateAndDeleteAds() {
 
     const router = useRouter();
 
-    const adsContentInfoList = [
+    const languagesInfoList = [
         {
             fullLanguageName: "Arabic",
             internationalLanguageCode: "ar",
@@ -317,7 +317,7 @@ export default function UpdateAndDeleteAds() {
                                     <tr key={ad._id}>
                                         <td className="ad-content-cell">
                                             <section className="ad-content mb-4">
-                                                {adsContentInfoList.map((el) => (
+                                                {languagesInfoList.map((el) => (
                                                     <div key={el.fullLanguageName}>
                                                         <h6 className="fw-bold">In {el.fullLanguageName} :</h6>
                                                         <input
