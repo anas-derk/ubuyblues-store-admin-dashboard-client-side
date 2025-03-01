@@ -135,6 +135,7 @@ export default function UpdateAndDeleteCategories() {
                 await router.replace("/login");
             }
             else {
+                setIsGetCategories(false);
                 setErrorMsgOnGetCategoriesData(err?.message === "Network Error" ? "Network Error When Get Brands Data" : "Sorry, Someting Went Wrong When Get Brands Data, Please Repeate The Process !!");
             }
         }
@@ -155,6 +156,7 @@ export default function UpdateAndDeleteCategories() {
                 await router.replace("/login");
             }
             else {
+                setIsGetCategories(false);
                 setErrorMsgOnGetCategoriesData(err?.message === "Network Error" ? "Network Error When Get Brands Data" : "Sorry, Someting Went Wrong When Get Brands Data, Please Repeate The Process !!");
             }
         }
@@ -174,6 +176,7 @@ export default function UpdateAndDeleteCategories() {
                 await router.replace("/login");
             }
             else {
+                setIsGetCategories(false);
                 setErrorMsgOnGetCategoriesData(err?.message === "Network Error" ? "Network Error When Get Categories Data" : "Sorry, Someting Went Wrong When Get Categories Data, Please Repeate The Process !!");
             }
         }
