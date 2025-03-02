@@ -56,6 +56,29 @@ export default function UpdateAndDeleteBrands() {
 
     const pageSize = 10;
 
+    const languagesInfoList = [
+        {
+            fullLanguageName: "Arabic",
+            internationalLanguageCode: "ar",
+            formField: "contentInAR"
+        },
+        {
+            fullLanguageName: "English",
+            internationalLanguageCode: "en",
+            formField: "contentInEN"
+        },
+        {
+            fullLanguageName: "Deutche",
+            internationalLanguageCode: "de",
+            formField: "contentInDE"
+        },
+        {
+            fullLanguageName: "Turkish",
+            internationalLanguageCode: "tr",
+            formField: "contentInTR"
+        }
+    ];
+
     useEffect(() => {
         const adminToken = localStorage.getItem(process.env.adminTokenNameInLocalStorage);
         if (adminToken) {
@@ -375,14 +398,19 @@ export default function UpdateAndDeleteBrands() {
                                     <tr key={brand._id}>
                                         <td className="brand-title-cell">
                                             <section className="brand-title mb-4">
-                                                <input
-                                                    type="text"
-                                                    placeholder="Enter New Brand Title"
-                                                    defaultValue={brand.title}
-                                                    className={`form-control d-block mx-auto p-2 border-2 brand-title-field ${formValidationErrors["title"] && brandIndex === selectedBrandIndex ? "border-danger mb-3" : "mb-4"}`}
-                                                    onChange={(e) => changeBrandData(brandIndex, "title", e.target.value.trim())}
-                                                />
-                                                {formValidationErrors["title"] && <FormFieldErrorBox errorMsg={formValidationErrors["title"]} />}
+                                                {languagesInfoList.map((el) => (
+                                                    <div key={el.fullLanguageName}>
+                                                        <h6 className="fw-bold">In {el.fullLanguageName} :</h6>
+                                                        <input
+                                                            type="text"
+                                                            placeholder={`Enter New Brand Title In ${el.fullLanguageName}`}
+                                                            className={`form-control d-block mx-auto p-2 border-2 and-title-field ${formValidationErrors[el.formField] && brandIndex === selectedBrandIndex ? "border-danger mb-3" : "mb-4"}`}
+                                                            defaultValue={brand.title[el.internationalLanguageCode]}
+                                                            onChange={(e) => changeBrandData(brandIndex, "title", e.target.value.trim(), el.internationalLanguageCode)}
+                                                        />
+                                                        {formValidationErrors[el.formField] && brandIndex === selectedBrandIndex && <FormFieldErrorBox errorMsg={formValidationErrors[el.formField]} />}
+                                                    </div>
+                                                ))}
                                             </section>
                                         </td>
                                         <td className="brand-image-cell">

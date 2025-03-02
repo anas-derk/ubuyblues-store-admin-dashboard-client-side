@@ -321,6 +321,7 @@ export default function UpdateAndDeleteAds() {
                                                         <h6 className="fw-bold">In {el.fullLanguageName} :</h6>
                                                         <input
                                                             type="text"
+                                                            placeholder={`Enter New Ad Content In ${el.fullLanguageName}`}
                                                             className={`form-control d-block mx-auto p-2 border-2 ad-content-field ${formValidationErrors[el.formField] && adIndex === selectedAdIndex ? "border-danger mb-3" : "mb-4"}`}
                                                             defaultValue={ad.content[el.internationalLanguageCode]}
                                                             onChange={(e) => changeAdContent(adIndex, e.target.value.trim(), el.internationalLanguageCode)}

@@ -386,6 +386,7 @@ export default function UpdateAndDeleteCategories() {
                                                         <h6 className="fw-bold">In {el.fullLanguageName} :</h6>
                                                         <input
                                                             type="text"
+                                                            placeholder={`Enter New Category Name In ${el.fullLanguageName}`}
                                                             className={`form-control d-block mx-auto p-2 border-2 category-name-field ${formValidationErrors[el.formField] && categoryIndex === selectedCategoryIndex ? "border-danger mb-3" : "mb-4"}`}
                                                             defaultValue={category.name[el.internationalLanguageCode]}
                                                             onChange={(e) => changeCategoryData(categoryIndex, "name", e.target.value.trim(), el.internationalLanguageCode)}
