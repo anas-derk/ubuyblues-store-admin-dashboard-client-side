@@ -111,7 +111,8 @@ export default function StoresManagment() {
                 await router.replace("/login");
             }
             else {
-                setErrorMsgOnGetStoresData(err?.message === "Network Error" ? "Network Error When Get Brands Data" : "Sorry, Someting Went Wrong When Get Brands Data, Please Repeate The Process !!");
+                setIsGetStores(false);
+                setErrorMsgOnGetStoresData(err?.message === "Network Error" ? "Network Error When Get Stores Data" : "Sorry, Someting Went Wrong When Get Stores Data, Please Repeate The Process !!");
             }
         }
     }
@@ -131,7 +132,8 @@ export default function StoresManagment() {
                 await router.replace("/login");
             }
             else {
-                setErrorMsgOnGetStoresData(err?.message === "Network Error" ? "Network Error When Get Brands Data" : "Sorry, Someting Went Wrong When Get Brands Data, Please Repeate The Process !!");
+                setIsGetStores(false);
+                setErrorMsgOnGetStoresData(err?.message === "Network Error" ? "Network Error When Get Stores Data" : "Sorry, Someting Went Wrong When Get Stores Data, Please Repeate The Process !!");
             }
         }
     }
@@ -150,7 +152,8 @@ export default function StoresManagment() {
                 await router.replace("/login");
             }
             else {
-                setErrorMsgOnGetStoresData(err?.message === "Network Error" ? "Network Error When Get Brands Data" : "Sorry, Someting Went Wrong When Get Brands Data, Please Repeate The Process !!");
+                setIsGetStores(false);
+                setErrorMsgOnGetStoresData(err?.message === "Network Error" ? "Network Error When Get Stores Data" : "Sorry, Someting Went Wrong When Get Stores Data, Please Repeate The Process !!");
             }
         }
     }

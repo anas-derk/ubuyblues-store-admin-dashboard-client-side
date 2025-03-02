@@ -124,7 +124,7 @@ export default function UsersManagment() {
             }
             else {
                 setIsGetUsers(false);
-                setErrorMsgOnGetUsersData(err?.message === "Network Error" ? "Network Error When Get Brands Data" : "Sorry, Someting Went Wrong When Get Brands Data, Please Repeate The Process !!");
+                setErrorMsgOnGetUsersData(err?.message === "Network Error" ? "Network Error When Get Users Data" : "Sorry, Someting Went Wrong When Get Users Data, Please Repeate The Process !!");
             }
         }
     }
@@ -145,7 +145,7 @@ export default function UsersManagment() {
             }
             else {
                 setIsGetUsers(false);
-                setErrorMsgOnGetUsersData(err?.message === "Network Error" ? "Network Error When Get Brands Data" : "Sorry, Someting Went Wrong When Get Brands Data, Please Repeate The Process !!");
+                setErrorMsgOnGetUsersData(err?.message === "Network Error" ? "Network Error When Get Users Data" : "Sorry, Someting Went Wrong When Get Users Data, Please Repeate The Process !!");
             }
         }
     }

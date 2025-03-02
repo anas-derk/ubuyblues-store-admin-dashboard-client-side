@@ -116,6 +116,7 @@ export default function UpdateAndDeleteAdmins() {
                 await router.replace("/login");
             }
             else {
+                setIsGetAdmins(false);
                 setErrorMsgOnGetAdminsData(err?.message === "Network Error" ? "Network Error When Get Admins Data" : "Sorry, Someting Went Wrong When Get Admins Data, Please Repeate The Process !!");
             }
         }
@@ -136,6 +137,7 @@ export default function UpdateAndDeleteAdmins() {
                 await router.replace("/login");
             }
             else {
+                setIsGetAdmins(false);
                 setErrorMsgOnGetAdminsData(err?.message === "Network Error" ? "Network Error When Get Admins Data" : "Sorry, Someting Went Wrong When Get Admins Data, Please Repeate The Process !!");
             }
         }
@@ -155,6 +157,7 @@ export default function UpdateAndDeleteAdmins() {
                 await router.replace("/login");
             }
             else {
+                setIsGetAdmins(false);
                 setErrorMsgOnGetAdminsData(err?.message === "Network Error" ? "Network Error When Get Admins Data" : "Sorry, Someting Went Wrong When Get Admins Data, Please Repeate The Process !!");
             }
         }

@@ -125,6 +125,7 @@ export default function UpdateAndDeleteBrands() {
                 await router.replace("/login");
             }
             else {
+                setIsGetBrands(false);
                 setErrorMsgOnGetBrandsData(err?.message === "Network Error" ? "Network Error When Get Brands Data" : "Sorry, Someting Went Wrong When Get Brands Data, Please Repeate The Process !!");
             }
         }
@@ -145,6 +146,7 @@ export default function UpdateAndDeleteBrands() {
                 await router.replace("/login");
             }
             else {
+                setIsGetBrands(false);
                 setErrorMsgOnGetBrandsData(err?.message === "Network Error" ? "Network Error When Get Brands Data" : "Sorry, Someting Went Wrong When Get Brands Data, Please Repeate The Process !!");
             }
         }
@@ -164,6 +166,7 @@ export default function UpdateAndDeleteBrands() {
                 await router.replace("/login");
             }
             else {
+                setIsGetBrands(false);
                 setErrorMsgOnGetBrandsData(err?.message === "Network Error" ? "Network Error When Get Brands Data" : "Sorry, Someting Went Wrong When Get Brands Data, Please Repeate The Process !!");
             }
         }

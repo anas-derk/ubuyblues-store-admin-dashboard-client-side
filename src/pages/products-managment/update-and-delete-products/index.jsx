@@ -118,7 +118,7 @@ export default function UpdateAndDeleteProducts() {
             }
             else {
                 setIsGetProducts(false);
-                setErrorMsgOnGetProductsData(err?.message === "Network Error" ? "Network Error When Get Brands Data" : "Sorry, Someting Went Wrong When Get Brands Data, Please Repeate The Process !!");
+                setErrorMsgOnGetProductsData(err?.message === "Network Error" ? "Network Error When Get Products Data" : "Sorry, Someting Went Wrong When Get Products Data, Please Repeate The Process !!");
             }
         }
     }
@@ -139,7 +139,7 @@ export default function UpdateAndDeleteProducts() {
             }
             else {
                 setIsGetProducts(false);
-                setErrorMsgOnGetProductsData(err?.message === "Network Error" ? "Network Error When Get Brands Data" : "Sorry, Someting Went Wrong When Get Brands Data, Please Repeate The Process !!");
+                setErrorMsgOnGetProductsData(err?.message === "Network Error" ? "Network Error When Get Products Data" : "Sorry, Someting Went Wrong When Get Products Data, Please Repeate The Process !!");
             }
         }
     }
@@ -159,7 +159,7 @@ export default function UpdateAndDeleteProducts() {
             }
             else {
                 setIsGetProducts(false);
-                setErrorMsgOnGetProductsData(err?.message === "Network Error" ? "Network Error When Get Brands Data" : "Sorry, Someting Went Wrong When Get Brands Data, Please Repeate The Process !!");
+                setErrorMsgOnGetProductsData(err?.message === "Network Error" ? "Network Error When Get Products Data" : "Sorry, Someting Went Wrong When Get Products Data, Please Repeate The Process !!");
             }
         }
     }
