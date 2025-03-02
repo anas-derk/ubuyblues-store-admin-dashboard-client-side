@@ -63,6 +63,29 @@ export default function StoresManagment() {
 
     const storeStatusList = ["pending", "approving", "blocking"];
 
+    const languagesInfoList = [
+        {
+            fullLanguageName: "Arabic",
+            internationalLanguageCode: "ar",
+            formField: "contentInAR"
+        },
+        {
+            fullLanguageName: "English",
+            internationalLanguageCode: "en",
+            formField: "contentInEN"
+        },
+        {
+            fullLanguageName: "Deutche",
+            internationalLanguageCode: "de",
+            formField: "contentInDE"
+        },
+        {
+            fullLanguageName: "Turkish",
+            internationalLanguageCode: "tr",
+            formField: "contentInTR"
+        }
+    ];
+
     useEffect(() => {
         const adminToken = localStorage.getItem(process.env.adminTokenNameInLocalStorage);
         if (adminToken) {
@@ -204,8 +227,12 @@ export default function StoresManagment() {
         setIsDisplayChangeStoreStatusBox(true);
     }
 
-    const changeStoreData = (storeIndex, fieldName, newValue) => {
-        allStoresInsideThePage[storeIndex][fieldName] = newValue;
+    const changeStoreData = (storeIndex, fieldName, newValue, language) => {
+        if (language) {
+            allStoresInsideThePage[storeIndex][fieldName][language] = newValue;
+        } else {
+            allStoresInsideThePage[storeIndex][fieldName] = newValue;
+        }
     }
 
     const updateStoreData = async (storeIndex) => {
@@ -483,14 +510,19 @@ export default function StoresManagment() {
                                             <td>{store._id}</td>
                                             <td>
                                                 <section className="store-name mb-4">
-                                                    <input
-                                                        type="text"
-                                                        defaultValue={store.name}
-                                                        className={`form-control d-block mx-auto p-2 border-2 store-name-field ${formValidationErrors["name"] && storeIndex === selectedStoreIndex ? "border-danger mb-3" : "mb-4"}`}
-                                                        placeholder="Pleae Enter Store Name"
-                                                        onChange={(e) => changeStoreData(storeIndex, "name", e.target.value)}
-                                                    />
-                                                    {formValidationErrors["name"] && <FormFieldErrorBox errorMsg={formValidationErrors["name"]} />}
+                                                    {languagesInfoList.map((el) => (
+                                                        <div key={el.fullLanguageName}>
+                                                            <h6 className="fw-bold">In {el.fullLanguageName} :</h6>
+                                                            <input
+                                                                type="text"
+                                                                placeholder={`Enter New Store Name In ${el.fullLanguageName}`}
+                                                                className={`form-control d-block mx-auto p-2 border-2 store-name-field ${formValidationErrors[el.formField] && storeIndex === selectedStoreIndex ? "border-danger mb-3" : "mb-4"}`}
+                                                                defaultValue={store.name[el.internationalLanguageCode]}
+                                                                onChange={(e) => changeStoreData(storeIndex, "name", e.target.value.trim(), el.internationalLanguageCode)}
+                                                            />
+                                                            {formValidationErrors[el.formField] && storeIndex === selectedStoreIndex && <FormFieldErrorBox errorMsg={formValidationErrors[el.formField]} />}
+                                                        </div>
+                                                    ))}
                                                 </section>
                                             </td>
                                             <td>{store.ownerFirstName + " " + store.ownerLastName}</td>
@@ -508,13 +540,19 @@ export default function StoresManagment() {
                                             </td>
                                             <td>
                                                 <section className="store-products-type mb-4">
-                                                    <input
-                                                        type="text"
-                                                        defaultValue={store.productsType}
-                                                        className={`form-control d-block mx-auto p-2 border-2 store-products-type-field ${formValidationErrors["productsType"] && storeIndex === selectedStoreIndex ? "border-danger mb-3" : "mb-4"}`}
-                                                        placeholder="Pleae Enter Products Type"
-                                                        onChange={(e) => changeStoreData(storeIndex, "productsType", e.target.value)}
-                                                    />
+                                                    {languagesInfoList.map((el) => (
+                                                        <div key={el.fullLanguageName}>
+                                                            <h6 className="fw-bold">In {el.fullLanguageName} :</h6>
+                                                            <input
+                                                                type="text"
+                                                                placeholder={`Enter New Store Products Type In ${el.fullLanguageName}`}
+                                                                className={`form-control d-block mx-auto p-2 border-2 store-name-field ${formValidationErrors[el.formField] && storeIndex === selectedStoreIndex ? "border-danger mb-3" : "mb-4"}`}
+                                                                defaultValue={store.name[el.internationalLanguageCode]}
+                                                                onChange={(e) => changeStoreData(storeIndex, "productsType", e.target.value.trim(), el.internationalLanguageCode)}
+                                                            />
+                                                            {formValidationErrors[el.formField] && storeIndex === selectedStoreIndex && <FormFieldErrorBox errorMsg={formValidationErrors[el.formField]} />}
+                                                        </div>
+                                                    ))}
                                                     {formValidationErrors["productsType"] && <FormFieldErrorBox errorMsg={formValidationErrors["productsType"]} />}
                                                 </section>
                                             </td>

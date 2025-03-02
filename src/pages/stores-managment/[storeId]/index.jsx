@@ -41,6 +41,29 @@ export default function StoreDetails({ storeId }) {
 
     const router = useRouter();
 
+    const languagesInfoList = [
+        {
+            fullLanguageName: "Arabic",
+            internationalLanguageCode: "ar",
+            formField: "contentInAR"
+        },
+        {
+            fullLanguageName: "English",
+            internationalLanguageCode: "en",
+            formField: "contentInEN"
+        },
+        {
+            fullLanguageName: "Deutche",
+            internationalLanguageCode: "de",
+            formField: "contentInDE"
+        },
+        {
+            fullLanguageName: "Turkish",
+            internationalLanguageCode: "tr",
+            formField: "contentInTR"
+        }
+    ];
+
     useEffect(() => {
         const adminToken = localStorage.getItem(process.env.adminTokenNameInLocalStorage);
         if (adminToken) {
@@ -79,6 +102,14 @@ export default function StoreDetails({ storeId }) {
                 });
         } else router.replace("/login");
     }, []);
+
+    const handleChangeStoreData = (fieldName, newValue, language) => {
+        if (language) {
+            storeDetails[fieldName][language] = newValue;
+        } else {
+            storeDetails[fieldName] = newValue;
+        }
+    }
 
     const updateStoreData = async (storeId) => {
         try {
@@ -273,14 +304,19 @@ export default function StoreDetails({ storeId }) {
                                         <th>Name</th>
                                         <td className="update-store-name-cell">
                                             <section className="store-name">
-                                                <input
-                                                    type="text"
-                                                    defaultValue={storeDetails.name}
-                                                    className={`form-control d-block mx-auto p-2 border-2 store-name-field ${formValidationErrors["name"] ? "border-danger mb-3" : "mb-4"}`}
-                                                    placeholder="Pleae Enter New Store Name"
-                                                    onChange={(e) => setStoreDetails({ ...storeDetails, name: e.target.value })}
-                                                />
-                                                {formValidationErrors["name"] && <FormFieldErrorBox errorMsg={formValidationErrors["name"]} />}
+                                                {languagesInfoList.map((el) => (
+                                                    <div key={el.fullLanguageName}>
+                                                        <h6 className="fw-bold">In {el.fullLanguageName} :</h6>
+                                                        <input
+                                                            type="text"
+                                                            placeholder={`Enter New Store Name In ${el.fullLanguageName}`}
+                                                            className={`form-control d-block mx-auto p-2 border-2 store-name-field ${formValidationErrors[el.formField] ? "border-danger mb-3" : "mb-4"}`}
+                                                            defaultValue={storeDetails.name[el.internationalLanguageCode]}
+                                                            onChange={(e) => handleChangeStoreData("name", e.target.value.trim(), el.internationalLanguageCode)}
+                                                        />
+                                                        {formValidationErrors[el.formField] && <FormFieldErrorBox errorMsg={formValidationErrors[el.formField]} />}
+                                                    </div>
+                                                ))}
                                             </section>
                                         </td>
                                     </tr>
@@ -374,14 +410,19 @@ export default function StoreDetails({ storeId }) {
                                         <th>Products Type</th>
                                         <td className="update-products-type-cell">
                                             <section className="store-products-type">
-                                                <input
-                                                    type="text"
-                                                    defaultValue={storeDetails.productsType}
-                                                    className={`form-control d-block mx-auto p-2 border-2 store-products-type-field ${formValidationErrors["productsType"] ? "border-danger mb-3" : "mb-4"}`}
-                                                    placeholder="Pleae Enter New Store Products Type"
-                                                    onChange={(e) => setStoreDetails({ ...storeDetails, productsType: e.target.value })}
-                                                />
-                                                {formValidationErrors["productsType"] && <FormFieldErrorBox errorMsg={formValidationErrors["productsType"]} />}
+                                                {languagesInfoList.map((el) => (
+                                                    <div key={el.fullLanguageName}>
+                                                        <h6 className="fw-bold">In {el.fullLanguageName} :</h6>
+                                                        <input
+                                                            type="text"
+                                                            placeholder={`Enter New Store Products Type In ${el.fullLanguageName}`}
+                                                            className={`form-control d-block mx-auto p-2 border-2 store-products-type-field ${formValidationErrors[el.formField] ? "border-danger mb-3" : "mb-4"}`}
+                                                            defaultValue={storeDetails.productsType[el.internationalLanguageCode]}
+                                                            onChange={(e) => handleChangeStoreData("productsType", e.target.value.trim(), el.internationalLanguageCode)}
+                                                        />
+                                                        {formValidationErrors[el.formField] && <FormFieldErrorBox errorMsg={formValidationErrors[el.formField]} />}
+                                                    </div>
+                                                ))}
                                             </section>
                                         </td>
                                     </tr>
@@ -389,14 +430,19 @@ export default function StoreDetails({ storeId }) {
                                         <th>Products Description</th>
                                         <td className="update-products-description-cell">
                                             <section className="store-products-description">
-                                                <input
-                                                    type="text"
-                                                    defaultValue={storeDetails.productsDescription}
-                                                    className={`form-control d-block mx-auto p-2 border-2 store-products-description-field ${formValidationErrors["productsDescription"] ? "border-danger mb-3" : "mb-4"}`}
-                                                    placeholder="Pleae Enter New Store Products Description"
-                                                    onChange={(e) => setStoreDetails({ ...storeDetails, productsDescription: e.target.value })}
-                                                />
-                                                {formValidationErrors["productsDescription"] && <FormFieldErrorBox errorMsg={formValidationErrors["productsDescription"]} />}
+                                                {languagesInfoList.map((el) => (
+                                                    <div key={el.fullLanguageName}>
+                                                        <h6 className="fw-bold">In {el.fullLanguageName} :</h6>
+                                                        <input
+                                                            type="text"
+                                                            placeholder={`Enter New Store Products Description In ${el.fullLanguageName}`}
+                                                            className={`form-control d-block mx-auto p-2 border-2 store-products-description-field ${formValidationErrors[el.formField] ? "border-danger mb-3" : "mb-4"}`}
+                                                            defaultValue={storeDetails.productsDescription[el.internationalLanguageCode]}
+                                                            onChange={(e) => handleChangeStoreData("productsDescription", e.target.value.trim(), el.internationalLanguageCode)}
+                                                        />
+                                                        {formValidationErrors[el.formField] && <FormFieldErrorBox errorMsg={formValidationErrors[el.formField]} />}
+                                                    </div>
+                                                ))}
                                             </section>
                                         </td>
                                     </tr>
