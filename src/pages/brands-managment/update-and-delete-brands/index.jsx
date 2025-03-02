@@ -195,11 +195,15 @@ export default function UpdateAndDeleteBrands() {
         }
     }
 
-    const changeBrandData = (brandIndex, fieldName, newValue) => {
+    const changeBrandData = (brandIndex, fieldName, newValue, language) => {
         setSelectedBrandImageIndex(-1);
         setSelectedBrandIndex(-1);
-        let brandsDataTemp = allBrandsInsideThePage;
-        brandsDataTemp[brandIndex][fieldName] = newValue;
+        let brandsDataTemp = allBrandsInsideThePage.map((brand) => brand);
+        if (language) {
+            brandsDataTemp[brandIndex][fieldName][language] = newValue;
+        } else {
+            brandsDataTemp[brandIndex][fieldName] = newValue;
+        }
         setAllBrandsInsideThePage(brandsDataTemp);
     }
 
@@ -287,7 +291,7 @@ export default function UpdateAndDeleteBrands() {
             if (Object.keys(errorsObject).length == 0) {
                 setWaitMsg("Please Wait To Updating ...");
                 const result = (await axios.put(`${process.env.BASE_API_URL}/brands/${allBrandsInsideThePage[brandIndex]._id}?language=${process.env.defaultLanguage}`, {
-                    newBrandTitle: allBrandsInsideThePage[brandIndex].title,
+                    title: allBrandsInsideThePage[brandIndex].title,
                 }, {
                     headers: {
                         Authorization: localStorage.getItem(process.env.adminTokenNameInLocalStorage),
