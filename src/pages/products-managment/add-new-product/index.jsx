@@ -12,6 +12,7 @@ import { HiOutlineBellAlert } from "react-icons/hi2";
 import { countries } from "countries-list";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import NotFoundError from "@/components/NotFoundError";
+import FormFieldErrorBox from "@/components/FormFieldErrorBox";
 
 export default function AddNewProduct() {
 

@@ -6,9 +6,9 @@ import ErrorOnLoadingThePage from "@/components/ErrorOnLoadingThePage";
 import LoaderPage from "@/components/LoaderPage";
 import AdminPanelHeader from "@/components/AdminPanelHeader";
 import { useRouter } from "next/router";
-import { HiOutlineBellAlert } from "react-icons/hi2";
 import { inputValuesValidation } from "../../../../public/global_functions/validations";
 import { getAdminInfo } from "../../../../public/global_functions/popular";
+import FormFieldErrorBox from "@/components/FormFieldErrorBox";
 
 export default function AddNewBrand() {
 

@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 import { HiOutlineBellAlert } from "react-icons/hi2";
 import { inputValuesValidation } from "../../../../../public/global_functions/validations";
 import { IoIosCloseCircleOutline } from "react-icons/io";
+import FormFieldErrorBox from "@/components/FormFieldErrorBox";
 
 export default function UpdateProductCategories({ productIdAsProperty }) {
 

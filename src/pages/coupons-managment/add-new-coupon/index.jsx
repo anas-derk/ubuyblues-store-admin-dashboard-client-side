@@ -5,11 +5,11 @@ import axios from "axios";
 import ErrorOnLoadingThePage from "@/components/ErrorOnLoadingThePage";
 import LoaderPage from "@/components/LoaderPage";
 import AdminPanelHeader from "@/components/AdminPanelHeader";
-import { HiOutlineBellAlert } from "react-icons/hi2";
 import { useRouter } from "next/router";
 import { inputValuesValidation } from "../../../../public/global_functions/validations";
 import { getAdminInfo } from "../../../../public/global_functions/popular";
 import CodeGenerator from "node-code-generator";
+import FormFieldErrorBox from "@/components/FormFieldErrorBox";
 
 export default function AddNewCoupon() {
 

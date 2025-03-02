@@ -9,6 +9,7 @@ import { inputValuesValidation } from "../../../../public/global_functions/valid
 import { getAdminInfo } from "../../../../public/global_functions/popular";
 import { getDateFormated, getStoreDetails } from "../../../../public/global_functions/popular";
 import NotFoundError from "@/components/NotFoundError";
+import FormFieldErrorBox from "@/components/FormFieldErrorBox";
 
 export default function StoreDetails({ storeId }) {
 

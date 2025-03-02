@@ -12,6 +12,7 @@ import ChangeStoreStatusBox from "@/components/ChangeStoreStatusBox";
 import { getAdminInfo, getAllStoresInsideThePage } from "../../../public/global_functions/popular";
 import NotFoundError from "@/components/NotFoundError";
 import TableLoader from "@/components/TableLoader";
+import FormFieldErrorBox from "@/components/FormFieldErrorBox";
 
 export default function StoresManagment() {
 

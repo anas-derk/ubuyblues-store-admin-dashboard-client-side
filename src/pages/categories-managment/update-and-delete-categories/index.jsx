@@ -12,6 +12,7 @@ import { getAdminInfo, getAllCategoriesInsideThePage } from "../../../../public/
 import NotFoundError from "@/components/NotFoundError";
 import TableLoader from "@/components/TableLoader";
 import Link from "next/link";
+import FormFieldErrorBox from "@/components/FormFieldErrorBox";
 
 export default function UpdateAndDeleteCategories() {
 

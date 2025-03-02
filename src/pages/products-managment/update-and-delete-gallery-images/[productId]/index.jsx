@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 import { inputValuesValidation } from "../../../../../public/global_functions/validations";
 import { getAdminInfo } from "../../../../../public/global_functions/popular";
 import NotFoundError from "@/components/NotFoundError";
+import FormFieldErrorBox from "@/components/FormFieldErrorBox";
 
 export default function UpdateAndDeleteGalleryImages({ productIdAsProperty }) {
 

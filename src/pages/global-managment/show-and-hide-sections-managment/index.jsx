@@ -40,7 +40,7 @@ export default function ShowAndHideSections() {
                         if (adminDetails.isWebsiteOwner) {
                             const res = await axios.get(`${process.env.BASE_API_URL}/appeared-sections/all-sections`);
                             result = res.data;
-                            if(!result.error) {
+                            if (!result.error) {
                                 setAllSections(result.data);
                             }
                             setIsLoadingPage(false);
@@ -118,7 +118,7 @@ export default function ShowAndHideSections() {
                 <div className="page-content d-flex justify-content-center align-items-center flex-column p-5">
                     <h1 className="fw-bold w-fit pb-2 mb-3">
                         <PiHandWavingThin className="me-2" />
-                        Hi, Mr {  adminInfo.firstName + " " + adminInfo.lastName } In Your Add Show And Hide Sections Page
+                        Hi, Mr {adminInfo.firstName + " " + adminInfo.lastName} In Your Add Show And Hide Sections Page
                     </h1>
                     <div className="sections-box w-100">
                         {allSections.length > 0 ? <table className="sections-table mb-4 managment-table bg-white w-100">
