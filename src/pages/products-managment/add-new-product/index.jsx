@@ -13,6 +13,7 @@ import { countries } from "countries-list";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import NotFoundError from "@/components/NotFoundError";
 import FormFieldErrorBox from "@/components/FormFieldErrorBox";
+import { useTranslation } from "react-i18next";
 
 export default function AddNewProduct() {
 
@@ -70,6 +71,8 @@ export default function AddNewProduct() {
     const [selectedCountriesList, setSelectedCountriesList] = useState([]);
 
     const router = useRouter();
+
+    const { i18n } = useTranslation();
 
     useEffect(() => {
         const adminToken = localStorage.getItem(process.env.adminTokenNameInLocalStorage);
@@ -400,7 +403,7 @@ export default function AddNewProduct() {
                                 <ul className={`categories-list options-list bg-white border ${formValidationErrors["categories"] ? "border-danger mb-4" : "border-dark"}`}>
                                     <li className="text-center fw-bold border-bottom border-2 border-dark">Seached Categories List</li>
                                     {searchedCategories.length > 0 && searchedCategories.map((category) => (
-                                        <li key={category._id} onClick={() => handleSelectCategory(category)}>{category.name}</li>
+                                        <li key={category._id} onClick={() => handleSelectCategory(category)}>{category.name[i18n.language]}</li>
                                     ))}
                                 </ul>
                                 {searchedCategories.length === 0 && searchedCategoryName && <p className="alert alert-danger mt-4">Sorry, Can't Find Any Related Categories Match This Name !!</p>}
@@ -410,7 +413,7 @@ export default function AddNewProduct() {
                         {selectedCategories.length > 0 ? <div className="selected-categories row mb-4">
                             {selectedCategories.map((category) => <div className="col-md-4 mb-3" key={category._id}>
                                 <div className="selected-category-box bg-white p-2 border border-2 border-dark text-center">
-                                    <span className="me-2 category-name">{category.name}</span>
+                                    <span className="me-2 category-name">{category.name[i18n.language]}</span>
                                     <IoIosCloseCircleOutline className="remove-icon" onClick={() => handleRemoveCategoryFromSelectedCategoriesList(category)} />
                                 </div>
                             </div>)}
