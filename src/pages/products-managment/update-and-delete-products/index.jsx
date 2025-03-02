@@ -18,6 +18,7 @@ import Link from "next/link";
 import NotFoundError from "@/components/NotFoundError";
 import TableLoader from "@/components/TableLoader";
 import FormFieldErrorBox from "@/components/FormFieldErrorBox";
+import { useTranslation } from "react-i18next";
 
 export default function UpdateAndDeleteProducts() {
 
@@ -63,7 +64,32 @@ export default function UpdateAndDeleteProducts() {
 
     const router = useRouter();
 
+    const { i18n } = useTranslation();
+
     const pageSize = 10;
+
+    const languagesInfoList = [
+        {
+            fullLanguageName: "Arabic",
+            internationalLanguageCode: "ar",
+            formField: "contentInAR"
+        },
+        {
+            fullLanguageName: "English",
+            internationalLanguageCode: "en",
+            formField: "contentInEN"
+        },
+        {
+            fullLanguageName: "Deutche",
+            internationalLanguageCode: "de",
+            formField: "contentInDE"
+        },
+        {
+            fullLanguageName: "Turkish",
+            internationalLanguageCode: "tr",
+            formField: "contentInTR"
+        }
+    ];
 
     useEffect(() => {
         const adminToken = localStorage.getItem(process.env.adminTokenNameInLocalStorage);
@@ -201,14 +227,18 @@ export default function UpdateAndDeleteProducts() {
         }
     }
 
-    const changeProductData = (productIndex, fieldName, newValue) => {
+    const changeProductData = (productIndex, fieldName, newValue, language) => {
         setSelectedProductIndex(-1);
         let tempNewValue = newValue;
         if (fieldName === "startDiscountPeriod" || fieldName === "endDiscountPeriod") {
             tempNewValue = getDateInUTCFormat(newValue);
         }
         let productsDataTemp = allProductsInsideThePage.map(product => product);
-        productsDataTemp[productIndex][fieldName] = tempNewValue;
+        if (language) {
+            productsDataTemp[productIndex][fieldName][language] = tempNewValue;
+        } else {
+            productsDataTemp[productIndex][fieldName] = tempNewValue;
+        }
         setAllProductsInsideThePage(productsDataTemp);
     }
 
@@ -521,14 +551,19 @@ export default function UpdateAndDeleteProducts() {
                                     <tr key={product._id}>
                                         <td className="product-name-cell">
                                             <section className="product-name mb-4">
-                                                <input
-                                                    type="text"
-                                                    placeholder="Enter New Product Name"
-                                                    defaultValue={product.name}
-                                                    className={`form-control d-block mx-auto p-2 border-2 product-name-field ${formValidationErrors["name"] && productIndex === selectedProductIndex ? "border-danger mb-3" : "mb-4"}`}
-                                                    onChange={(e) => changeProductData(productIndex, "name", e.target.value.trim())}
-                                                />
-                                                {formValidationErrors["name"] && <FormFieldErrorBox errorMsg={formValidationErrors["name"]} />}
+                                                {languagesInfoList.map((el) => (
+                                                    <div key={el.fullLanguageName}>
+                                                        <h6 className="fw-bold">In {el.fullLanguageName} :</h6>
+                                                        <input
+                                                            type="text"
+                                                            placeholder={`Enter New Product Name In ${el.fullLanguageName}`}
+                                                            className={`form-control d-block mx-auto p-2 border-2 product-name-field ${formValidationErrors[el.formField] && productIndex === selectedProductIndex ? "border-danger mb-3" : "mb-4"}`}
+                                                            defaultValue={product.name[el.internationalLanguageCode]}
+                                                            onChange={(e) => changeProductData(productIndex, "name", e.target.value.trim(), el.internationalLanguageCode)}
+                                                        />
+                                                        {formValidationErrors[el.formField] && productIndex === selectedProductIndex && <FormFieldErrorBox errorMsg={formValidationErrors[el.formField]} />}
+                                                    </div>
+                                                ))}
                                             </section>
                                         </td>
                                         <td className="product-price-cell">
@@ -559,13 +594,19 @@ export default function UpdateAndDeleteProducts() {
                                         </td>
                                         <td className="product-description-cell" width="400">
                                             <section className="product-description mb-4">
-                                                <textarea
-                                                    placeholder="Enter New Product Description"
-                                                    defaultValue={product.description}
-                                                    className={`form-control d-block mx-auto p-2 border-2 product-description-field ${formValidationErrors["description"] && productIndex === selectedProductIndex ? "border-danger mb-3" : "mb-4"}`}
-                                                    onChange={(e) => changeProductData(productIndex, "description", e.target.value.trim())}
-                                                ></textarea>
-                                                {formValidationErrors["description"] && <FormFieldErrorBox errorMsg={formValidationErrors["description"]} />}
+                                                {languagesInfoList.map((el) => (
+                                                    <div key={el.fullLanguageName}>
+                                                        <h6 className="fw-bold">In {el.fullLanguageName} :</h6>
+                                                        <textarea
+                                                            type="text"
+                                                            placeholder={`Enter New Product Description In ${el.fullLanguageName}`}
+                                                            className={`form-control d-block mx-auto p-2 border-2 product-description-field ${formValidationErrors[el.formField] && productIndex === selectedProductIndex ? "border-danger mb-3" : "mb-4"}`}
+                                                            defaultValue={product.description[el.internationalLanguageCode]}
+                                                            onChange={(e) => changeProductData(productIndex, "description", e.target.value.trim(), el.internationalLanguageCode)}
+                                                        />
+                                                        {formValidationErrors[el.formField] && productIndex === selectedProductIndex && <FormFieldErrorBox errorMsg={formValidationErrors[el.formField]} />}
+                                                    </div>
+                                                ))}
                                             </section>
                                         </td>
                                         <td className="product-price-discount-cell">
