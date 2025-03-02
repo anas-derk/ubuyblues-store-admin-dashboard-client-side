@@ -195,10 +195,7 @@ export default function UpdateProductCategories({ productIdAsProperty }) {
                                     ))}
                                 </ul>
                                 {searchedCategories.length === 0 && searchedCategoryName && <p className="alert alert-danger mt-4">Sorry, Can't Find Any Related Categories Match This Name !!</p>}
-                                {formValidationErrors["categories"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                    <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                    <span>{formValidationErrors["categories"]}</span>
-                                </p>}
+                                {formValidationErrors["categories"] && <FormFieldErrorBox errorMsg={formValidationErrors["categories"]} />}
                             </div>
                         </section>
                         {productData.categories.length > 0 ? <div className="selected-categories row mb-4">

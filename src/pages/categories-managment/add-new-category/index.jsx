@@ -5,7 +5,6 @@ import axios from "axios";
 import ErrorOnLoadingThePage from "@/components/ErrorOnLoadingThePage";
 import LoaderPage from "@/components/LoaderPage";
 import AdminPanelHeader from "@/components/AdminPanelHeader";
-import { HiOutlineBellAlert } from "react-icons/hi2";
 import { useRouter } from "next/router";
 import { inputValuesValidation } from "../../../../public/global_functions/validations";
 import { getAdminInfo, getAllCategoriesInsideThePage } from "../../../../public/global_functions/popular";
@@ -198,10 +197,7 @@ export default function AddNewCategory() {
                                 onChange={(e) => setCategoryName(e.target.value)}
                                 value={categoryName}
                             />
-                            {formValidationErrors["categoryName"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                <span>{formValidationErrors["categoryName"]}</span>
-                            </p>}
+                            {formValidationErrors["categoryName"] && <FormFieldErrorBox errorMsg={formValidationErrors["categoryName"]} />}
                         </section>
                         <section className="category-parent mb-4">
                             <h6 className="fw-bold mb-3">Please Select Category Parent</h6>
@@ -221,10 +217,7 @@ export default function AddNewCategory() {
                                     }
                                 </ul>
                                 {searchedCategories.length === 0 && searchedCategoryParent && <p className="alert alert-danger mt-4">Sorry, Can't Find Any Category Parent Match This Name !!</p>}
-                                {formValidationErrors["categoryParent"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                    <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                    <span>{formValidationErrors["categoryParent"]}</span>
-                                </p>}
+                                {formValidationErrors["categoryParent"] && <FormFieldErrorBox errorMsg={formValidationErrors["categoryParent"]} />}
                             </div>
                         </section>
                         {!waitMsg && !successMsg && !errorMsg && <button

@@ -8,7 +8,6 @@ import AdminPanelHeader from "@/components/AdminPanelHeader";
 import { useRouter } from "next/router";
 import { inputValuesValidation } from "../../../../public/global_functions/validations";
 import { getAdminInfo } from "../../../../public/global_functions/popular";
-import { HiOutlineBellAlert } from "react-icons/hi2";
 import FormFieldErrorBox from "@/components/FormFieldErrorBox";
 
 export default function UpdateAndDeleteAds() {
@@ -390,10 +389,7 @@ export default function UpdateAndDeleteAds() {
                                                     onChange={(e) => changeAdImage(adIndex, e.target.files[0])}
                                                     accept=".png, .jpg, .webp"
                                                 />
-                                                {formValidationErrors["adImage"] && adIndex === selectedAdIndex && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                                    <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                                    <span>{formValidationErrors["adImage"]}</span>
-                                                </p>}
+                                                {formValidationErrors["adImage"] && <FormFieldErrorBox errorMsg={formValidationErrors["adImage"]} />}
                                             </section>
                                             {selectedAdIndex !== adIndex && <button
                                                 className="btn btn-success d-block mb-3 mx-auto global-button"

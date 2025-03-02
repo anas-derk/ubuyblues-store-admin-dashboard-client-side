@@ -8,7 +8,6 @@ import AdminPanelHeader from "@/components/AdminPanelHeader";
 import { inputValuesValidation } from "../../../../public/global_functions/validations";
 import { getAdminInfo } from "../../../../public/global_functions/popular";
 import { getDateFormated, getStoreDetails } from "../../../../public/global_functions/popular";
-import { HiOutlineBellAlert } from "react-icons/hi2";
 import NotFoundError from "@/components/NotFoundError";
 
 export default function StoreDetails({ storeId }) {
@@ -280,10 +279,7 @@ export default function StoreDetails({ storeId }) {
                                                     placeholder="Pleae Enter New Store Name"
                                                     onChange={(e) => setStoreDetails({ ...storeDetails, name: e.target.value })}
                                                 />
-                                                {formValidationErrors["name"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                                    <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                                    <span>{formValidationErrors["name"]}</span>
-                                                </p>}
+                                                {formValidationErrors["name"] && <FormFieldErrorBox errorMsg={formValidationErrors["name"]} />}
                                             </section>
                                         </td>
                                     </tr>
@@ -307,10 +303,7 @@ export default function StoreDetails({ storeId }) {
                                                     ref={storeImageFileElementRef}
                                                     value={storeImageFileElementRef.current?.value}
                                                 />
-                                                {formValidationErrors["image"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                                    <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                                    <span>{formValidationErrors["image"]}</span>
-                                                </p>}
+                                                {formValidationErrors["image"] && <FormFieldErrorBox errorMsg={formValidationErrors["image"]} />}
                                             </section>
                                             {!isWaitChangeStoreImage && !errorChangeStoreImageMsg && !successChangeStoreImageMsg &&
                                                 <button
@@ -342,10 +335,7 @@ export default function StoreDetails({ storeId }) {
                                                     placeholder="Pleae Enter New Owner First Name"
                                                     onChange={(e) => setStoreDetails({ ...storeDetails, ownerFirstName: e.target.value })}
                                                 />
-                                                {formValidationErrors["ownerFirstName"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                                    <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                                    <span>{formValidationErrors["ownerFirstName"]}</span>
-                                                </p>}
+                                                {formValidationErrors["ownerFirstName"] && <FormFieldErrorBox errorMsg={formValidationErrors["ownerFirstName"]} />}
                                             </section>
                                         </td>
                                     </tr>
@@ -360,10 +350,7 @@ export default function StoreDetails({ storeId }) {
                                                     placeholder="Pleae Enter New Owner Last Name"
                                                     onChange={(e) => setStoreDetails({ ...storeDetails, ownerLastName: e.target.value })}
                                                 />
-                                                {formValidationErrors["ownerLastName"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                                    <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                                    <span>{formValidationErrors["ownerLastName"]}</span>
-                                                </p>}
+                                                {formValidationErrors["ownerLastName"] && <FormFieldErrorBox errorMsg={formValidationErrors["ownerLastName"]} />}
                                             </section>
                                         </td>
                                     </tr>
@@ -378,10 +365,7 @@ export default function StoreDetails({ storeId }) {
                                                     placeholder="Pleae Enter New Store Owner Email"
                                                     onChange={(e) => setStoreDetails({ ...storeDetails, ownerEmail: e.target.value })}
                                                 />
-                                                {formValidationErrors["ownerEmail"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                                    <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                                    <span>{formValidationErrors["ownerEmail"]}</span>
-                                                </p>}
+                                                {formValidationErrors["ownerEmail"] && <FormFieldErrorBox errorMsg={formValidationErrors["ownerEmail"]} />}
                                             </section>
                                         </td>
                                     </tr>
@@ -396,10 +380,7 @@ export default function StoreDetails({ storeId }) {
                                                     placeholder="Pleae Enter New Store Products Type"
                                                     onChange={(e) => setStoreDetails({ ...storeDetails, productsType: e.target.value })}
                                                 />
-                                                {formValidationErrors["productsType"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                                    <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                                    <span>{formValidationErrors["productsType"]}</span>
-                                                </p>}
+                                                {formValidationErrors["productsType"] && <FormFieldErrorBox errorMsg={formValidationErrors["productsType"]} />}
                                             </section>
                                         </td>
                                     </tr>
@@ -414,10 +395,7 @@ export default function StoreDetails({ storeId }) {
                                                     placeholder="Pleae Enter New Store Products Description"
                                                     onChange={(e) => setStoreDetails({ ...storeDetails, productsDescription: e.target.value })}
                                                 />
-                                                {formValidationErrors["productsDescription"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                                    <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                                    <span>{formValidationErrors["productsDescription"]}</span>
-                                                </p>}
+                                                {formValidationErrors["productsDescription"] && <FormFieldErrorBox errorMsg={formValidationErrors["productsDescription"]} />}
                                             </section>
                                         </td>
                                     </tr>
@@ -499,10 +477,7 @@ export default function StoreDetails({ storeId }) {
                                                     placeholder="Pleae Enter New Store Name"
                                                     onChange={(e) => setStoreDetails({ ...storeDetails, name: e.target.value })}
                                                 />
-                                                {formValidationErrors["name"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                                    <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                                    <span>{formValidationErrors["name"]}</span>
-                                                </p>}
+                                                {formValidationErrors["name"] && <FormFieldErrorBox errorMsg={formValidationErrors["name"]} />}
                                             </section>
                                         </td>
                                     </tr>
@@ -528,10 +503,7 @@ export default function StoreDetails({ storeId }) {
                                                     ref={storeImageFileElementRef}
                                                     value={storeImageFileElementRef.current?.value}
                                                 />
-                                                {formValidationErrors["image"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                                    <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                                    <span>{formValidationErrors["image"]}</span>
-                                                </p>}
+                                                {formValidationErrors["image"] && <FormFieldErrorBox errorMsg={formValidationErrors["image"]} />}
                                             </section>
                                             {!isWaitChangeStoreImage && !errorChangeStoreImageMsg && !successChangeStoreImageMsg &&
                                                 <button
@@ -565,10 +537,7 @@ export default function StoreDetails({ storeId }) {
                                                     placeholder="Pleae Enter New Owner First Name"
                                                     onChange={(e) => setStoreDetails({ ...storeDetails, ownerFirstName: e.target.value })}
                                                 />
-                                                {formValidationErrors["ownerFirstName"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                                    <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                                    <span>{formValidationErrors["ownerFirstName"]}</span>
-                                                </p>}
+                                                {formValidationErrors["ownerFirstName"] && <FormFieldErrorBox errorMsg={formValidationErrors["ownerFirstName"]} />}
                                             </section>
                                         </td>
                                     </tr>
@@ -585,10 +554,7 @@ export default function StoreDetails({ storeId }) {
                                                     placeholder="Pleae Enter New Owner Last Name"
                                                     onChange={(e) => setStoreDetails({ ...storeDetails, ownerLastName: e.target.value })}
                                                 />
-                                                {formValidationErrors["ownerLastName"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                                    <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                                    <span>{formValidationErrors["ownerLastName"]}</span>
-                                                </p>}
+                                                {formValidationErrors["ownerLastName"] && <FormFieldErrorBox errorMsg={formValidationErrors["ownerLastName"]} />}
                                             </section>
                                         </td>
                                     </tr>
@@ -605,10 +571,7 @@ export default function StoreDetails({ storeId }) {
                                                     placeholder="Pleae Enter New Store Owner Email"
                                                     onChange={(e) => setStoreDetails({ ...storeDetails, ownerEmail: e.target.value })}
                                                 />
-                                                {formValidationErrors["ownerEmail"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                                    <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                                    <span>{formValidationErrors["ownerEmail"]}</span>
-                                                </p>}
+                                                {formValidationErrors["ownerEmail"] && <FormFieldErrorBox errorMsg={formValidationErrors["ownerEmail"]} />}
                                             </section>
                                         </td>
                                     </tr>
@@ -625,10 +588,7 @@ export default function StoreDetails({ storeId }) {
                                                     placeholder="Pleae Enter New Store Products Type"
                                                     onChange={(e) => setStoreDetails({ ...storeDetails, productsType: e.target.value })}
                                                 />
-                                                {formValidationErrors["productsType"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                                    <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                                    <span>{formValidationErrors["productsType"]}</span>
-                                                </p>}
+                                                {formValidationErrors["productsType"] && <FormFieldErrorBox errorMsg={formValidationErrors["productsType"]} />}
                                             </section>
                                         </td>
                                     </tr>
@@ -645,10 +605,7 @@ export default function StoreDetails({ storeId }) {
                                                     placeholder="Pleae Enter New Store Products Description"
                                                     onChange={(e) => setStoreDetails({ ...storeDetails, productsDescription: e.target.value })}
                                                 />
-                                                {formValidationErrors["productsDescription"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                                    <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                                    <span>{formValidationErrors["productsDescription"]}</span>
-                                                </p>}
+                                                {formValidationErrors["productsDescription"] && <FormFieldErrorBox errorMsg={formValidationErrors["productsDescription"]} />}
                                             </section>
                                         </td>
                                     </tr>

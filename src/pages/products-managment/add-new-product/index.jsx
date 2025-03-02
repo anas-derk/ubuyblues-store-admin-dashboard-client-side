@@ -6,13 +6,12 @@ import LoaderPage from "@/components/LoaderPage";
 import ErrorOnLoadingThePage from "@/components/ErrorOnLoadingThePage";
 import AdminPanelHeader from "@/components/AdminPanelHeader";
 import { inputValuesValidation } from "../../../../public/global_functions/validations";
-import { getAdminInfo, getAllCategoriesInsideThePage, getAllCategoriesWithHierarechy, getCategoriesCount } from "../../../../public/global_functions/popular";
+import { getAdminInfo, getAllCategoriesInsideThePage, getCategoriesCount } from "../../../../public/global_functions/popular";
 import { useRouter } from "next/router";
 import { HiOutlineBellAlert } from "react-icons/hi2";
 import { countries } from "countries-list";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import NotFoundError from "@/components/NotFoundError";
-import CategoriesTree from "@/components/CategoryTree";
 
 export default function AddNewProduct() {
 
@@ -366,10 +365,7 @@ export default function AddNewProduct() {
                                 onChange={(e) => setProductData({ ...productData, name: e.target.value })}
                                 value={productData.name}
                             />
-                            {formValidationErrors["name"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                <span>{formValidationErrors["name"]}</span>
-                            </p>}
+                            {formValidationErrors["name"] && <FormFieldErrorBox errorMsg={formValidationErrors["name"]} />}
                         </section>
                         <section className="price mb-4">
                             <input
@@ -379,10 +375,7 @@ export default function AddNewProduct() {
                                 onChange={(e) => setProductData({ ...productData, price: e.target.value.trim() })}
                                 value={productData.price}
                             />
-                            {formValidationErrors["price"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                <span>{formValidationErrors["price"]}</span>
-                            </p>}
+                            {formValidationErrors["price"] && <FormFieldErrorBox errorMsg={formValidationErrors["price"]} />}
                         </section>
                         <section className="description mb-4">
                             <input
@@ -392,10 +385,7 @@ export default function AddNewProduct() {
                                 onChange={(e) => setProductData({ ...productData, description: e.target.value })}
                                 value={productData.description}
                             />
-                            {formValidationErrors["description"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                <span>{formValidationErrors["description"]}</span>
-                            </p>}
+                            {formValidationErrors["description"] && <FormFieldErrorBox errorMsg={formValidationErrors["description"]} />}
                         </section>
                         <section className="category mb-4 overflow-auto">
                             <h6 className="mb-3 fw-bold">Please Select Categories</h6>
@@ -413,10 +403,7 @@ export default function AddNewProduct() {
                                     ))}
                                 </ul>
                                 {searchedCategories.length === 0 && searchedCategoryName && <p className="alert alert-danger mt-4">Sorry, Can't Find Any Related Categories Match This Name !!</p>}
-                                {formValidationErrors["categories"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                    <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                    <span>{formValidationErrors["categories"]}</span>
-                                </p>}
+                                {formValidationErrors["categories"] && <FormFieldErrorBox errorMsg={formValidationErrors["categories"]} />}
                             </div>
                         </section>
                         {selectedCategories.length > 0 ? <div className="selected-categories row mb-4">
@@ -438,10 +425,7 @@ export default function AddNewProduct() {
                                 onChange={(e) => setProductData({ ...productData, discount: (e.target.value || e.target.value == 0) ? e.target.value.trim() : "" })}
                                 value={productData.discount}
                             />
-                            {formValidationErrors["discount"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                <span>{formValidationErrors["discount"]}</span>
-                            </p>}
+                            {formValidationErrors["discount"] && <FormFieldErrorBox errorMsg={formValidationErrors["discount"]} />}
                         </section>
                         <section className="quantity mb-4">
                             <input
@@ -451,10 +435,7 @@ export default function AddNewProduct() {
                                 onChange={(e) => setProductData({ ...productData, quantity: (e.target.value || e.target.value === 0) ? e.target.value.trim() : "" })}
                                 value={productData.quantity}
                             />
-                            {formValidationErrors["quantity"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                <span>{formValidationErrors["quantity"]}</span>
-                            </p>}
+                            {formValidationErrors["quantity"] && <FormFieldErrorBox errorMsg={formValidationErrors["quantity"]} />}
                         </section>
                         <h6 className="mb-3 fw-bold">Please Select Countries</h6>
                         <div className="select-country-box select-box mb-4">
@@ -491,10 +472,7 @@ export default function AddNewProduct() {
                                 ref={productImageFileElementRef}
                                 value={productImageFileElementRef.current?.value}
                             />
-                            {formValidationErrors["image"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                <span>{formValidationErrors["image"]}</span>
-                            </p>}
+                            {formValidationErrors["image"] && <FormFieldErrorBox errorMsg={formValidationErrors["image"]} />}
                         </section>
                         <h6 className="mb-3 fw-bold">Please Select 3D Product Image</h6>
                         <section className="3d-image mb-4">
@@ -506,10 +484,7 @@ export default function AddNewProduct() {
                                 ref={threeDProductImageFileElementRef}
                                 value={threeDProductImageFileElementRef.current?.value}
                             />
-                            {formValidationErrors["3DImage"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                <span>{formValidationErrors["3DImage"]}</span>
-                            </p>}
+                            {formValidationErrors["3DImage"] && <FormFieldErrorBox errorMsg={formValidationErrors["3DImage"]} />}
                         </section>
                         <h6 className="mb-3 fw-bold">Please Select Product Gallery Images</h6>
                         <section className="gallery-images mb-4">
@@ -522,10 +497,7 @@ export default function AddNewProduct() {
                                 value={productGalleryImagesFilesElementRef.current?.value}
                                 ref={productGalleryImagesFilesElementRef}
                             />
-                            {formValidationErrors["galleryImages"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                <span>{formValidationErrors["galleryImages"]}</span>
-                            </p>}
+                            {formValidationErrors["galleryImages"] && <FormFieldErrorBox errorMsg={formValidationErrors["galleryImages"]} />}
                         </section>
                         {!waitMsg && !successMsg && !errorMsg && <button
                             type="submit"

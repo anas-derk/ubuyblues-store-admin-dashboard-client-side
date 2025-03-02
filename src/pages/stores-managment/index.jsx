@@ -8,9 +8,8 @@ import ErrorOnLoadingThePage from "@/components/ErrorOnLoadingThePage";
 import AdminPanelHeader from "@/components/AdminPanelHeader";
 import PaginationBar from "@/components/PaginationBar";
 import { inputValuesValidation } from "../../../public/global_functions/validations";
-import { HiOutlineBellAlert } from "react-icons/hi2";
 import ChangeStoreStatusBox from "@/components/ChangeStoreStatusBox";
-import { getAdminInfo, getStoresCount, getAllStoresInsideThePage } from "../../../public/global_functions/popular";
+import { getAdminInfo, getAllStoresInsideThePage } from "../../../public/global_functions/popular";
 import NotFoundError from "@/components/NotFoundError";
 import TableLoader from "@/components/TableLoader";
 
@@ -487,10 +486,7 @@ export default function StoresManagment() {
                                                         placeholder="Pleae Enter Store Name"
                                                         onChange={(e) => changeStoreData(storeIndex, "name", e.target.value)}
                                                     />
-                                                    {formValidationErrors["name"] && storeIndex === selectedStoreIndex && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                                        <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                                        <span>{formValidationErrors["name"]}</span>
-                                                    </p>}
+                                                    {formValidationErrors["name"] && <FormFieldErrorBox errorMsg={formValidationErrors["name"]} />}
                                                 </section>
                                             </td>
                                             <td>{store.ownerFirstName + " " + store.ownerLastName}</td>
@@ -503,10 +499,7 @@ export default function StoresManagment() {
                                                         placeholder="Pleae Enter Owner Email"
                                                         onChange={(e) => changeStoreData(storeIndex, "ownerEmail", e.target.value)}
                                                     />
-                                                    {formValidationErrors["ownerEmail"] && storeIndex === selectedStoreIndex && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                                        <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                                        <span>{formValidationErrors["ownerEmail"]}</span>
-                                                    </p>}
+                                                    {formValidationErrors["ownerEmail"] && <FormFieldErrorBox errorMsg={formValidationErrors["ownerEmail"]} />}
                                                 </section>
                                             </td>
                                             <td>
@@ -518,10 +511,7 @@ export default function StoresManagment() {
                                                         placeholder="Pleae Enter Products Type"
                                                         onChange={(e) => changeStoreData(storeIndex, "productsType", e.target.value)}
                                                     />
-                                                    {formValidationErrors["productsType"] && storeIndex === selectedStoreIndex && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                                        <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                                        <span>{formValidationErrors["productsType"]}</span>
-                                                    </p>}
+                                                    {formValidationErrors["productsType"] && <FormFieldErrorBox errorMsg={formValidationErrors["productsType"]} />}
                                                 </section>
                                             </td>
                                             <td>

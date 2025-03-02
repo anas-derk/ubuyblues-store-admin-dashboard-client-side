@@ -427,10 +427,7 @@ export default function UpdateAndDeleteAdmins() {
                                                         placeholder="Pleae Enter New First Name"
                                                         onChange={(e) => changeAdminData(adminIndex, "firstName", e.target.value)}
                                                     />
-                                                    {formValidationErrors["firstName"] && adminIndex === selectedAdminIndex && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                                        <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                                        <span>{formValidationErrors["firstName"]}</span>
-                                                    </p>}
+                                                    {formValidationErrors["firstName"] && <FormFieldErrorBox errorMsg={formValidationErrors["firstName"]} />}
                                                 </section>
                                             </td>
                                             <td>
@@ -442,10 +439,7 @@ export default function UpdateAndDeleteAdmins() {
                                                         placeholder="Pleae Enter New Last Name"
                                                         onChange={(e) => changeAdminData(adminIndex, "lastName", e.target.value)}
                                                     />
-                                                    {formValidationErrors["lastName"] && adminIndex === selectedAdminIndex && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                                        <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                                        <span>{formValidationErrors["lastName"]}</span>
-                                                    </p>}
+                                                    {formValidationErrors["lastName"] && <FormFieldErrorBox errorMsg={formValidationErrors["lastName"]} />}
                                                 </section>
                                             </td>
                                             <td>
@@ -457,10 +451,7 @@ export default function UpdateAndDeleteAdmins() {
                                                         placeholder="Pleae Enter New Email"
                                                         onChange={(e) => changeAdminData(adminIndex, "email", e.target.value)}
                                                     />
-                                                    {formValidationErrors["email"] && adminIndex === selectedAdminIndex && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                                        <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                                        <span>{formValidationErrors["email"]}</span>
-                                                    </p>}
+                                                    {formValidationErrors["email"] && <FormFieldErrorBox errorMsg={formValidationErrors["email"]} />}
                                                 </section>
                                             </td>
                                             <td>

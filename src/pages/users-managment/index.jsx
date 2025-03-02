@@ -95,19 +95,6 @@ export default function UsersManagment() {
         return filteringString;
     }
 
-    const getUsersCount = async (filters) => {
-        try {
-            return (await axios.get(`${process.env.BASE_API_URL}/users/users-count?language=${process.env.defaultLanguage}&${filters ? filters : ""}`, {
-                headers: {
-                    Authorization: localStorage.getItem(process.env.adminTokenNameInLocalStorage),
-                }
-            })).data;
-        }
-        catch (err) {
-            throw err;
-        }
-    }
-
     const getAllUsersInsideThePage = async (pageNumber, pageSize, filters) => {
         try {
             return (await axios.get(`${process.env.BASE_API_URL}/users/all-users-inside-the-page?pageNumber=${pageNumber}&pageSize=${pageSize}&language=${process.env.defaultLanguage}&${filters ? filters : ""}`, {
@@ -136,6 +123,7 @@ export default function UsersManagment() {
                 await router.replace("/login");
             }
             else {
+                setIsGetUsers(false);
                 setErrorMsgOnGetUsersData(err?.message === "Network Error" ? "Network Error When Get Brands Data" : "Sorry, Someting Went Wrong When Get Brands Data, Please Repeate The Process !!");
             }
         }
@@ -156,6 +144,7 @@ export default function UsersManagment() {
                 await router.replace("/login");
             }
             else {
+                setIsGetUsers(false);
                 setErrorMsgOnGetUsersData(err?.message === "Network Error" ? "Network Error When Get Brands Data" : "Sorry, Someting Went Wrong When Get Brands Data, Please Repeate The Process !!");
             }
         }
@@ -175,7 +164,8 @@ export default function UsersManagment() {
                 await router.replace("/login");
             }
             else {
-                setErrorMsgOnGetUsersData(err?.message === "Network Error" ? "Network Error When Get Brands Data" : "Sorry, Someting Went Wrong When Get Brands Data, Please Repeate The Process !!");
+                setIsGetUsers(false);
+                setErrorMsgOnGetUsersData(err?.message === "Network Error" ? "Network Error When Get Users Data" : "Sorry, Someting Went Wrong When Get Users Data, Please Repeate The Process !!");
             }
         }
     }

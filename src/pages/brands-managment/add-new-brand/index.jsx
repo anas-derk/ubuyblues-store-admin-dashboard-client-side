@@ -100,7 +100,7 @@ export default function AddNewBrand() {
                 let formData = new FormData();
                 formData.append("brandImg", brandImage);
                 formData.append("title", brandTitle);
-                const result =( await axios.post(`${process.env.BASE_API_URL}/brands/add-new-brand?language=${process.env.defaultLanguage}`, formData, {
+                const result = (await axios.post(`${process.env.BASE_API_URL}/brands/add-new-brand?language=${process.env.defaultLanguage}`, formData, {
                     headers: {
                         Authorization: localStorage.getItem(process.env.adminTokenNameInLocalStorage),
                     }
@@ -151,7 +151,7 @@ export default function AddNewBrand() {
                 <div className="page-content d-flex justify-content-center align-items-center flex-column p-4">
                     <h1 className="fw-bold w-fit pb-2 mb-3">
                         <PiHandWavingThin className="me-2" />
-                        Hi, Mr { adminInfo.firstName + " " + adminInfo.lastName } In Your Add New Brand Page
+                        Hi, Mr {adminInfo.firstName + " " + adminInfo.lastName} In Your Add New Brand Page
                     </h1>
                     <form className="add-new-brand-form admin-dashbboard-form" onSubmit={(e) => addNewBrand(e, brandTitle)}>
                         <h6 className="mb-3 fw-bold">Please Select Brand Image</h6>
@@ -164,10 +164,7 @@ export default function AddNewBrand() {
                                 value={fileElementRef.current?.value}
                                 accept=".png, .jpg, .webp"
                             />
-                            {formValidationErrors["brandImage"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                <span>{formValidationErrors["brandImage"]}</span>
-                            </p>}
+                            {formValidationErrors["brandImage"] && <FormFieldErrorBox errorMsg={formValidationErrors["brandImage"]} />}
                         </section>
                         <section className="brand-title mb-4">
                             <input
@@ -177,10 +174,7 @@ export default function AddNewBrand() {
                                 onChange={(e) => setBrandTitle(e.target.value)}
                                 value={brandTitle}
                             />
-                            {formValidationErrors["brandTitle"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                <span>{formValidationErrors["brandTitle"]}</span>
-                            </p>}
+                            {formValidationErrors["brandTitle"] && <FormFieldErrorBox errorMsg={formValidationErrors["brandTitle"]} />}
                         </section>
                         {!waitMsg && !successMsg && !errorMsg && <button
                             type="submit"

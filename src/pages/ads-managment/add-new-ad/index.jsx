@@ -5,7 +5,6 @@ import axios from "axios";
 import ErrorOnLoadingThePage from "@/components/ErrorOnLoadingThePage";
 import LoaderPage from "@/components/LoaderPage";
 import AdminPanelHeader from "@/components/AdminPanelHeader";
-import { HiOutlineBellAlert } from "react-icons/hi2";
 import { useRouter } from "next/router";
 import { inputValuesValidation } from "../../../../public/global_functions/validations";
 import { getAdminInfo, getAllProductsInsideThePage } from "../../../../public/global_functions/popular";
@@ -238,10 +237,7 @@ export default function AddNewAd() {
                                 onChange={(e) => setAdContent(e.target.value)}
                                 value={adContent}
                             />
-                            {formValidationErrors["adContent"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                <span>{formValidationErrors["adContent"]}</span>
-                            </p>}
+                            {formValidationErrors["adContent"] && <FormFieldErrorBox errorMsg={formValidationErrors["adContent"]} />}
                         </section> : <section className="ad-image mb-4">
                             <input
                                 type="file"
@@ -251,10 +247,7 @@ export default function AddNewAd() {
                                 ref={adImageFileRef}
                                 value={adImageFileRef.current?.value}
                             />
-                            {formValidationErrors["adImage"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                <span>{formValidationErrors["adImage"]}</span>
-                            </p>}
+                            {formValidationErrors["adImage"] && <FormFieldErrorBox errorMsg={formValidationErrors["adImage"]} />}
                         </section>}
                         {advertisementType === "image" && <section className="related-product mb-4 overflow-auto">
                             <h6 className="mb-3 fw-bold">Please Select Related Product</h6>
@@ -272,10 +265,7 @@ export default function AddNewAd() {
                                     ))}
                                 </ul>
                                 {searchedProducts.length === 0 && searchedProductName && <p className="alert alert-danger mt-4">Sorry, Can't Find Any Related Products Match This Name !!</p>}
-                                {formValidationErrors["relatedProduct"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                    <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                    <span>{formValidationErrors["relatedProduct"]}</span>
-                                </p>}
+                                {formValidationErrors["relatedProduct"] && <FormFieldErrorBox errorMsg={formValidationErrors["relatedProduct"]} />}
                             </div>
                             {selectedRelatedProduct && <div className="selected-related-product row mb-4">
                                 <h6 className="fw-bold text-center mb-3">Selected Related Product Is :</h6>

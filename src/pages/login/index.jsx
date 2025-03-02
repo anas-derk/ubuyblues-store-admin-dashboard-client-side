@@ -133,7 +133,7 @@ export default function AdminLogin() {
                                 <BiSolidUser className="icon" />
                             </div>
                         </div>
-                        {formValidationErrors["email"] && <p className="error-msg text-danger">{formValidationErrors["email"]}</p>}
+                        {formValidationErrors["email"] && <FormFieldErrorBox errorMsg={formValidationErrors["email"]} />}
                         <div className="password-field-box">
                             <input
                                 type={isVisiblePassword ? "text" : "password"}
@@ -146,7 +146,7 @@ export default function AdminLogin() {
                                 {isVisiblePassword && <AiOutlineEyeInvisible className="invisible-eye-icon icon" onClick={() => setIsVisiblePassword(value => value = !value)} />}
                             </div>
                         </div>
-                        {formValidationErrors["password"] && <p className='error-msg text-danger'>{formValidationErrors["password"]}</p>}
+                        {formValidationErrors["password"] && <FormFieldErrorBox errorMsg={formValidationErrors["password"]} />}
                         {!waitMsg && !errMsg && <button type="submit" className="btn btn-success mx-auto d-block mb-4 p-3">
                             <span className="me-2">Login</span>
                             <FiLogIn />
@@ -162,8 +162,8 @@ export default function AdminLogin() {
                             <span className="me-2">Forget Password</span>
                         </a>
                         {errMsg && Object.keys(blockingDateAndReason).length > 0 && <div className="blocking-date-and-reason-box bg-white border border-danger p-3">
-                            <h6 className="blocking-date fw-bold">Blocking Date: { getDateFormated(blockingDateAndReason.blockingDate) }</h6>
-                            <h6 className="blocking-reason m-0 fw-bold">Blocking Reason: { blockingDateAndReason.blockingReason }</h6>
+                            <h6 className="blocking-date fw-bold">Blocking Date: {getDateFormated(blockingDateAndReason.blockingDate)}</h6>
+                            <h6 className="blocking-reason m-0 fw-bold">Blocking Reason: {blockingDateAndReason.blockingReason}</h6>
                         </div>}
                     </form>
                 </div>

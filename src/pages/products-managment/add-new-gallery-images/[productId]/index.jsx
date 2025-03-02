@@ -6,7 +6,6 @@ import ErrorOnLoadingThePage from "@/components/ErrorOnLoadingThePage";
 import LoaderPage from "@/components/LoaderPage";
 import AdminPanelHeader from "@/components/AdminPanelHeader";
 import { useRouter } from "next/router";
-import { HiOutlineBellAlert } from "react-icons/hi2";
 import { inputValuesValidation } from "../../../../../public/global_functions/validations";
 import { getAdminInfo } from "../../../../../public/global_functions/popular";
 
@@ -140,7 +139,7 @@ export default function AddNewProductGalleryImage({ productIdAsProperty }) {
                 <div className="page-content d-flex justify-content-center align-items-center flex-column p-4">
                     <h1 className="fw-bold w-fit pb-2 mb-3">
                         <PiHandWavingThin className="me-2" />
-                        Hi, Mr { adminInfo.firstName + " " + adminInfo.lastName } In Your Add New Product Gallery Images Page
+                        Hi, Mr {adminInfo.firstName + " " + adminInfo.lastName} In Your Add New Product Gallery Images Page
                     </h1>
                     <form className="add-new-gallery-images-form admin-dashbboard-form" onSubmit={addNewGalleryImages}>
                         <h6 className="mb-3 fw-bold">Please Select Gallery Images</h6>
@@ -154,10 +153,7 @@ export default function AddNewProductGalleryImage({ productIdAsProperty }) {
                                 value={fileElementRef.current?.value}
                                 accept=".png, .jpg, .webp"
                             />
-                            {formValidationErrors["newGalleryImageFiles"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                <span>{formValidationErrors["newGalleryImageFiles"]}</span>
-                            </p>}
+                            {formValidationErrors["newGalleryImageFiles"] && <FormFieldErrorBox errorMsg={formValidationErrors["newGalleryImageFiles"]} />}
                         </section>
                         {!waitMsg && !successMsg && !errorMsg && <button
                             type="submit"

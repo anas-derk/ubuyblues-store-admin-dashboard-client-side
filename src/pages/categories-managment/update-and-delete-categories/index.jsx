@@ -9,7 +9,6 @@ import { useRouter } from "next/router";
 import PaginationBar from "@/components/PaginationBar";
 import { inputValuesValidation } from "../../../../public/global_functions/validations";
 import { getAdminInfo, getAllCategoriesInsideThePage } from "../../../../public/global_functions/popular";
-import { HiOutlineBellAlert } from "react-icons/hi2";
 import NotFoundError from "@/components/NotFoundError";
 import TableLoader from "@/components/TableLoader";
 import Link from "next/link";
@@ -352,10 +351,7 @@ export default function UpdateAndDeleteCategories() {
                                     placeholder="Please Enter Category Name"
                                     onChange={(e) => setFilters({ ...filters, name: e.target.value })}
                                 />
-                                {formValidationErrors["categoryName"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                    <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                    <span>{formValidationErrors["categoryName"]}</span>
-                                </p>}
+                                {formValidationErrors["categoryName"] && <FormFieldErrorBox errorMsg={formValidationErrors["categoryName"]} />}
                             </div>
                         </div>
                         {!isGetCategories && <button

@@ -8,7 +8,6 @@ import AdminPanelHeader from "@/components/AdminPanelHeader";
 import { inputValuesValidation } from "../../../../public/global_functions/validations";
 import { getAdminInfo } from "../../../../public/global_functions/popular";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import { HiOutlineBellAlert } from "react-icons/hi2";
 import { useRouter } from "next/router";
 
 export default function ChangeBussinessEmailPassword() {
@@ -180,7 +179,7 @@ export default function ChangeBussinessEmailPassword() {
                 <div className="page-content d-flex justify-content-center align-items-center flex-column p-4">
                     <h1 className="fw-bold w-fit pb-2 mb-3">
                         <PiHandWavingThin className="me-2" />
-                        Hi, Mr { adminInfo.firstName + " " + adminInfo.lastName } In  Change Bussiness Email Password Page
+                        Hi, Mr {adminInfo.firstName + " " + adminInfo.lastName} In  Change Bussiness Email Password Page
                     </h1>
                     <form className="change-bussiness-email-password-form admin-dashbboard-form" onSubmit={changeBussinessEmailPassword}>
                         <section className="email mb-4">
@@ -191,10 +190,7 @@ export default function ChangeBussinessEmailPassword() {
                                 onChange={(e) => setEmail(e.target.value.trim())}
                                 value={email}
                             />
-                            {formValidationErrors.email && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                <span>{formValidationErrors.email}</span>
-                            </p>}
+                            {formValidationErrors["email"] && <FormFieldErrorBox errorMsg={formValidationErrors["email"]} />}
                         </section>
                         <section className="current-password mb-3">
                             <div className={`current-password-field-box ${formValidationErrors.currentPassword ? "error-in-field" : ""}`}>
@@ -210,10 +206,7 @@ export default function ChangeBussinessEmailPassword() {
                                     {isVisibleCurrentPassword && <AiOutlineEyeInvisible className='invisible-eye-icon icon' onClick={() => setIsVisibleCurrentPassword(value => value = !value)} />}
                                 </div>
                             </div>
-                            {formValidationErrors.currentPassword && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                <span>{formValidationErrors.currentPassword}</span>
-                            </p>}
+                            {formValidationErrors["currentPassword"] && <FormFieldErrorBox errorMsg={formValidationErrors["currentPassword"]} />}
                         </section>
                         <section className="new-password mb-3">
                             <div className={`new-password-field-box ${formValidationErrors.newPassword ? "error-in-field" : ""}`}>
@@ -229,10 +222,7 @@ export default function ChangeBussinessEmailPassword() {
                                     {isVisibleNewPassword && <AiOutlineEyeInvisible className='invisible-eye-icon icon' onClick={() => setIsVisibleNewPassword(value => value = !value)} />}
                                 </div>
                             </div>
-                            {formValidationErrors.newPassword && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                <span>{formValidationErrors.newPassword}</span>
-                            </p>}
+                            {formValidationErrors["newPassword"] && <FormFieldErrorBox errorMsg={formValidationErrors["newPassword"]} />}
                         </section>
                         <section className="confirm-new-password mb-3">
                             <div className={`confirm-new-password-field-box ${formValidationErrors.confirmNewPassword ? "error-in-field" : ""}`}>
@@ -248,10 +238,7 @@ export default function ChangeBussinessEmailPassword() {
                                     {isVisibleConfirmNewPassword && <AiOutlineEyeInvisible className='invisible-eye-icon icon' onClick={() => setIsVisibleConfirmNewPassword(value => value = !value)} />}
                                 </div>
                             </div>
-                            {formValidationErrors.confirmNewPassword && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                <span>{formValidationErrors.confirmNewPassword}</span>
-                            </p>}
+                            {formValidationErrors["confirmNewPassword"] && <FormFieldErrorBox errorMsg={formValidationErrors["confirmNewPassword"]} />}
                         </section>
                         {!waitMsg && !successMsg && !errorMsg && <button
                             type="submit"

@@ -8,8 +8,8 @@ import AdminPanelHeader from "@/components/AdminPanelHeader";
 import { getAdminInfo } from "../../../../public/global_functions/popular";
 import { inputValuesValidation } from "../../../../public/global_functions/validations";
 import { useRouter } from "next/router";
-import { HiOutlineBellAlert } from "react-icons/hi2";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import FormFieldErrorBox from "@/components/FormFieldErrorBox";
 
 export default function AddNewAdmin() {
 
@@ -191,10 +191,7 @@ export default function AddNewAdmin() {
                                 onChange={(e) => setNewAdminData({ ...newAdminData, firstName: e.target.value })}
                                 value={newAdminData.firstName}
                             />
-                            {formValidationErrors["firstName"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                <span>{formValidationErrors["firstName"]}</span>
-                            </p>}
+                            {formValidationErrors["firstName"] && <FormFieldErrorBox errorMsg={formValidationErrors["firstName"]} />}
                         </section>
                         <section className="last-name mb-4">
                             <input
@@ -204,10 +201,7 @@ export default function AddNewAdmin() {
                                 onChange={(e) => setNewAdminData({ ...newAdminData, lastName: e.target.value })}
                                 value={newAdminData.lastName}
                             />
-                            {formValidationErrors["lastName"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                <span>{formValidationErrors["lastName"]}</span>
-                            </p>}
+                            {formValidationErrors["lastName"] && <FormFieldErrorBox errorMsg={formValidationErrors["lastName"]} />}
                         </section>
                         <section className="email mb-4">
                             <input
@@ -217,10 +211,7 @@ export default function AddNewAdmin() {
                                 onChange={(e) => setNewAdminData({ ...newAdminData, email: e.target.value })}
                                 value={newAdminData.email}
                             />
-                            {formValidationErrors["email"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                <span>{formValidationErrors["email"]}</span>
-                            </p>}
+                            {formValidationErrors["email"] && <FormFieldErrorBox errorMsg={formValidationErrors["email"]} />}
                         </section>
                         <section className="password mb-4">
                             <div className={`current-password-field-box ${formValidationErrors["password"] ? "error-in-field" : ""}`}>
@@ -236,10 +227,7 @@ export default function AddNewAdmin() {
                                     {isVisiblePassword && <AiOutlineEyeInvisible className="invisible-eye-icon icon" onClick={() => setIsVisiblePassword(value => value = !value)} />}
                                 </div>
                             </div>
-                            {formValidationErrors["password"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                <span>{formValidationErrors["password"]}</span>
-                            </p>}
+                            {formValidationErrors["password"] && <FormFieldErrorBox errorMsg={formValidationErrors["password"]} />}
                         </section>
                         {!waitMsg && !successMsg && !errorMsg && <button
                             type="submit"

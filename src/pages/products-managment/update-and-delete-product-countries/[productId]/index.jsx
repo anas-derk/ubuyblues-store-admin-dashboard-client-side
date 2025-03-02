@@ -7,7 +7,6 @@ import ErrorOnLoadingThePage from "@/components/ErrorOnLoadingThePage";
 import AdminPanelHeader from "@/components/AdminPanelHeader";
 import { getAdminInfo, getProductInfo } from "../../../../../public/global_functions/popular";
 import { useRouter } from "next/router";
-import { HiOutlineBellAlert } from "react-icons/hi2";
 import { inputValuesValidation } from "../../../../../public/global_functions/validations";
 import { countries } from "countries-list";
 import { IoIosCloseCircleOutline } from "react-icons/io";
@@ -194,10 +193,7 @@ export default function UpdateProductCountries({ productIdAsProperty }) {
                                 </div>
                             </div>)}
                         </div>}
-                        {formValidationErrors["countries"] && <p className="bg-danger p-2 form-field-error-box mb-4 text-white">
-                            <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                            <span>{formValidationErrors["countries"]}</span>
-                        </p>}
+                        {formValidationErrors["countries"] && <FormFieldErrorBox errorMsg={formValidationErrors["countries"]} />}
                         {!waitMsg && !successMsg && !errorMsg && <button
                             type="submit"
                             className="btn btn-success w-50 d-block mx-auto p-2 global-button"

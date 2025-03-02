@@ -7,7 +7,6 @@ import ErrorOnLoadingThePage from "@/components/ErrorOnLoadingThePage";
 import AdminPanelHeader from "@/components/AdminPanelHeader";
 import { useRouter } from "next/router";
 import PaginationBar from "@/components/PaginationBar";
-import { HiOutlineBellAlert } from "react-icons/hi2";
 import { inputValuesValidation } from "../../../../public/global_functions/validations";
 import { getAdminInfo } from "../../../../public/global_functions/popular";
 import TableLoader from "@/components/TableLoader";
@@ -379,11 +378,8 @@ export default function UpdateAndDeleteBrands() {
                                                     defaultValue={brand.title}
                                                     className={`form-control d-block mx-auto p-2 border-2 brand-title-field ${formValidationErrors["title"] && brandIndex === selectedBrandIndex ? "border-danger mb-3" : "mb-4"}`}
                                                     onChange={(e) => changeBrandData(brandIndex, "title", e.target.value.trim())}
-                                                ></input>
-                                                {formValidationErrors["title"] && brandIndex === selectedBrandIndex && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                                    <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                                    <span>{formValidationErrors["title"]}</span>
-                                                </p>}
+                                                />
+                                                {formValidationErrors["title"] && <FormFieldErrorBox errorMsg={formValidationErrors["title"]} />}
                                             </section>
                                         </td>
                                         <td className="brand-image-cell">
@@ -401,10 +397,7 @@ export default function UpdateAndDeleteBrands() {
                                                     onChange={(e) => changeBrandData(brandIndex, "image", e.target.files[0])}
                                                     accept=".png, .jpg, .webp"
                                                 />
-                                                {formValidationErrors["image"] && brandIndex === selectedBrandImageIndex && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                                    <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                                    <span>{formValidationErrors["image"]}</span>
-                                                </p>}
+                                                {formValidationErrors["image"] && <FormFieldErrorBox errorMsg={formValidationErrors["image"]} />}
                                             </section>
                                             {(selectedBrandImageIndex !== brandIndex && selectedBrandIndex !== brandIndex) &&
                                                 <button

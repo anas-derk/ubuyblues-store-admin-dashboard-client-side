@@ -8,7 +8,6 @@ import AdminPanelHeader from "@/components/AdminPanelHeader";
 import { useRouter } from "next/router";
 import { inputValuesValidation } from "../../../../public/global_functions/validations";
 import { getAdminInfo } from "../../../../public/global_functions/popular";
-import { HiOutlineBellAlert } from "react-icons/hi2";
 import NotFoundError from "@/components/NotFoundError";
 
 export default function UpdateAndDeleteCoupons() {
@@ -68,14 +67,14 @@ export default function UpdateAndDeleteCoupons() {
     }, []);
 
     const getAllCoupons = async () => {
-        try{
+        try {
             return (await axios.get(`${process.env.BASE_API_URL}/coupons/all-coupons?language=${process.env.defaultLanguage}`, {
                 headers: {
                     Authorization: localStorage.getItem(process.env.adminTokenNameInLocalStorage)
                 }
             })).data;
         }
-        catch(err) {
+        catch (err) {
             throw err;
         }
     }
@@ -236,11 +235,8 @@ export default function UpdateAndDeleteCoupons() {
                                                     className={`form-control d-block mx-auto p-2 border-2 discount-percentage-field ${formValidationErrors["discountPercentage"] && couponIndex === selectedCouponIndex ? "border-danger mb-3" : "mb-4"}`}
                                                     defaultValue={coupon.discountPercentage}
                                                     onChange={(e) => changeCouponDiscountPercentage(couponIndex, e.target.value.trim())}
-                                                ></input>
-                                                {formValidationErrors["discountPercentage"] && couponIndex === selectedCouponIndex && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                                    <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                                    <span>{formValidationErrors["discountPercentage"]}</span>
-                                                </p>}
+                                                />
+                                                {formValidationErrors["discountPercentage"] && <FormFieldErrorBox errorMsg={formValidationErrors["discountPercentage"]} />}
                                             </section>
                                         </td>
                                         <td className="update-cell">

@@ -169,10 +169,7 @@ export default function AddNewCoupon() {
                                     value={couponDetails.code}
                                     disabled
                                 />
-                                {formValidationErrors["code"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                    <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                    <span>{formValidationErrors["code"]}</span>
-                                </p>}
+                                {formValidationErrors["code"] && <FormFieldErrorBox errorMsg={formValidationErrors["code"]} />}
                             </div>
                             <div className="col-md-4">
                                 <button
@@ -193,10 +190,7 @@ export default function AddNewCoupon() {
                                 onChange={(e) => setCouponDetails({ ...couponDetails, discountPercentage: Number(e.target.value.trim()) })}
                                 value={couponDetails.discountPercentage}
                             />
-                            {formValidationErrors["discountPercentage"] && <p className="bg-danger p-2 form-field-error-box m-0 text-white">
-                                <span className="me-2"><HiOutlineBellAlert className="alert-icon" /></span>
-                                <span>{formValidationErrors["discountPercentage"]}</span>
-                            </p>}
+                            {formValidationErrors["discountPercentage"] && <FormFieldErrorBox errorMsg={formValidationErrors["discountPercentage"]} />}
                         </section>
                         {!waitMsg && !successMsg && !errorMsg && <button
                             type="submit"
