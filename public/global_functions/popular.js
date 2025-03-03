@@ -185,6 +185,31 @@ const getProductInfo = async (productId) => {
     }
 }
 
+const getLanguagesInfoList = (fieldName) => {
+    return [
+        {
+            fullLanguageName: "Arabic",
+            internationalLanguageCode: "ar",
+            formField: `${fieldName}InAR`
+        },
+        {
+            fullLanguageName: "English",
+            internationalLanguageCode: "en",
+            formField: `${fieldName}InEN`
+        },
+        {
+            fullLanguageName: "Deutche",
+            internationalLanguageCode: "de",
+            formField: `${fieldName}InDE`
+        },
+        {
+            fullLanguageName: "Turkish",
+            internationalLanguageCode: "tr",
+            formField: `${fieldName}InTR`
+        }
+    ];
+}
+
 export {
     getProductsCount,
     getAllProductsInsideThePage,
@@ -204,5 +229,6 @@ export {
     getAdminInfo,
     getOrderDetails,
     handleSelectUserLanguage,
-    getProductInfo
+    getProductInfo,
+    getLanguagesInfoList
 }

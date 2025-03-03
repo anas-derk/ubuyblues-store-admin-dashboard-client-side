@@ -8,10 +8,11 @@ import AdminPanelHeader from "@/components/AdminPanelHeader";
 import { useRouter } from "next/router";
 import PaginationBar from "@/components/PaginationBar";
 import { inputValuesValidation } from "../../../../public/global_functions/validations";
-import { getAdminInfo } from "../../../../public/global_functions/popular";
+import { getAdminInfo, getLanguagesInfoList } from "../../../../public/global_functions/popular";
 import TableLoader from "@/components/TableLoader";
 import NotFoundError from "@/components/NotFoundError";
 import FormFieldErrorBox from "@/components/FormFieldErrorBox";
+import { useTranslation } from "react-i18next";
 
 export default function UpdateAndDeleteBrands() {
 
@@ -55,30 +56,9 @@ export default function UpdateAndDeleteBrands() {
 
     const router = useRouter();
 
-    const pageSize = 10;
+    const { i18n } = useTranslation();
 
-    const languagesInfoList = [
-        {
-            fullLanguageName: "Arabic",
-            internationalLanguageCode: "ar",
-            formField: "contentInAR"
-        },
-        {
-            fullLanguageName: "English",
-            internationalLanguageCode: "en",
-            formField: "contentInEN"
-        },
-        {
-            fullLanguageName: "Deutche",
-            internationalLanguageCode: "de",
-            formField: "contentInDE"
-        },
-        {
-            fullLanguageName: "Turkish",
-            internationalLanguageCode: "tr",
-            formField: "contentInTR"
-        }
-    ];
+    const pageSize = 10;
 
     useEffect(() => {
         const adminToken = localStorage.getItem(process.env.adminTokenNameInLocalStorage);
@@ -223,7 +203,7 @@ export default function UpdateAndDeleteBrands() {
                             msg: "Sorry, Invalid Image Type, Please Upload JPG Or PNG Image File !!",
                         },
                     },
-                },
+                }
             ]);
             setSelectedBrandImageIndex(brandIndex);
             setFormValidationErrors(errorsObject);
@@ -277,15 +257,15 @@ export default function UpdateAndDeleteBrands() {
         try {
             setFormValidationErrors({});
             const errorsObject = inputValuesValidation([
-                {
-                    name: "title",
-                    value: allBrandsInsideThePage[brandIndex].title,
+                ...["ar", "en", "de", "tr"].map((language) => ({
+                    name: `titleIn${language.toUpperCase()}`,
+                    value: allBrandsInsideThePage[brandIndex].title[language],
                     rules: {
                         isRequired: {
                             msg: "Sorry, This Field Can't Be Empty !!",
                         },
                     },
-                },
+                })),
             ]);
             setFormValidationErrors(errorsObject);
             setSelectedBrandIndex(brandIndex);
@@ -403,7 +383,7 @@ export default function UpdateAndDeleteBrands() {
                                     <tr key={brand._id}>
                                         <td className="brand-title-cell">
                                             <section className="brand-title mb-4">
-                                                {languagesInfoList.map((el) => (
+                                                {getLanguagesInfoList("title").map((el) => (
                                                     <div key={el.fullLanguageName}>
                                                         <h6 className="fw-bold">In {el.fullLanguageName} :</h6>
                                                         <input
@@ -421,7 +401,7 @@ export default function UpdateAndDeleteBrands() {
                                         <td className="brand-image-cell">
                                             <img
                                                 src={`${process.env.BASE_API_URL}/${brand.imagePath}`}
-                                                alt={`${brand.title} Brand Image !!`}
+                                                alt={`${brand.title[i18n.language]} Brand Image !!`}
                                                 width="100"
                                                 height="100"
                                                 className="d-block mx-auto mb-4"
@@ -433,7 +413,7 @@ export default function UpdateAndDeleteBrands() {
                                                     onChange={(e) => changeBrandData(brandIndex, "image", e.target.files[0])}
                                                     accept=".png, .jpg, .webp"
                                                 />
-                                                {formValidationErrors["image"] && <FormFieldErrorBox errorMsg={formValidationErrors["image"]} />}
+                                                {formValidationErrors["image"] && selectedBrandImageIndex === brandIndex && <FormFieldErrorBox errorMsg={formValidationErrors["image"]} />}
                                             </section>
                                             {(selectedBrandImageIndex !== brandIndex && selectedBrandIndex !== brandIndex) &&
                                                 <button
