@@ -13,12 +13,12 @@ import {
     getAllProductsInsideThePage,
     getTimeAndDateByLocalTime,
     getDateInUTCFormat,
+    getLanguagesInfoList,
 } from "../../../../public/global_functions/popular";
 import Link from "next/link";
 import NotFoundError from "@/components/NotFoundError";
 import TableLoader from "@/components/TableLoader";
 import FormFieldErrorBox from "@/components/FormFieldErrorBox";
-import { useTranslation } from "react-i18next";
 
 export default function UpdateAndDeleteProducts() {
 
@@ -64,32 +64,7 @@ export default function UpdateAndDeleteProducts() {
 
     const router = useRouter();
 
-    const { i18n } = useTranslation();
-
     const pageSize = 10;
-
-    const languagesInfoList = [
-        {
-            fullLanguageName: "Arabic",
-            internationalLanguageCode: "ar",
-            formField: "contentInAR"
-        },
-        {
-            fullLanguageName: "English",
-            internationalLanguageCode: "en",
-            formField: "contentInEN"
-        },
-        {
-            fullLanguageName: "Deutche",
-            internationalLanguageCode: "de",
-            formField: "contentInDE"
-        },
-        {
-            fullLanguageName: "Turkish",
-            internationalLanguageCode: "tr",
-            formField: "contentInTR"
-        }
-    ];
 
     useEffect(() => {
         const adminToken = localStorage.getItem(process.env.adminTokenNameInLocalStorage);
@@ -310,15 +285,15 @@ export default function UpdateAndDeleteProducts() {
         try {
             setFormValidationErrors({});
             const errorsObject = inputValuesValidation([
-                {
-                    name: "name",
-                    value: allProductsInsideThePage[productIndex].name,
+                ...["ar", "en", "de", "tr"].map((language) => ({
+                    name: `nameIn${language.toUpperCase()}`,
+                    value: allProductsInsideThePage[productIndex].name[language],
                     rules: {
                         isRequired: {
                             msg: "Sorry, This Field Can't Be Empty !!",
                         },
                     },
-                },
+                })),
                 {
                     name: "price",
                     value: allProductsInsideThePage[productIndex].price,
@@ -341,15 +316,15 @@ export default function UpdateAndDeleteProducts() {
                         },
                     },
                 },
-                {
-                    name: "description",
-                    value: allProductsInsideThePage[productIndex].description,
+                ...["ar", "en", "de", "tr"].map((language) => ({
+                    name: `descriptionIn${language.toUpperCase()}`,
+                    value: allProductsInsideThePage[productIndex].description[language],
                     rules: {
                         isRequired: {
                             msg: "Sorry, This Field Can't Be Empty !!",
                         },
                     },
-                },
+                })),
                 {
                     name: "discount",
                     value: allProductsInsideThePage[productIndex].discount,
@@ -551,7 +526,7 @@ export default function UpdateAndDeleteProducts() {
                                     <tr key={product._id}>
                                         <td className="product-name-cell">
                                             <section className="product-name mb-4">
-                                                {languagesInfoList.map((el) => (
+                                                {getLanguagesInfoList("name").map((el) => (
                                                     <div key={el.fullLanguageName}>
                                                         <h6 className="fw-bold">In {el.fullLanguageName} :</h6>
                                                         <input
@@ -575,7 +550,7 @@ export default function UpdateAndDeleteProducts() {
                                                     className={`form-control d-block mx-auto p-2 border-2 product-price-field ${formValidationErrors["price"] && productIndex === selectedProductIndex ? "border-danger mb-3" : "mb-4"}`}
                                                     onChange={(e) => changeProductData(productIndex, "price", e.target.value)}
                                                 />
-                                                {formValidationErrors["price"] && <FormFieldErrorBox errorMsg={formValidationErrors["price"]} />}
+                                                {formValidationErrors["price"] && productIndex === selectedProductIndex && <FormFieldErrorBox errorMsg={formValidationErrors["price"]} />}
                                             </section>
                                         </td>
                                         <td className="product-quantity-cell">
@@ -589,12 +564,12 @@ export default function UpdateAndDeleteProducts() {
                                                     className={`form-control d-block mx-auto p-2 border-2 product-quantity-field ${formValidationErrors["quantity"] && productIndex === selectedProductIndex ? "border-danger mb-3" : "mb-4"}`}
                                                     onChange={(e) => changeProductData(productIndex, "quantity", e.target.value)}
                                                 />
-                                                {formValidationErrors["quantity"] && <FormFieldErrorBox errorMsg={formValidationErrors["quantity"]} />}
+                                                {formValidationErrors["quantity"] && productIndex === selectedProductIndex && <FormFieldErrorBox errorMsg={formValidationErrors["quantity"]} />}
                                             </section>
                                         </td>
                                         <td className="product-description-cell" width="400">
                                             <section className="product-description mb-4">
-                                                {languagesInfoList.map((el) => (
+                                                {getLanguagesInfoList("description").map((el) => (
                                                     <div key={el.fullLanguageName}>
                                                         <h6 className="fw-bold">In {el.fullLanguageName} :</h6>
                                                         <textarea
@@ -618,7 +593,7 @@ export default function UpdateAndDeleteProducts() {
                                                     className={`form-control d-block mx-auto p-2 border-2 product-price-discount ${formValidationErrors["discount"] && productIndex === selectedProductIndex ? "border-danger mb-3" : "mb-4"}`}
                                                     onChange={(e) => changeProductData(productIndex, "discount", e.target.value)}
                                                 />
-                                                {formValidationErrors["discount"] && <FormFieldErrorBox errorMsg={formValidationErrors["discount"]} />}
+                                                {formValidationErrors["discount"] && productIndex === selectedProductIndex && <FormFieldErrorBox errorMsg={formValidationErrors["discount"]} />}
                                             </section>
                                             <div className="limited-period-box border border-2 p-3 border-dark">
                                                 <div className="period-box">
@@ -644,7 +619,7 @@ export default function UpdateAndDeleteProducts() {
                                                             className={`form-control d-block mx-auto p-2 border-2 product-price-discount-in-offer-period-field ${formValidationErrors["discount"] && productIndex === selectedProductIndex ? "border-danger mb-3" : "mb-2"}`}
                                                             onChange={(e) => changeProductData(productIndex, "discountInOfferPeriod", e.target.value)}
                                                         />
-                                                        {formValidationErrors["discountInOfferPeriod"] && <FormFieldErrorBox errorMsg={formValidationErrors["discountInOfferPeriod"]} />}
+                                                        {formValidationErrors["discountInOfferPeriod"] && productIndex === selectedProductIndex && <FormFieldErrorBox errorMsg={formValidationErrors["discountInOfferPeriod"]} />}
                                                     </section>
                                                     <section className="offer-description">
                                                         <input
@@ -654,7 +629,7 @@ export default function UpdateAndDeleteProducts() {
                                                             className={`form-control d-block mx-auto p-2 border-2 offer-description-field ${formValidationErrors["name"] && productIndex === selectedProductIndex ? "border-danger mb-3" : "mb-2"}`}
                                                             onChange={(e) => changeProductData(productIndex, "offerDescription", e.target.value.trim())}
                                                         />
-                                                        {formValidationErrors["offerDescription"] && <FormFieldErrorBox errorMsg={formValidationErrors["offerDescription"]} />}
+                                                        {formValidationErrors["offerDescription"] && productIndex === selectedProductIndex && <FormFieldErrorBox errorMsg={formValidationErrors["offerDescription"]} />}
                                                     </section>
                                                 </div>
                                             </div>
@@ -674,7 +649,7 @@ export default function UpdateAndDeleteProducts() {
                                                     onChange={(e) => changeProductData(productIndex, "image", e.target.files[0])}
                                                     accept=".png, .jpg, .webp"
                                                 />
-                                                {formValidationErrors["image"] && <FormFieldErrorBox errorMsg={formValidationErrors["image"]} />}
+                                                {formValidationErrors["image"] && productIndex === selectedProductIndex && <FormFieldErrorBox errorMsg={formValidationErrors["image"]} />}
                                             </section>
                                             {(selectedProducImageIndex !== productIndex && selectedProductIndex !== productIndex) &&
                                                 <button
