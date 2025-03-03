@@ -7,7 +7,7 @@ import ErrorOnLoadingThePage from "@/components/ErrorOnLoadingThePage";
 import AdminPanelHeader from "@/components/AdminPanelHeader";
 import { useRouter } from "next/router";
 import { inputValuesValidation } from "../../../../public/global_functions/validations";
-import { getAdminInfo } from "../../../../public/global_functions/popular";
+import { getAdminInfo, getLanguagesInfoList } from "../../../../public/global_functions/popular";
 import FormFieldErrorBox from "@/components/FormFieldErrorBox";
 
 export default function UpdateAndDeleteAds() {
@@ -41,29 +41,6 @@ export default function UpdateAndDeleteAds() {
     const [formValidationErrors, setFormValidationErrors] = useState({});
 
     const router = useRouter();
-
-    const languagesInfoList = [
-        {
-            fullLanguageName: "Arabic",
-            internationalLanguageCode: "ar",
-            formField: "contentInAR"
-        },
-        {
-            fullLanguageName: "English",
-            internationalLanguageCode: "en",
-            formField: "contentInEN"
-        },
-        {
-            fullLanguageName: "Deutche",
-            internationalLanguageCode: "de",
-            formField: "contentInDE"
-        },
-        {
-            fullLanguageName: "Turkish",
-            internationalLanguageCode: "tr",
-            formField: "contentInTR"
-        }
-    ];
 
     useEffect(() => {
         const adminToken = localStorage.getItem(process.env.adminTokenNameInLocalStorage);
@@ -141,7 +118,7 @@ export default function UpdateAndDeleteAds() {
             setFormValidationErrors({});
             const errorsObject = inputValuesValidation(advertisementType === "text" ? [
                 ...["ar", "en", "de", "tr"].map((language) => ({
-                    name: `contentIn${language.toUpperCase()}`,
+                    name: `adContentIn${language.toUpperCase()}`,
                     value: allTextAds[adIndex].content[language],
                     rules: {
                         isRequired: {
@@ -316,7 +293,7 @@ export default function UpdateAndDeleteAds() {
                                     <tr key={ad._id}>
                                         <td className="ad-content-cell">
                                             <section className="ad-content mb-4">
-                                                {languagesInfoList.map((el) => (
+                                                {getLanguagesInfoList("adContent").map((el) => (
                                                     <div key={el.fullLanguageName}>
                                                         <h6 className="fw-bold">In {el.fullLanguageName} :</h6>
                                                         <input
@@ -325,7 +302,7 @@ export default function UpdateAndDeleteAds() {
                                                             className={`form-control d-block mx-auto p-2 border-2 ad-content-field ${formValidationErrors[el.formField] && adIndex === selectedAdIndex ? "border-danger mb-3" : "mb-4"}`}
                                                             defaultValue={ad.content[el.internationalLanguageCode]}
                                                             onChange={(e) => changeAdContent(adIndex, e.target.value.trim(), el.internationalLanguageCode)}
-                                                        ></input>
+                                                        />
                                                         {formValidationErrors[el.formField] && adIndex === selectedAdIndex && <FormFieldErrorBox errorMsg={formValidationErrors[el.formField]} />}
                                                     </div>
                                                 ))}

@@ -237,7 +237,7 @@ export default function UpdateAndDeleteCoupons() {
                                                     defaultValue={coupon.discountPercentage}
                                                     onChange={(e) => changeCouponDiscountPercentage(couponIndex, e.target.value.trim())}
                                                 />
-                                                {formValidationErrors["discountPercentage"] && <FormFieldErrorBox errorMsg={formValidationErrors["discountPercentage"]} />}
+                                                {formValidationErrors["discountPercentage"] && couponIndex === selectedCouponIndex && <FormFieldErrorBox errorMsg={formValidationErrors["discountPercentage"]} />}
                                             </section>
                                         </td>
                                         <td className="update-cell">

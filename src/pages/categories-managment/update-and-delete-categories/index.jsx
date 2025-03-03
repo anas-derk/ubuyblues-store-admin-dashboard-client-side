@@ -8,7 +8,7 @@ import AdminPanelHeader from "@/components/AdminPanelHeader";
 import { useRouter } from "next/router";
 import PaginationBar from "@/components/PaginationBar";
 import { inputValuesValidation } from "../../../../public/global_functions/validations";
-import { getAdminInfo, getAllCategoriesInsideThePage } from "../../../../public/global_functions/popular";
+import { getAdminInfo, getAllCategoriesInsideThePage, getLanguagesInfoList } from "../../../../public/global_functions/popular";
 import NotFoundError from "@/components/NotFoundError";
 import TableLoader from "@/components/TableLoader";
 import Link from "next/link";
@@ -227,15 +227,15 @@ export default function UpdateAndDeleteCategories() {
         try {
             setFormValidationErrors({});
             const errorsObject = inputValuesValidation([
-                {
-                    name: "categoryName",
-                    value: allCategoriesInsideThePage[categoryIndex].name,
+                ...["ar", "en", "de", "tr"].map((language) => ({
+                    name: `categoryNameIn${language.toUpperCase()}`,
+                    value: allCategoriesInsideThePage[categoryIndex].name[language],
                     rules: {
                         isRequired: {
                             msg: "Sorry, This Field Can't Be Empty !!",
                         },
                     },
-                },
+                })),
             ]);
             setFormValidationErrors(errorsObject);
             setSelectedCategoryIndex(categoryIndex);
@@ -382,7 +382,7 @@ export default function UpdateAndDeleteCategories() {
                                     <tr key={category._id}>
                                         <td className="category-name-cell">
                                             <section className="category-name mb-4">
-                                                {languagesInfoList.map((el) => (
+                                                {getLanguagesInfoList("categoryName").map((el) => (
                                                     <div key={el.fullLanguageName}>
                                                         <h6 className="fw-bold">In {el.fullLanguageName} :</h6>
                                                         <input
@@ -392,7 +392,7 @@ export default function UpdateAndDeleteCategories() {
                                                             defaultValue={category.name[el.internationalLanguageCode]}
                                                             onChange={(e) => changeCategoryData(categoryIndex, "name", e.target.value.trim(), el.internationalLanguageCode)}
                                                         />
-                                                        {formValidationErrors[el.formField] && adIndex === selectedAdIndex && <FormFieldErrorBox errorMsg={formValidationErrors[el.formField]} />}
+                                                        {formValidationErrors[el.formField] && categoryIndex === selectedCategoryIndex && <FormFieldErrorBox errorMsg={formValidationErrors[el.formField]} />}
                                                     </div>
                                                 ))}
                                             </section>
