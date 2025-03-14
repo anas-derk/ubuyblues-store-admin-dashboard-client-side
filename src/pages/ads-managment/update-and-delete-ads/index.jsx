@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 import { inputValuesValidation } from "../../../../public/global_functions/validations";
 import { getAdminInfo, getLanguagesInfoList } from "../../../../public/global_functions/popular";
 import FormFieldErrorBox from "@/components/FormFieldErrorBox";
+import ConfirmDelete from "@/components/ConfirmDelete";
 
 export default function UpdateAndDeleteAds() {
 
@@ -39,6 +40,8 @@ export default function UpdateAndDeleteAds() {
     });
 
     const [formValidationErrors, setFormValidationErrors] = useState({});
+
+    const [isDisplayConfirmDeleteBox, setIsDisplayConfirmDeleteBox] = useState(false);
 
     const router = useRouter();
 
@@ -202,6 +205,11 @@ export default function UpdateAndDeleteAds() {
         }
     }
 
+    const handleDisplayConfirmDeleteBox = (adIndex) => {
+        setIsDisplayConfirmDeleteBox(true);
+        setSelectedAdIndex(adIndex);
+    }
+
     const deleteAd = async (adIndex) => {
         try {
             setWaitMsg("Please Wait To Deleting ...");
@@ -257,6 +265,15 @@ export default function UpdateAndDeleteAds() {
             </Head>
             {!isLoadingPage && !errorMsgOnLoadingThePage && <>
                 <AdminPanelHeader isWebsiteOwner={adminInfo.isWebsiteOwner} isMerchant={adminInfo.isMerchant} />
+                {isDisplayConfirmDeleteBox && <ConfirmDelete
+                    name="Advertisement"
+                    setIsDisplayConfirmDeleteBox={setIsDisplayConfirmDeleteBox}
+                    handleDeleteFunc={deleteAd}
+                    setSelectedElementIndex={setSelectedAdIndex}
+                    waitMsg={waitMsg}
+                    errorMsg={errorMsg}
+                    successMsg={successMsg}
+                />}
                 <div className="page-content d-flex justify-content-center align-items-center flex-column p-5">
                     <h1 className="fw-bold w-fit pb-2 mb-4">
                         <PiHandWavingThin className="me-2" />
@@ -317,7 +334,7 @@ export default function UpdateAndDeleteAds() {
                                                 <hr />
                                                 <button
                                                     className="btn btn-danger global-button"
-                                                    onClick={() => deleteAd(adIndex)}
+                                                    onClick={() => handleDisplayConfirmDeleteBox(adIndex)}
                                                 >Delete</button>
                                             </>}
                                             {waitMsg && selectedAdIndex === adIndex && <button
