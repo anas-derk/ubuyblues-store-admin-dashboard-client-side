@@ -207,7 +207,7 @@ export default function AddNewProduct() {
                         },
                     },
                 },
-                {
+                productData.threeDImage ? {
                     name: "3DImage",
                     value: productData.threeDImage,
                     rules: {
@@ -218,7 +218,7 @@ export default function AddNewProduct() {
                             msg: "Sorry, Invalid Image Type, Please Upload JPG Or PNG Or WEBP Image File !!",
                         },
                     },
-                },
+                } : null,
             ]);
             setFormValidationErrors(errorsObject);
             if (Object.keys(errorsObject).length == 0) {
@@ -235,7 +235,9 @@ export default function AddNewProduct() {
                     formData.append("countries[]", country);
                 }
                 formData.append("productImage", productData.image);
-                formData.append("threeDImage", productData.threeDImage);
+                if (productData.threeDImage) {
+                    formData.append("threeDImage", productData.threeDImage);
+                }
                 for (let galleryImage of productData.galleryImages) {
                     formData.append("galleryImages", galleryImage);
                 }
@@ -250,19 +252,19 @@ export default function AddNewProduct() {
                     setSuccessMsg(result.msg);
                     let successTimeout = setTimeout(() => {
                         setSuccessMsg("");
-                        setProductData({
-                            ...productData,
-                            name: "",
-                            price: "",
-                            description: "",
-                            discount: "",
-                            image: null,
-                            threeDImage: null,
-                            galleryImages: [],
-                        });
-                        productImageFileElementRef.current.value = "";
-                        threeDProductImageFileElementRef.current.value = "";
-                        productGalleryImagesFilesElementRef.current.value = "";
+                        // setProductData({
+                        //     ...productData,
+                        //     name: "",
+                        //     price: "",
+                        //     description: "",
+                        //     discount: "",
+                        //     image: null,
+                        //     threeDImage: null,
+                        //     galleryImages: [],
+                        // });
+                        // productImageFileElementRef.current.value = "";
+                        // threeDProductImageFileElementRef.current.value = "";
+                        // productGalleryImagesFilesElementRef.current.value = "";
                         clearTimeout(successTimeout);
                     }, 1500);
                 } else {
