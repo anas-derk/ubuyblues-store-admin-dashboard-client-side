@@ -7,9 +7,10 @@ import ErrorOnLoadingThePage from "@/components/ErrorOnLoadingThePage";
 import AdminPanelHeader from "@/components/AdminPanelHeader";
 import { useRouter } from "next/router";
 import { inputValuesValidation } from "../../../../public/global_functions/validations";
-import { getAdminInfo } from "../../../../public/global_functions/popular";
+import { getAdminInfo, handleDisplayConfirmDeleteBox } from "../../../../public/global_functions/popular";
 import NotFoundError from "@/components/NotFoundError";
 import FormFieldErrorBox from "@/components/FormFieldErrorBox";
+import ConfirmDelete from "@/components/ConfirmDelete";
 
 export default function UpdateAndDeleteCoupons() {
 
@@ -30,6 +31,8 @@ export default function UpdateAndDeleteCoupons() {
     const [successMsg, setSuccessMsg] = useState("");
 
     const [formValidationErrors, setFormValidationErrors] = useState({});
+
+    const [isDisplayConfirmDeleteBox, setIsDisplayConfirmDeleteBox] = useState(false);
 
     const router = useRouter();
 
@@ -209,6 +212,15 @@ export default function UpdateAndDeleteCoupons() {
             </Head>
             {!isLoadingPage && !errorMsgOnLoadingThePage && <>
                 <AdminPanelHeader isWebsiteOwner={adminInfo.isWebsiteOwner} isMerchant={adminInfo.isMerchant} />
+                {isDisplayConfirmDeleteBox && <ConfirmDelete
+                    name="Coupon"
+                    setIsDisplayConfirmDeleteBox={setIsDisplayConfirmDeleteBox}
+                    handleDeleteFunc={() => deleteCoupon(selectedCouponIndex)}
+                    setSelectedElementIndex={setSelectedCouponIndex}
+                    waitMsg={waitMsg}
+                    errorMsg={errorMsg}
+                    successMsg={successMsg}
+                />}
                 <div className="page-content d-flex justify-content-center align-items-center flex-column p-5">
                     <h1 className="fw-bold w-fit pb-2 mb-4">
                         <PiHandWavingThin className="me-2" />
@@ -249,7 +261,7 @@ export default function UpdateAndDeleteCoupons() {
                                                 <hr />
                                                 <button
                                                     className="btn btn-danger global-button"
-                                                    onClick={() => deleteCoupon(couponIndex)}
+                                                    onClick={() => handleDisplayConfirmDeleteBox(couponIndex, setSelectedCouponIndex, setIsDisplayConfirmDeleteBox)}
                                                 >Delete</button>
                                             </>}
                                             {waitMsg && selectedCouponIndex === couponIndex && <button

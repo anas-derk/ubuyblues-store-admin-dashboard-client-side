@@ -7,9 +7,10 @@ import ErrorOnLoadingThePage from "@/components/ErrorOnLoadingThePage";
 import AdminPanelHeader from "@/components/AdminPanelHeader";
 import { useRouter } from "next/router";
 import { inputValuesValidation } from "../../../../../public/global_functions/validations";
-import { getAdminInfo } from "../../../../../public/global_functions/popular";
+import { getAdminInfo, handleDisplayConfirmDeleteBox } from "../../../../../public/global_functions/popular";
 import NotFoundError from "@/components/NotFoundError";
 import FormFieldErrorBox from "@/components/FormFieldErrorBox";
+import ConfirmDelete from "@/components/ConfirmDelete";
 
 export default function UpdateAndDeleteGalleryImages({ productIdAsProperty }) {
 
@@ -32,6 +33,8 @@ export default function UpdateAndDeleteGalleryImages({ productIdAsProperty }) {
     const [successMsg, setSuccessMsg] = useState("");
 
     const [formValidationErrors, setFormValidationErrors] = useState({});
+
+    const [isDisplayConfirmDeleteBox, setIsDisplayConfirmDeleteBox] = useState(false);
 
     const router = useRouter();
 
@@ -197,6 +200,15 @@ export default function UpdateAndDeleteGalleryImages({ productIdAsProperty }) {
             </Head>
             {!isLoadingPage && !errorMsgOnLoadingThePage && <>
                 <AdminPanelHeader isWebsiteOwner={adminInfo.isWebsiteOwner} isMerchant={adminInfo.isMerchant} />
+                {isDisplayConfirmDeleteBox && <ConfirmDelete
+                    name="Image From Product Galley"
+                    setIsDisplayConfirmDeleteBox={setIsDisplayConfirmDeleteBox}
+                    handleDeleteFunc={() => deleteImageFromGallery(selectedGalleryImageIndex)}
+                    setSelectedElementIndex={setSelectedGalleryImageIndex}
+                    waitMsg={waitMsg}
+                    errorMsg={errorMsg}
+                    successMsg={successMsg}
+                />}
                 <div className="page-content d-flex justify-content-center align-items-center flex-column p-5">
                     <h1 className="fw-bold w-fit pb-2 mb-4">
                         <PiHandWavingThin className="me-2" />
@@ -253,7 +265,7 @@ export default function UpdateAndDeleteGalleryImages({ productIdAsProperty }) {
                                         <td className="delete-gallery-image-cell">
                                             {(selectedGalleryImageIndex !== imageIndex || formValidationErrors["galleryImage"]) && <button
                                                 className="btn btn-danger global-button"
-                                                onClick={() => deleteImageFromGallery(imageIndex)}
+                                                onClick={() => handleDisplayConfirmDeleteBox(imageIndex, setSelectedGalleryImageIndex, setIsDisplayConfirmDeleteBox)}
                                             >Delete</button>}
                                             {waitMsg === "Please Wait To Deleting ..." && selectedGalleryImageIndex === imageIndex && <button
                                                 className="btn btn-info d-block mb-3 mx-auto global-button"

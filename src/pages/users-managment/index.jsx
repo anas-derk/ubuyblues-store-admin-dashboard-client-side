@@ -7,9 +7,10 @@ import ErrorOnLoadingThePage from "@/components/ErrorOnLoadingThePage";
 import AdminPanelHeader from "@/components/AdminPanelHeader";
 import { useRouter } from "next/router";
 import PaginationBar from "@/components/PaginationBar";
-import { getAdminInfo, getDateFormated } from "../../../public/global_functions/popular";
+import { getAdminInfo, getDateFormated, handleDisplayConfirmDeleteBox } from "../../../public/global_functions/popular";
 import NotFoundError from "@/components/NotFoundError";
 import TableLoader from "@/components/TableLoader";
+import ConfirmDelete from "@/components/ConfirmDelete";
 
 export default function UsersManagment() {
 
@@ -43,6 +44,8 @@ export default function UsersManagment() {
         firstName: "",
         lastName: "",
     });
+
+    const [isDisplayConfirmDeleteBox, setIsDisplayConfirmDeleteBox] = useState(false);
 
     const router = useRouter();
 
@@ -246,6 +249,15 @@ export default function UsersManagment() {
             </Head>
             {!isLoadingPage && !errorMsgOnLoadingThePage && <>
                 <AdminPanelHeader isWebsiteOwner={adminInfo.isWebsiteOwner} isMerchant={adminInfo.isMerchant} />
+                {isDisplayConfirmDeleteBox && <ConfirmDelete
+                    name="Product"
+                    setIsDisplayConfirmDeleteBox={setIsDisplayConfirmDeleteBox}
+                    handleDeleteFunc={() => deleteUser(selectedUserIndex)}
+                    setSelectedElementIndex={setSelectedUserIndex}
+                    waitMsg={waitMsg}
+                    errorMsg={errorMsg}
+                    successMsg={successMsg}
+                />}
                 <div className="page-content d-flex justify-content-center align-items-center flex-column text-center pt-5 pb-5">
                     <div className="container-fluid">
                         <h1 className="welcome-msg mb-4 fw-bold pb-3 mx-auto">
@@ -340,7 +352,7 @@ export default function UsersManagment() {
                                                 {selectedUserIndex !== userIndex && <>
                                                     <button
                                                         className="btn btn-danger global-button"
-                                                        onClick={() => deleteUser(userIndex)}
+                                                        onClick={() => handleDisplayConfirmDeleteBox(userIndex, setSelectedUserIndex, setIsDisplayConfirmDeleteBox)}
                                                     >Delete</button>
                                                 </>}
                                                 {waitMsg && selectedUserIndex === userIndex && <button

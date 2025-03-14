@@ -14,11 +14,13 @@ import {
     getTimeAndDateByLocalTime,
     getDateInUTCFormat,
     getLanguagesInfoList,
+    handleDisplayConfirmDeleteBox,
 } from "../../../../public/global_functions/popular";
 import Link from "next/link";
 import NotFoundError from "@/components/NotFoundError";
 import TableLoader from "@/components/TableLoader";
 import FormFieldErrorBox from "@/components/FormFieldErrorBox";
+import ConfirmDelete from "@/components/ConfirmDelete";
 
 export default function UpdateAndDeleteProducts() {
 
@@ -61,6 +63,8 @@ export default function UpdateAndDeleteProducts() {
     });
 
     const [formValidationErrors, setFormValidationErrors] = useState({});
+
+    const [isDisplayConfirmDeleteBox, setIsDisplayConfirmDeleteBox] = useState(false);
 
     const router = useRouter();
 
@@ -465,6 +469,15 @@ export default function UpdateAndDeleteProducts() {
             </Head>
             {!isLoadingPage && !errorMsgOnLoadingThePage && <>
                 <AdminPanelHeader isWebsiteOwner={adminInfo.isWebsiteOwner} isMerchant={adminInfo.isMerchant} />
+                {isDisplayConfirmDeleteBox && <ConfirmDelete
+                    name="Product"
+                    setIsDisplayConfirmDeleteBox={setIsDisplayConfirmDeleteBox}
+                    handleDeleteFunc={() => deleteProduct(selectedProductIndex)}
+                    setSelectedElementIndex={setSelectedProductIndex}
+                    waitMsg={waitMsg}
+                    errorMsg={errorMsg}
+                    successMsg={successMsg}
+                />}
                 <div className="page-content d-flex justify-content-center align-items-center flex-column p-4">
                     <h1 className="fw-bold w-fit pb-2 mb-4">
                         <PiHandWavingThin className="me-2" />
@@ -691,7 +704,7 @@ export default function UpdateAndDeleteProducts() {
                                                 <hr />
                                                 <button
                                                     className="btn btn-danger global-button"
-                                                    onClick={() => deleteProduct(productIndex)}
+                                                    onClick={() => handleDisplayConfirmDeleteBox(productIndex, setSelectedProductIndex, setIsDisplayConfirmDeleteBox)}
                                                 >Delete</button>
                                             </>}
                                             {waitMsg && selectedProductIndex === productIndex && <button

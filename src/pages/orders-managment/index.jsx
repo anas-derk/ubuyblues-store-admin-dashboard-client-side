@@ -8,9 +8,10 @@ import ErrorOnLoadingThePage from "@/components/ErrorOnLoadingThePage";
 import AdminPanelHeader from "@/components/AdminPanelHeader";
 import PaginationBar from "@/components/PaginationBar";
 import { inputValuesValidation } from "../../../public/global_functions/validations";
-import { getAdminInfo, getDateFormated } from "../../../public/global_functions/popular";
+import { getAdminInfo, getDateFormated, handleDisplayConfirmDeleteBox } from "../../../public/global_functions/popular";
 import NotFoundError from "@/components/NotFoundError";
 import TableLoader from "@/components/TableLoader";
+import ConfirmDelete from "@/components/ConfirmDelete";
 
 export default function OrdersManagment() {
 
@@ -51,6 +52,8 @@ export default function OrdersManagment() {
     });
 
     const [formValidationErrors, setFormValidationErrors] = useState({});
+
+    const [isDisplayConfirmDeleteBox, setIsDisplayConfirmDeleteBox] = useState(false);
 
     const router = useRouter();
 
@@ -330,6 +333,15 @@ export default function OrdersManagment() {
                 {/* Start Admin Dashboard Side Bar */}
                 <AdminPanelHeader isWebsiteOwner={adminInfo.isWebsiteOwner} isMerchant={adminInfo.isMerchant} />
                 {/* Start Admin Dashboard Side Bar */}
+                {isDisplayConfirmDeleteBox && <ConfirmDelete
+                    name="Order"
+                    setIsDisplayConfirmDeleteBox={setIsDisplayConfirmDeleteBox}
+                    handleDeleteFunc={() => deleteOrder(selectedOrderIndex)}
+                    setSelectedElementIndex={setSelectedOrderIndex}
+                    waitMsg={waitMsg}
+                    errorMsg={errorMsg}
+                    successMsg={successMsg}
+                />}
                 {/* Start Content Section */}
                 <section className="page-content d-flex justify-content-center align-items-center flex-column text-center pt-5 pb-5">
                     <div className="container-fluid">
@@ -467,7 +479,7 @@ export default function OrdersManagment() {
                                                     </button>}
                                                     <button
                                                         className="btn btn-danger d-block mx-auto mb-3 global-button"
-                                                        onClick={() => deleteOrder(orderIndex)}
+                                                        onClick={() => handleDisplayConfirmDeleteBox(orderIndex, setSelectedOrderIndex, setIsDisplayConfirmDeleteBox)}
                                                     >
                                                         Delete
                                                     </button>

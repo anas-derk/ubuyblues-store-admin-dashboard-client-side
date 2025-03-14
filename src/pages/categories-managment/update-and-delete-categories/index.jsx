@@ -8,11 +8,12 @@ import AdminPanelHeader from "@/components/AdminPanelHeader";
 import { useRouter } from "next/router";
 import PaginationBar from "@/components/PaginationBar";
 import { inputValuesValidation } from "../../../../public/global_functions/validations";
-import { getAdminInfo, getAllCategoriesInsideThePage, getLanguagesInfoList } from "../../../../public/global_functions/popular";
+import { getAdminInfo, getAllCategoriesInsideThePage, getLanguagesInfoList, handleDisplayConfirmDeleteBox } from "../../../../public/global_functions/popular";
 import NotFoundError from "@/components/NotFoundError";
 import TableLoader from "@/components/TableLoader";
 import Link from "next/link";
 import FormFieldErrorBox from "@/components/FormFieldErrorBox";
+import ConfirmDelete from "@/components/ConfirmDelete";
 
 export default function UpdateAndDeleteCategories() {
 
@@ -46,6 +47,8 @@ export default function UpdateAndDeleteCategories() {
     });
 
     const [formValidationErrors, setFormValidationErrors] = useState({});
+
+    const [isDisplayConfirmDeleteBox, setIsDisplayConfirmDeleteBox] = useState(false);
 
     const router = useRouter();
 
@@ -335,6 +338,15 @@ export default function UpdateAndDeleteCategories() {
             </Head>
             {!isLoadingPage && !errorMsgOnLoadingThePage && <>
                 <AdminPanelHeader isWebsiteOwner={adminInfo.isWebsiteOwner} isMerchant={adminInfo.isMerchant} />
+                {isDisplayConfirmDeleteBox && <ConfirmDelete
+                    name="Category"
+                    setIsDisplayConfirmDeleteBox={setIsDisplayConfirmDeleteBox}
+                    handleDeleteFunc={() => deleteCategory(selectedCategoryIndex)}
+                    setSelectedElementIndex={setSelectedCategoryIndex}
+                    waitMsg={waitMsg}
+                    errorMsg={errorMsg}
+                    successMsg={successMsg}
+                />}
                 <div className="page-content d-flex justify-content-center align-items-center flex-column p-5">
                     <h1 className="fw-bold w-fit pb-2 mb-4">
                         <PiHandWavingThin className="me-2" />
@@ -414,7 +426,7 @@ export default function UpdateAndDeleteCategories() {
                                                 <hr />
                                                 <button
                                                     className="btn btn-danger global-button"
-                                                    onClick={() => deleteCategory(categoryIndex)}
+                                                    onClick={() => handleDisplayConfirmDeleteBox(categoryIndex, setSelectedCategoryIndex, setIsDisplayConfirmDeleteBox)}
                                                 >Delete</button>
                                             </>}
                                             {waitMsg && selectedCategoryIndex === categoryIndex && <button

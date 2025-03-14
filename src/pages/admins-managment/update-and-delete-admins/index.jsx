@@ -7,10 +7,11 @@ import ErrorOnLoadingThePage from "@/components/ErrorOnLoadingThePage";
 import AdminPanelHeader from "@/components/AdminPanelHeader";
 import PaginationBar from "@/components/PaginationBar";
 import { inputValuesValidation } from "../../../../public/global_functions/validations";
-import { getAdminInfo } from "../../../../public/global_functions/popular";
+import { getAdminInfo, handleDisplayConfirmDeleteBox } from "../../../../public/global_functions/popular";
 import NotFoundError from "@/components/NotFoundError";
 import TableLoader from "@/components/TableLoader";
 import FormFieldErrorBox from "@/components/FormFieldErrorBox";
+import ConfirmDelete from "@/components/ConfirmDelete";
 
 export default function UpdateAndDeleteAdmins() {
 
@@ -46,6 +47,8 @@ export default function UpdateAndDeleteAdmins() {
     });
 
     const [formValidationErrors, setFormValidationErrors] = useState({});
+
+    const [isDisplayConfirmDeleteBox, setIsDisplayConfirmDeleteBox] = useState(false);
 
     const router = useRouter();
 
@@ -347,6 +350,15 @@ export default function UpdateAndDeleteAdmins() {
             {!isLoadingPage && !errorMsgOnLoadingThePage && <>
                 {/* Start Admin Dashboard Side Bar */}
                 <AdminPanelHeader isWebsiteOwner={adminInfo.isWebsiteOwner} isMerchant={adminInfo.isMerchant} />
+                {isDisplayConfirmDeleteBox && <ConfirmDelete
+                    name="Admin"
+                    setIsDisplayConfirmDeleteBox={setIsDisplayConfirmDeleteBox}
+                    handleDeleteFunc={() => deleteAdmin(selectedAdminIndex)}
+                    setSelectedElementIndex={setSelectedAdminIndex}
+                    waitMsg={waitMsg}
+                    errorMsg={errorMsg}
+                    successMsg={successMsg}
+                />}
                 {/* Start Admin Dashboard Side Bar */}
                 {/* Start Content Section */}
                 <section className="page-content d-flex justify-content-center align-items-center flex-column text-center pt-5 pb-5">
@@ -471,7 +483,7 @@ export default function UpdateAndDeleteAdmins() {
                                                     !admin.isMerchant &&
                                                     <button
                                                         className="btn btn-danger d-block mx-auto mb-3 global-button"
-                                                        onClick={() => deleteAdmin(adminIndex)}
+                                                        onClick={() => handleDisplayConfirmDeleteBox(adminIndex, setSelectedAdminIndex, setIsDisplayConfirmDeleteBox)}
                                                     >
                                                         Delete
                                                     </button>

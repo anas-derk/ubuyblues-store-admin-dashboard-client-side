@@ -5,7 +5,8 @@ import axios from "axios";
 import LoaderPage from "@/components/LoaderPage";
 import ErrorOnLoadingThePage from "@/components/ErrorOnLoadingThePage";
 import AdminPanelHeader from "@/components/AdminPanelHeader";
-import { getAdminInfo, getOrderDetails } from "../../../../public/global_functions/popular";
+import { getAdminInfo, getOrderDetails, handleDisplayConfirmDeleteBox } from "../../../../public/global_functions/popular";
+import ConfirmDelete from "@/components/ConfirmDelete";
 
 export default function OrderDetails({ orderIdAsProperty }) {
 
@@ -24,6 +25,8 @@ export default function OrderDetails({ orderIdAsProperty }) {
     const [errorMsg, setErrorMsg] = useState("");
 
     const [successMsg, setSuccessMsg] = useState("");
+
+    const [isDisplayConfirmDeleteBox, setIsDisplayConfirmDeleteBox] = useState(false);
 
     const router = useRouter();
 
@@ -169,6 +172,15 @@ export default function OrderDetails({ orderIdAsProperty }) {
                 {/* Start Admin Dashboard Side Bar */}
                 <AdminPanelHeader isWebsiteOwner={adminInfo.isWebsiteOwner} isMerchant={adminInfo.isMerchant} />
                 {/* Start Admin Dashboard Side Bar */}
+                {isDisplayConfirmDeleteBox && <ConfirmDelete
+                    name="Product From Order"
+                    setIsDisplayConfirmDeleteBox={setIsDisplayConfirmDeleteBox}
+                    handleDeleteFunc={() => deleteProductFromOrder(selectedOrderProductIndex)}
+                    setSelectedElementIndex={setSelectedOrderProductIndex}
+                    waitMsg={waitMsg}
+                    errorMsg={errorMsg}
+                    successMsg={successMsg}
+                />}
                 {/* Start Content Section */}
                 <section className="page-content d-flex justify-content-center align-items-center flex-column text-center pt-4 pb-4 p-4">
                     <div className="container-fluid">
@@ -252,7 +264,7 @@ export default function OrderDetails({ orderIdAsProperty }) {
                                                     </button>}
                                                     {selectedOrderProductIndex !== orderProductIndex && orderDetails.products.length > 1 && <button
                                                         className="btn btn-danger d-block mx-auto mb-3 global-button"
-                                                        onClick={() => deleteProductFromOrder(orderProductIndex)}
+                                                        onClick={() => handleDisplayConfirmDeleteBox(orderProductIndex, setSelectedOrderProductIndex, setIsDisplayConfirmDeleteBox)}
                                                     >
                                                         Delete
                                                     </button>}

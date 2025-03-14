@@ -9,10 +9,11 @@ import AdminPanelHeader from "@/components/AdminPanelHeader";
 import PaginationBar from "@/components/PaginationBar";
 import { inputValuesValidation } from "../../../public/global_functions/validations";
 import ChangeStoreStatusBox from "@/components/ChangeStoreStatusBox";
-import { getAdminInfo, getAllStoresInsideThePage } from "../../../public/global_functions/popular";
+import { getAdminInfo, getAllStoresInsideThePage, handleDisplayConfirmDeleteBox } from "../../../public/global_functions/popular";
 import NotFoundError from "@/components/NotFoundError";
 import TableLoader from "@/components/TableLoader";
 import FormFieldErrorBox from "@/components/FormFieldErrorBox";
+import ConfirmDelete from "@/components/ConfirmDelete";
 
 export default function StoresManagment() {
 
@@ -56,6 +57,8 @@ export default function StoresManagment() {
     const [storeAction, setStoreAction] = useState("");
 
     const [selectedStore, setSelectedStore] = useState("");
+
+    const [isDisplayConfirmDeleteBox, setIsDisplayConfirmDeleteBox] = useState(false);
 
     const router = useRouter();
 
@@ -402,6 +405,15 @@ export default function StoresManagment() {
                 {/* Start Admin Dashboard Side Bar */}
                 <AdminPanelHeader isWebsiteOwner={adminInfo.isWebsiteOwner} isMerchant={adminInfo.isMerchant} />
                 {/* Start Admin Dashboard Side Bar */}
+                {isDisplayConfirmDeleteBox && <ConfirmDelete
+                    name="Product"
+                    setIsDisplayConfirmDeleteBox={setIsDisplayConfirmDeleteBox}
+                    handleDeleteFunc={() => deleteStore(selectedStoreIndex)}
+                    setSelectedElementIndex={setSelectedStoreIndex}
+                    waitMsg={waitMsg}
+                    errorMsg={errorMsg}
+                    successMsg={successMsg}
+                />}
                 {/* Start Share Options Box */}
                 {isDisplayChangeStoreStatusBox && <ChangeStoreStatusBox
                     setIsDisplayChangeStoreStatusBox={setIsDisplayChangeStoreStatusBox}
@@ -571,7 +583,7 @@ export default function StoresManagment() {
                                                         storeIndex !== selectedStoreIndex && store.status !== "pending" &&
                                                         <button
                                                             className="btn btn-danger d-block mx-auto mb-3 global-button"
-                                                            onClick={() => deleteStore(storeIndex)}
+                                                            onClick={() => handleDisplayConfirmDeleteBox(storeIndex, setSelectedStoreIndex, setIsDisplayConfirmDeleteBox)}
                                                         >
                                                             Delete
                                                         </button>
