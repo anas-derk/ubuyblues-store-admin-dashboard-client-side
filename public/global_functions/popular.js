@@ -210,6 +210,11 @@ const getLanguagesInfoList = (fieldName) => {
     ];
 }
 
+const handleDisplayConfirmDeleteBox = (selectedElementIndex, setSelectedElementIndex, setIsDisplayConfirmDeleteBox) => {
+    setIsDisplayConfirmDeleteBox(true);
+    setSelectedElementIndex(selectedElementIndex);
+}
+
 export {
     getProductsCount,
     getAllProductsInsideThePage,
@@ -230,5 +235,6 @@ export {
     getOrderDetails,
     handleSelectUserLanguage,
     getProductInfo,
-    getLanguagesInfoList
+    getLanguagesInfoList,
+    handleDisplayConfirmDeleteBox
 }

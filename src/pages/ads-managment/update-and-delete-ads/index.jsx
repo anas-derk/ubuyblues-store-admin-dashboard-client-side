@@ -7,7 +7,7 @@ import ErrorOnLoadingThePage from "@/components/ErrorOnLoadingThePage";
 import AdminPanelHeader from "@/components/AdminPanelHeader";
 import { useRouter } from "next/router";
 import { inputValuesValidation } from "../../../../public/global_functions/validations";
-import { getAdminInfo, getLanguagesInfoList } from "../../../../public/global_functions/popular";
+import { getAdminInfo, getLanguagesInfoList, handleDisplayConfirmDeleteBox } from "../../../../public/global_functions/popular";
 import FormFieldErrorBox from "@/components/FormFieldErrorBox";
 import ConfirmDelete from "@/components/ConfirmDelete";
 
@@ -205,14 +205,8 @@ export default function UpdateAndDeleteAds() {
         }
     }
 
-    const handleDisplayConfirmDeleteBox = (adIndex) => {
-        setIsDisplayConfirmDeleteBox(true);
-        setSelectedAdIndex(adIndex);
-    }
-
     const deleteAd = async (adIndex) => {
         try {
-            console.log(allTextAds);
             setWaitMsg("Please Wait To Deleting ...");
             setSelectedAdIndex(adIndex);
             const result = (await axios.delete(`${process.env.BASE_API_URL}/ads/${advertisementType === "text" ? allTextAds[adIndex]._id : allImageAds[adIndex]._id}?language=${process.env.defaultLanguage}`, {
@@ -336,7 +330,7 @@ export default function UpdateAndDeleteAds() {
                                                 <hr />
                                                 <button
                                                     className="btn btn-danger global-button"
-                                                    onClick={() => handleDisplayConfirmDeleteBox(adIndex)}
+                                                    onClick={() => handleDisplayConfirmDeleteBox(adIndex, setSelectedAdIndex, setIsDisplayConfirmDeleteBox)}
                                                 >Delete</button>
                                             </>}
                                             {waitMsg && selectedAdIndex === adIndex && <button
