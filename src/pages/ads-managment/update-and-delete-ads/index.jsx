@@ -212,6 +212,7 @@ export default function UpdateAndDeleteAds() {
 
     const deleteAd = async (adIndex) => {
         try {
+            console.log(allTextAds);
             setWaitMsg("Please Wait To Deleting ...");
             setSelectedAdIndex(adIndex);
             const result = (await axios.delete(`${process.env.BASE_API_URL}/ads/${advertisementType === "text" ? allTextAds[adIndex]._id : allImageAds[adIndex]._id}?language=${process.env.defaultLanguage}`, {
@@ -242,6 +243,7 @@ export default function UpdateAndDeleteAds() {
             }
         }
         catch (err) {
+            console.log(err);
             if (err?.response?.status === 401) {
                 localStorage.removeItem(process.env.adminTokenNameInLocalStorage);
                 await router.replace("/login");
@@ -268,7 +270,7 @@ export default function UpdateAndDeleteAds() {
                 {isDisplayConfirmDeleteBox && <ConfirmDelete
                     name="Advertisement"
                     setIsDisplayConfirmDeleteBox={setIsDisplayConfirmDeleteBox}
-                    handleDeleteFunc={deleteAd}
+                    handleDeleteFunc={() => deleteAd(selectedAdIndex)}
                     setSelectedElementIndex={setSelectedAdIndex}
                     waitMsg={waitMsg}
                     errorMsg={errorMsg}
