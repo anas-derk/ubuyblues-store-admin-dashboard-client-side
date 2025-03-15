@@ -253,7 +253,7 @@ export default function UpdateAndDeleteProducts() {
                 />
                 {formValidationErrors[fieldName] && ((selectedProducImageIndex === productIndex) || (selectedThreeDegreeProducImageIndex === productIndex)) && <FormFieldErrorBox errorMsg={formValidationErrors[fieldName]} />}
             </section>
-            {((selectedProducImageIndex !== productIndex) || (selectedThreeDegreeProducImageIndex !== productIndex)) && <button
+            {((selectedProducImageIndex !== productIndex && type === "primary") || (selectedThreeDegreeProducImageIndex !== productIndex && type === "three-degree")) && <button
                 className="btn btn-success d-block mb-3 w-50 mx-auto global-button"
                 onClick={() => updateProductImage(productIndex, type)}
             >Change</button>}
@@ -299,15 +299,19 @@ export default function UpdateAndDeleteProducts() {
                     },
                 },
             ]);
-            setFormValidationErrors(errorsObject);
             if (type === "primary") {
                 setSelectedProducImageIndex(productIndex);
-            } else setSelectedThreeDegreeProducImageIndex(productIndex);
+                setSelectedThreeDegreeProducImageIndex(-1);
+            } else {
+                setSelectedProducImageIndex(-1);
+                setSelectedThreeDegreeProducImageIndex(productIndex);
+            }
             setProductImageType(type);
+            setFormValidationErrors(errorsObject);
             if (Object.keys(errorsObject).length == 0) {
                 setWaitChangeProductImageMsg(`Please Waiting Change ${type === "primary" ? "" : "3D"} Image ...`);
                 let formData = new FormData();
-                formData.append("productImage", allProductsInsideThePage[productIndex].image);
+                formData.append("productImage", type === "primary" ? allProductsInsideThePage[productIndex].image : allProductsInsideThePage[productIndex].threeDImage);
                 const result = (await axios.put(`${process.env.BASE_API_URL}/products/update-product-image/${allProductsInsideThePage[productIndex]._id}?type=${type}&language=${process.env.defaultLanguage}`, formData, {
                     headers: {
                         Authorization: localStorage.getItem(process.env.adminTokenNameInLocalStorage),
@@ -321,7 +325,12 @@ export default function UpdateAndDeleteProducts() {
                         setAllProductsInsideThePage((await getAllProductsInsideThePage(currentPage, pageSize, getFilteringString(filters))).data.products);
                         if (type === "primary") {
                             setSelectedProducImageIndex(-1);
-                        } else setSelectedThreeDegreeProducImageIndex(-1);
+                            setSelectedThreeDegreeProducImageIndex(-1);
+                        } else {
+                            setSelectedProducImageIndex(-1);
+                            setSelectedThreeDegreeProducImageIndex(-1);
+                        }
+                        setProductImageType("");
                         clearTimeout(successTimeout);
                     }, 1500);
                 } else {
@@ -330,7 +339,12 @@ export default function UpdateAndDeleteProducts() {
                         setErrorChangeProductImageMsg("");
                         if (type === "primary") {
                             setSelectedProducImageIndex(-1);
-                        } else setSelectedThreeDegreeProducImageIndex(-1);
+                            setSelectedThreeDegreeProducImageIndex(-1);
+                        } else {
+                            setSelectedProducImageIndex(-1);
+                            setSelectedThreeDegreeProducImageIndex(-1);
+                        }
+                        setProductImageType("");
                         clearTimeout(errorTimeout);
                     }, 1500);
                 }
@@ -348,7 +362,12 @@ export default function UpdateAndDeleteProducts() {
                     setErrorChangeProductImageMsg("");
                     if (type === "primary") {
                         setSelectedProducImageIndex(-1);
-                    } else setSelectedThreeDegreeProducImageIndex(-1);
+                        setSelectedThreeDegreeProducImageIndex(-1);
+                    } else {
+                        setSelectedProducImageIndex(-1);
+                        setSelectedThreeDegreeProducImageIndex(-1);
+                    }
+                    setProductImageType("");
                     clearTimeout(errorTimeout);
                 }, 1500);
             }
