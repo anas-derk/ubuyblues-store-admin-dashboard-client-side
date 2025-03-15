@@ -38,6 +38,8 @@ export default function UpdateAndDeleteProducts() {
 
     const [selectedProducImageIndex, setSelectedProducImageIndex] = useState(-1);
 
+    const [selectedThreeDegreeProducImageIndex, setSelectedThreeDegreeProducImageIndex] = useState(-1);
+
     const [productImageType, setProductImageType] = useState("");
 
     const [selectedProductIndex, setSelectedProductIndex] = useState(-1);
@@ -210,6 +212,9 @@ export default function UpdateAndDeleteProducts() {
 
     const changeProductData = (productIndex, fieldName, newValue, language) => {
         setSelectedProductIndex(-1);
+        setSelectedProducImageIndex(-1);
+        setSelectedThreeDegreeProducImageIndex(-1);
+        setProductImageType("");
         let tempNewValue = newValue;
         if (fieldName === "startDiscountPeriod" || fieldName === "endDiscountPeriod") {
             tempNewValue = getDateInUTCFormat(newValue);
@@ -242,26 +247,24 @@ export default function UpdateAndDeleteProducts() {
             <section className="product-image mb-4">
                 <input
                     type="file"
-                    className={`form-control d-block mx-auto p-2 border-2 product-image-field ${formValidationErrors[fieldName] && productIndex === selectedProducImageIndex && type === productImageType ? "border-danger mb-3" : "mb-4"}`}
+                    className={`form-control d-block mx-auto p-2 border-2 product-image-field ${formValidationErrors[fieldName] && ((selectedProducImageIndex === productIndex) || (selectedThreeDegreeProducImageIndex === productIndex)) ? "border-danger mb-3" : "mb-4"}`}
                     onChange={(e) => changeProductData(productIndex, fieldName, e.target.files[0])}
                     accept=".png, .jpg, .webp"
                 />
-                {formValidationErrors[fieldName] && productIndex === selectedProducImageIndex && type === productImageType && <FormFieldErrorBox errorMsg={formValidationErrors[fieldName]} />}
+                {formValidationErrors[fieldName] && ((selectedProducImageIndex === productIndex) || (selectedThreeDegreeProducImageIndex === productIndex)) && <FormFieldErrorBox errorMsg={formValidationErrors[fieldName]} />}
             </section>
-            {(selectedProducImageIndex !== productIndex && type !== productImageType) &&
-                <button
-                    className="btn btn-success d-block mb-3 w-50 mx-auto global-button"
-                    onClick={() => updateProductImage(productIndex, type)}
-                >Change</button>
-            }
-            {waitChangeProductImageMsg && selectedProducImageIndex === productIndex && type === productImageType && <button
+            {((selectedProducImageIndex !== productIndex) || (selectedThreeDegreeProducImageIndex !== productIndex)) && <button
+                className="btn btn-success d-block mb-3 w-50 mx-auto global-button"
+                onClick={() => updateProductImage(productIndex, type)}
+            >Change</button>}
+            {waitChangeProductImageMsg && ((selectedProducImageIndex === productIndex) || (selectedThreeDegreeProducImageIndex === productIndex)) && type === productImageType && <button
                 className="btn btn-info d-block mb-3 mx-auto global-button"
             >{waitChangeProductImageMsg}</button>}
-            {successChangeProductImageMsg && selectedProducImageIndex === productIndex && type === productImageType && <button
+            {successChangeProductImageMsg && ((selectedProducImageIndex === productIndex) || (selectedThreeDegreeProducImageIndex === productIndex)) && type === productImageType && <button
                 className="btn btn-success d-block mx-auto global-button"
                 disabled
             >{successChangeProductImageMsg}</button>}
-            {errorChangeProductImageMsg && selectedProducImageIndex === productIndex && type === productImageType && <button
+            {errorChangeProductImageMsg && ((selectedProducImageIndex === productIndex) || (selectedThreeDegreeProducImageIndex === productIndex)) && type === productImageType && <button
                 className="btn btn-danger d-block mx-auto global-button"
                 disabled
             >{errorChangeProductImageMsg}</button>}
@@ -271,7 +274,6 @@ export default function UpdateAndDeleteProducts() {
     const updateProductImage = async (productIndex, type) => {
         try {
             setFormValidationErrors({});
-            setProductImageType(type);
             const errorsObject = inputValuesValidation([
                 type === "primary" ? {
                     name: "image",
@@ -298,7 +300,10 @@ export default function UpdateAndDeleteProducts() {
                 },
             ]);
             setFormValidationErrors(errorsObject);
-            setSelectedProducImageIndex(productIndex);
+            if (type === "primary") {
+                setSelectedProducImageIndex(productIndex);
+            } else setSelectedThreeDegreeProducImageIndex(productIndex);
+            setProductImageType(type);
             if (Object.keys(errorsObject).length == 0) {
                 setWaitChangeProductImageMsg(`Please Waiting Change ${type === "primary" ? "" : "3D"} Image ...`);
                 let formData = new FormData();
@@ -314,14 +319,18 @@ export default function UpdateAndDeleteProducts() {
                     let successTimeout = setTimeout(async () => {
                         setSuccessChangeProductImageMsg("");
                         setAllProductsInsideThePage((await getAllProductsInsideThePage(currentPage, pageSize, getFilteringString(filters))).data.products);
-                        setSelectedProducImageIndex(-1);
+                        if (type === "primary") {
+                            setSelectedProducImageIndex(-1);
+                        } else setSelectedThreeDegreeProducImageIndex(-1);
                         clearTimeout(successTimeout);
                     }, 1500);
                 } else {
                     setErrorChangeProductImageMsg("Sorry, Someting Went Wrong, Please Repeate The Process !!");
                     let errorTimeout = setTimeout(() => {
                         setErrorChangeProductImageMsg("");
-                        setSelectedProducImageIndex(-1);
+                        if (type === "primary") {
+                            setSelectedProducImageIndex(-1);
+                        } else setSelectedThreeDegreeProducImageIndex(-1);
                         clearTimeout(errorTimeout);
                     }, 1500);
                 }
@@ -337,7 +346,9 @@ export default function UpdateAndDeleteProducts() {
                 setErrorChangeProductImageMsg(err?.message === "Network Error" ? "Network Error" : "Sorry, Someting Went Wrong, Please Repeate The Process !!");
                 let errorTimeout = setTimeout(() => {
                     setErrorChangeProductImageMsg("");
-                    setSelectedProducImageIndex(-1);
+                    if (type === "primary") {
+                        setSelectedProducImageIndex(-1);
+                    } else setSelectedThreeDegreeProducImageIndex(-1);
                     clearTimeout(errorTimeout);
                 }, 1500);
             }
@@ -709,7 +720,7 @@ export default function UpdateAndDeleteProducts() {
                                         <td className="product-images-cell">
                                             {getProductImage("primary", product.imagePath, productIndex, "image")}
                                             <hr />
-                                            {getProductImage("threeDImage", product.threeDImagePath, productIndex, "threeDImage")}
+                                            {getProductImage("three-degree", product.threeDImagePath, productIndex, "threeDImage")}
                                         </td>
                                         <td className="update-cell">
                                             {selectedProductIndex !== productIndex && <>
