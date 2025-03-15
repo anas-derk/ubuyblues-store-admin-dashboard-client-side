@@ -38,6 +38,8 @@ export default function UpdateAndDeleteProducts() {
 
     const [selectedProducImageIndex, setSelectedProducImageIndex] = useState(-1);
 
+    const [productImageType, setProductImageType] = useState("");
+
     const [selectedProductIndex, setSelectedProductIndex] = useState(-1);
 
     const [waitChangeProductImageMsg, setWaitChangeProductImageMsg] = useState(false);
@@ -221,13 +223,70 @@ export default function UpdateAndDeleteProducts() {
         setAllProductsInsideThePage(productsDataTemp);
     }
 
-    const updateProductImage = async (productIndex) => {
+    const getProductImage = (type, imagePath, productIndex, fieldName) => {
+        return <>
+            <h6 className="fw-bold border border-3 border-dark p-2 mb-3">{type.toUpperCase()} :</h6>
+            {type === "primary" ? <img
+                src={`${process.env.BASE_API_URL}/${imagePath}`}
+                alt="Product Image !!"
+                width="100"
+                height="100"
+                className="d-block mx-auto mb-4"
+            /> : (imagePath ? <img
+                src={`${process.env.BASE_API_URL}/${imagePath}`}
+                alt="Product Image !!"
+                width="100"
+                height="100"
+                className="d-block mx-auto mb-4"
+            /> : <h6 className="fw-bold mb-3 bg-danger text-white p-2">Sorry Can't Find 3D Image</h6>)}
+            <section className="product-image mb-4">
+                <input
+                    type="file"
+                    className={`form-control d-block mx-auto p-2 border-2 product-image-field ${formValidationErrors[fieldName] && productIndex === selectedProducImageIndex && type === productImageType ? "border-danger mb-3" : "mb-4"}`}
+                    onChange={(e) => changeProductData(productIndex, fieldName, e.target.files[0])}
+                    accept=".png, .jpg, .webp"
+                />
+                {formValidationErrors[fieldName] && productIndex === selectedProducImageIndex && type === productImageType && <FormFieldErrorBox errorMsg={formValidationErrors[fieldName]} />}
+            </section>
+            {(selectedProducImageIndex !== productIndex && type !== productImageType) &&
+                <button
+                    className="btn btn-success d-block mb-3 w-50 mx-auto global-button"
+                    onClick={() => updateProductImage(productIndex, type)}
+                >Change</button>
+            }
+            {waitChangeProductImageMsg && selectedProducImageIndex === productIndex && type === productImageType && <button
+                className="btn btn-info d-block mb-3 mx-auto global-button"
+            >{waitChangeProductImageMsg}</button>}
+            {successChangeProductImageMsg && selectedProducImageIndex === productIndex && type === productImageType && <button
+                className="btn btn-success d-block mx-auto global-button"
+                disabled
+            >{successChangeProductImageMsg}</button>}
+            {errorChangeProductImageMsg && selectedProducImageIndex === productIndex && type === productImageType && <button
+                className="btn btn-danger d-block mx-auto global-button"
+                disabled
+            >{errorChangeProductImageMsg}</button>}
+        </>
+    }
+
+    const updateProductImage = async (productIndex, type) => {
         try {
             setFormValidationErrors({});
+            setProductImageType(type);
             const errorsObject = inputValuesValidation([
-                {
+                type === "primary" ? {
                     name: "image",
                     value: allProductsInsideThePage[productIndex].image,
+                    rules: {
+                        isRequired: {
+                            msg: "Sorry, This Field Can't Be Empty !!",
+                        },
+                        isImage: {
+                            msg: "Sorry, Invalid Image Type, Please Upload JPG Or PNG Or Webp Image File !!",
+                        },
+                    },
+                } : {
+                    name: "threeDImage",
+                    value: allProductsInsideThePage[productIndex].threeDImage,
                     rules: {
                         isRequired: {
                             msg: "Sorry, This Field Can't Be Empty !!",
@@ -241,10 +300,10 @@ export default function UpdateAndDeleteProducts() {
             setFormValidationErrors(errorsObject);
             setSelectedProducImageIndex(productIndex);
             if (Object.keys(errorsObject).length == 0) {
-                setWaitChangeProductImageMsg("Please Waiting Change Image ...");
+                setWaitChangeProductImageMsg(`Please Waiting Change ${type === "primary" ? "" : "3D"} Image ...`);
                 let formData = new FormData();
                 formData.append("productImage", allProductsInsideThePage[productIndex].image);
-                const result = (await axios.put(`${process.env.BASE_API_URL}/products/update-product-image/${allProductsInsideThePage[productIndex]._id}?language=${process.env.defaultLanguage}`, formData, {
+                const result = (await axios.put(`${process.env.BASE_API_URL}/products/update-product-image/${allProductsInsideThePage[productIndex]._id}?type=${type}&language=${process.env.defaultLanguage}`, formData, {
                     headers: {
                         Authorization: localStorage.getItem(process.env.adminTokenNameInLocalStorage),
                     }
@@ -647,40 +706,10 @@ export default function UpdateAndDeleteProducts() {
                                                 </div>
                                             </div>
                                         </td>
-                                        <td className="product-image-cell">
-                                            <img
-                                                src={`${process.env.BASE_API_URL}/${product.imagePath}`}
-                                                alt="Product Image !!"
-                                                width="100"
-                                                height="100"
-                                                className="d-block mx-auto mb-4"
-                                            />
-                                            <section className="product-image mb-4">
-                                                <input
-                                                    type="file"
-                                                    className={`form-control d-block mx-auto p-2 border-2 brand-image-field ${formValidationErrors["image"] && productIndex === selectedProducImageIndex ? "border-danger mb-3" : "mb-4"}`}
-                                                    onChange={(e) => changeProductData(productIndex, "image", e.target.files[0])}
-                                                    accept=".png, .jpg, .webp"
-                                                />
-                                                {formValidationErrors["image"] && productIndex === selectedProductIndex && <FormFieldErrorBox errorMsg={formValidationErrors["image"]} />}
-                                            </section>
-                                            {(selectedProducImageIndex !== productIndex && selectedProductIndex !== productIndex) &&
-                                                <button
-                                                    className="btn btn-success d-block mb-3 w-50 mx-auto global-button"
-                                                    onClick={() => updateProductImage(productIndex)}
-                                                >Change</button>
-                                            }
-                                            {waitChangeProductImageMsg && selectedProducImageIndex === productIndex && <button
-                                                className="btn btn-info d-block mb-3 mx-auto global-button"
-                                            >{waitChangeProductImageMsg}</button>}
-                                            {successChangeProductImageMsg && selectedProducImageIndex === productIndex && <button
-                                                className="btn btn-success d-block mx-auto global-button"
-                                                disabled
-                                            >{successChangeProductImageMsg}</button>}
-                                            {errorChangeProductImageMsg && selectedProducImageIndex === productIndex && <button
-                                                className="btn btn-danger d-block mx-auto global-button"
-                                                disabled
-                                            >{errorChangeProductImageMsg}</button>}
+                                        <td className="product-images-cell">
+                                            {getProductImage("primary", product.imagePath, productIndex, "image")}
+                                            <hr />
+                                            {getProductImage("threeDImage", product.threeDImagePath, productIndex, "threeDImage")}
                                         </td>
                                         <td className="update-cell">
                                             {selectedProductIndex !== productIndex && <>
