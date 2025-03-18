@@ -201,7 +201,7 @@ export default function AddNewCategory() {
                         </section>
                         <section className="category-parent mb-4">
                             <h6 className="fw-bold mb-3">Please Select Category Parent</h6>
-                            {selectedCategoryParent.name && <h6 className="bg-secondary p-3 mb-4 text-white border border-2 border-dark">Category Parent: {selectedCategoryParent.name}</h6>}
+                            {selectedCategoryParent.name && <h6 className="bg-secondary p-3 mb-4 text-white border border-2 border-dark">Category Parent: {selectedCategoryParent.name["en"]}</h6>}
                             <div className="select-category-box select-box mb-4">
                                 <input
                                     type="text"
@@ -212,7 +212,7 @@ export default function AddNewCategory() {
                                 <ul className={`categories-list options-list bg-white border ${formValidationErrors["categoryParent"] ? "border-danger mb-4" : "border-dark"}`}>
                                     <li onClick={() => handleSelectCategoryParent("")}>No Parent</li>
                                     {searchedCategories.length > 0 && searchedCategories.map((category) => (
-                                        <li key={category._id} onClick={() => handleSelectCategoryParent(category)}>{category.name}</li>
+                                        <li key={category._id} onClick={() => handleSelectCategoryParent(category)}>{category.name["en"]}</li>
                                     ))
                                     }
                                 </ul>
