@@ -191,11 +191,11 @@ export default function UpdateCategoryParent({ categoryIdAsProperty }) {
                         <PiHandWavingThin className="me-2" />
                         Hi, Mr {adminInfo.firstName + " " + adminInfo.lastName} In Your Update Category Parent Page
                     </h1>
-                    <h4 className="fw-bold mb-4 border border-3 border-dark p-3 bg-secondary text-white">Category Name: {categoryInfo.name}</h4>
+                    <h4 className="fw-bold mb-4 border border-3 border-dark p-3 bg-secondary text-white">Category Name: {categoryInfo.name["en"]}</h4>
                     <form className="add-new-category-form admin-dashbboard-form" onSubmit={updateCategoryParent}>
                         <section className="category-parent mb-4">
                             <h6 className="fw-bold mb-3">Please Select New Category Parent</h6>
-                            <h6 className="bg-secondary p-3 mb-4 text-white border border-2 border-dark">Category Parent: {categoryInfo.parent?.name ? categoryInfo.parent.name : "No Parent"}</h6>
+                            <h6 className="bg-secondary p-3 mb-4 text-white border border-2 border-dark">Category Parent: {categoryInfo.parent?.name ? categoryInfo.parent.name["en"] : "No Parent"}</h6>
                             <div className="select-category-box select-box mb-4">
                                 <input
                                     type="text"
@@ -206,7 +206,7 @@ export default function UpdateCategoryParent({ categoryIdAsProperty }) {
                                 <ul className={`categories-list options-list bg-white border ${formValidationErrors["categoryParent"] ? "border-danger mb-4" : "border-dark"}`}>
                                     <li onClick={() => handleSelectCategoryParent("")}>No Parent</li>
                                     {searchedCategories.length > 0 && searchedCategories.map((category) => (
-                                        <li key={category._id} onClick={() => handleSelectCategoryParent(category)}>{category.name}</li>
+                                        <li key={category._id} onClick={() => handleSelectCategoryParent(category)}>{category.name["en"]}</li>
                                     ))}
                                 </ul>
                                 {searchedCategories.length === 0 && searchedCategoryParent && <p className="alert alert-danger mt-4">Sorry, Can't Find Any Category Parent Match This Name !!</p>}
