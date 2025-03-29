@@ -650,7 +650,7 @@ export default function UpdateAndDeleteProducts() {
                                                     placeholder="Enter New Product Price"
                                                     defaultValue={product.price}
                                                     className={`form-control d-block mx-auto p-2 border-2 product-price-field ${formValidationErrors["price"] && productIndex === selectedProductIndex ? "border-danger mb-3" : "mb-4"}`}
-                                                    onChange={(e) => changeProductData(productIndex, "price", e.target.value)}
+                                                    onChange={(e) => changeProductData(productIndex, "price", e.target.valueAsNumber ? e.target.valueAsNumber : e.target.value)}
                                                 />
                                                 {formValidationErrors["price"] && productIndex === selectedProductIndex && <FormFieldErrorBox errorMsg={formValidationErrors["price"]} />}
                                             </section>
@@ -664,7 +664,7 @@ export default function UpdateAndDeleteProducts() {
                                                     placeholder="Enter New Product Quantity"
                                                     defaultValue={product.quantity}
                                                     className={`form-control d-block mx-auto p-2 border-2 product-quantity-field ${formValidationErrors["quantity"] && productIndex === selectedProductIndex ? "border-danger mb-3" : "mb-4"}`}
-                                                    onChange={(e) => changeProductData(productIndex, "quantity", e.target.value)}
+                                                    onChange={(e) => changeProductData(productIndex, "quantity", e.target.valueAsNumber ? e.target.valueAsNumber : e.target.value)}
                                                 />
                                                 {formValidationErrors["quantity"] && productIndex === selectedProductIndex && <FormFieldErrorBox errorMsg={formValidationErrors["quantity"]} />}
                                             </section>
@@ -693,7 +693,7 @@ export default function UpdateAndDeleteProducts() {
                                                     placeholder="Enter New Discount Price"
                                                     defaultValue={product.discount}
                                                     className={`form-control d-block mx-auto p-2 border-2 product-price-discount ${formValidationErrors["discount"] && productIndex === selectedProductIndex ? "border-danger mb-3" : "mb-4"}`}
-                                                    onChange={(e) => changeProductData(productIndex, "discount", e.target.value)}
+                                                    onChange={(e) => changeProductData(productIndex, "discount", e.target.valueAsNumber ? e.target.valueAsNumber : e.target.value)}
                                                 />
                                                 {formValidationErrors["discount"] && productIndex === selectedProductIndex && <FormFieldErrorBox errorMsg={formValidationErrors["discount"]} />}
                                             </section>
@@ -719,7 +719,7 @@ export default function UpdateAndDeleteProducts() {
                                                             placeholder="Enter New Discount Price"
                                                             defaultValue={product.discountInOfferPeriod}
                                                             className={`form-control d-block mx-auto p-2 border-2 product-price-discount-in-offer-period-field ${formValidationErrors["discount"] && productIndex === selectedProductIndex ? "border-danger mb-3" : "mb-2"}`}
-                                                            onChange={(e) => changeProductData(productIndex, "discountInOfferPeriod", e.target.value)}
+                                                            onChange={(e) => changeProductData(productIndex, "discountInOfferPeriod", e.target.valueAsNumber ? e.target.valueAsNumber : e.target.value)}
                                                         />
                                                         {formValidationErrors["discountInOfferPeriod"] && productIndex === selectedProductIndex && <FormFieldErrorBox errorMsg={formValidationErrors["discountInOfferPeriod"]} />}
                                                     </section>
