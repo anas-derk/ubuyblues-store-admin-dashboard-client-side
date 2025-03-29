@@ -129,7 +129,8 @@ export default function ChangeBussinessEmailPassword() {
             setFormValidationErrors(errorsObject);
             if (Object.keys(errorsObject).length == 0) {
                 setWaitMsg("Please Wait To Change ...");
-                const result = (await axios.put(`${process.env.BASE_API_URL}/global-passwords/change-bussiness-email-password?email=${email}&password=${currentPassword}&newPassword=${newPassword}&language=${process.env.defaultLanguage}`, undefined, {
+                console.log(`email=${email}&password=${currentPassword}&newPassword=${newPassword}&language=${process.env.defaultLanguage}`)
+                const result = (await axios.put(`${process.env.BASE_API_URL}/global-passwords/change-bussiness-email-password?language=${process.env.defaultLanguage}&email=${email}&password=${currentPassword}&newPassword=${newPassword}`, undefined, {
                     headers: {
                         Authorization: localStorage.getItem(process.env.adminTokenNameInLocalStorage),
                     },
