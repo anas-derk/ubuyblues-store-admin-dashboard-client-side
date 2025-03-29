@@ -262,7 +262,7 @@ export default function AddNewAd() {
                                 <ul className={`products-list options-list bg-white border ${formValidationErrors["relatedProduct"] ? "border-danger mb-4" : "border-dark"}`}>
                                     <li className="text-center fw-bold border-bottom border-2 border-dark">Seached Products List</li>
                                     {searchedProducts.length > 0 && searchedProducts.map((product) => (
-                                        <li key={product._id} onClick={() => handleSelectRelatedProduct(product)}>{product.name}</li>
+                                        <li key={product._id} onClick={() => handleSelectRelatedProduct(product)}>{product.name["en"]}</li>
                                     ))}
                                 </ul>
                                 {searchedProducts.length === 0 && searchedProductName && <p className="alert alert-danger mt-4">Sorry, Can't Find Any Related Products Match This Name !!</p>}
@@ -272,7 +272,7 @@ export default function AddNewAd() {
                                 <h6 className="fw-bold text-center mb-3">Selected Related Product Is :</h6>
                                 <div className="col-md-12 mb-3">
                                     <div className="selected-related-product-box bg-white p-2 border border-2 border-dark text-center">
-                                        <span className="me-2 selected-product-name">{selectedRelatedProduct.name}</span>
+                                        <span className="me-2 selected-product-name">{selectedRelatedProduct.name["en"]}</span>
                                     </div>
                                 </div>
                             </div>}
