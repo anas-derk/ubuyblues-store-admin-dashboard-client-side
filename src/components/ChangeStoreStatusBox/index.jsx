@@ -249,7 +249,7 @@ export default function ChangeStoreStatusBox({
             <div className="content-box d-flex align-items-center justify-content-center text-white flex-column p-4 text-center">
                 {!waitMsg && !errorMsg && !successMsg && <GrFormClose className="close-popup-box-icon" onClick={handleClosePopupBox} />}
                 <h2 className="mb-5 pb-3 border-bottom border-white">Change Store Status</h2>
-                <h4 className="mb-4">Are You Sure From: {storeAction} Store: ( {selectedStore.name} ) ?</h4>
+                <h4 className="mb-4">Are You Sure From: {storeAction} Store: ( {selectedStore.name["en"]} ) ?</h4>
                 <form className="change-store-status-form w-50" onSubmit={(e) => e.preventDefault()}>
                     {storeAction === "blocking" && <section className="change-store-status mb-4">
                         <input
