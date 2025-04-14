@@ -306,7 +306,7 @@ export default function UsersManagment() {
                                     />
                                 </div>
                                 <div className="col-md-4 mt-4">
-                                    <h6 className="me-2 fw-bold text-center">Checkout Status</h6>
+                                    <h6 className="me-2 fw-bold text-center">Registeration Method</h6>
                                     <select
                                         className="select-order-status form-select"
                                         onChange={(e) => setFilters({ ...filters, provider: e.target.value })}
