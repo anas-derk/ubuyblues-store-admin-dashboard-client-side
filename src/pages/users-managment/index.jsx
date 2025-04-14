@@ -39,7 +39,7 @@ export default function UsersManagment() {
     const [totalPagesCount, setTotalPagesCount] = useState(0);
 
     const [filters, setFilters] = useState({
-        isVerified: true,
+        isVerified: "",
         _id: "",
         firstName: "",
         lastName: "",
@@ -269,7 +269,7 @@ export default function UsersManagment() {
                             <h5 className="section-name fw-bold text-center">Filters: </h5>
                             <hr />
                             <div className="row mb-4">
-                                <div className="col-md-6">
+                                <div className="col-md-4">
                                     <h6 className="me-2 fw-bold text-center">User Id</h6>
                                     <input
                                         type="text"
@@ -278,7 +278,7 @@ export default function UsersManagment() {
                                         onChange={(e) => setFilters({ ...filters, _id: e.target.value.trim() })}
                                     />
                                 </div>
-                                <div className="col-md-6">
+                                <div className="col-md-4">
                                     <h6 className="me-2 fw-bold text-center">Email</h6>
                                     <input
                                         type="email"
@@ -315,6 +315,18 @@ export default function UsersManagment() {
                                         <option value="">All</option>
                                         <option value="google">Google</option>
                                         <option value="same-site">Same Site</option>
+                                    </select>
+                                </div>
+                                <div className="col-md-4 mt-4">
+                                    <h6 className="me-2 fw-bold text-center">Is Verified</h6>
+                                    <select
+                                        className="select-order-status form-select"
+                                        onChange={(e) => setFilters({ ...filters, isVerified: e.target.value })}
+                                    >
+                                        <option value="" hidden>Pleae Enter Is Verified</option>
+                                        <option value="">All</option>
+                                        <option value="true">Verified</option>
+                                        <option value="false">Not Verified</option>
                                     </select>
                                 </div>
                             </div>
