@@ -353,6 +353,7 @@ export default function UsersManagment() {
                                         <th>Last Name</th>
                                         <th>Date Of Creation</th>
                                         <th>Registeration Method</th>
+                                        <th>Is Verified</th>
                                         <th>Process</th>
                                     </tr>
                                 </thead>
@@ -376,6 +377,9 @@ export default function UsersManagment() {
                                             </td>
                                             <td className="user-registeration-method-cell">
                                                 {user.provider}
+                                            </td>
+                                            <td className="is-verified-user-cell">
+                                                {user.isVerified ? "yes" : "no"}
                                             </td>
                                             <td className="update-cell">
                                                 {selectedUserIndex !== userIndex && <>
