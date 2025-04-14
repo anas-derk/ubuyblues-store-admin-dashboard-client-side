@@ -94,6 +94,7 @@ export default function UsersManagment() {
         if (filters.email) filteringString += `email=${filters.email}&`;
         if (filters.firstName) filteringString += `firstName=${filters.firstName}&`;
         if (filters.lastName) filteringString += `lastName=${filters.lastName}&`;
+        if (filters.provider) filteringString += `provider=${filters.provider}&`;
         if (filteringString) filteringString = filteringString.substring(0, filteringString.length - 1);
         return filteringString;
     }
@@ -286,7 +287,7 @@ export default function UsersManagment() {
                                         onChange={(e) => setFilters({ ...filters, email: e.target.value.trim() })}
                                     />
                                 </div>
-                                <div className="col-md-6 mt-3">
+                                <div className="col-md-4 mt-3">
                                     <h6 className="me-2 fw-bold text-center">First Name</h6>
                                     <input
                                         type="text"
@@ -295,7 +296,7 @@ export default function UsersManagment() {
                                         onChange={(e) => setFilters({ ...filters, firstName: e.target.value.trim() })}
                                     />
                                 </div>
-                                <div className="col-md-6 mt-3">
+                                <div className="col-md-4 mt-3">
                                     <h6 className="me-2 fw-bold text-center">Last Name</h6>
                                     <input
                                         type="text"
@@ -303,6 +304,18 @@ export default function UsersManagment() {
                                         placeholder="Pleae Enter Last Name"
                                         onChange={(e) => setFilters({ ...filters, lastName: e.target.value.trim() })}
                                     />
+                                </div>
+                                <div className="col-md-4 mt-4">
+                                    <h6 className="me-2 fw-bold text-center">Checkout Status</h6>
+                                    <select
+                                        className="select-order-status form-select"
+                                        onChange={(e) => setFilters({ ...filters, provider: e.target.value })}
+                                    >
+                                        <option value="" hidden>Pleae Enter Registeration Method</option>
+                                        <option value="">All</option>
+                                        <option value="google">Google</option>
+                                        <option value="same-site">Same Site</option>
+                                    </select>
                                 </div>
                             </div>
                             {!isGetUsers && <button
@@ -327,6 +340,7 @@ export default function UsersManagment() {
                                         <th>First Name</th>
                                         <th>Last Name</th>
                                         <th>Date Of Creation</th>
+                                        <th>Registeration Method</th>
                                         <th>Process</th>
                                     </tr>
                                 </thead>
@@ -347,6 +361,9 @@ export default function UsersManagment() {
                                             </td>
                                             <td className="user-email-cell">
                                                 {getDateFormated(user.dateOfCreation)}
+                                            </td>
+                                            <td className="user-registeration-method-cell">
+                                                {user.provider}
                                             </td>
                                             <td className="update-cell">
                                                 {selectedUserIndex !== userIndex && <>
