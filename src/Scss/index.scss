@@ -111,16 +111,13 @@ input, textarea, select{
 }
 
 .managment-table{
+    background-color: #FFF;
     td, th{
         border: 1px solid;
         padding: 15px;
         text-align: center;
         font-size: 11px;
     }
-}
-
-.managment-table{
-    background-color: #FFF;
     textarea{
         height: 150px;
     }

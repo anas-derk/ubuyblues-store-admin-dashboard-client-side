@@ -48,6 +48,7 @@ export default function OrdersManagment() {
         status: "",
         customerName: "",
         email: "",
+        checkoutStatus: "",
         isDeleted: false,
     });
 
@@ -101,6 +102,7 @@ export default function OrdersManagment() {
         if (filters.status) filteringString += `status=${filters.status}&`;
         if (filters.customerName) filteringString += `customerName=${filters.customerName}&`;
         if (filters.email) filteringString += `email=${filters.email}&`;
+        if (filters.checkoutStatus) filteringString += `checkoutStatus=${filters.checkoutStatus}&`;
         if (filters.isDeleted) filteringString += `isDeleted=yes&`;
         else filteringString += `isDeleted=no&`;
         if (filteringString) filteringString = filteringString.substring(0, filteringString.length - 1);
@@ -383,7 +385,7 @@ export default function OrdersManagment() {
                                         <option value="completed">Completed</option>
                                     </select>
                                 </div>
-                                <div className="col-md-6 mt-4">
+                                <div className="col-md-4 mt-4">
                                     <h6 className="me-2 fw-bold text-center">Customer Name</h6>
                                     <input
                                         type="text"
@@ -392,7 +394,7 @@ export default function OrdersManagment() {
                                         onChange={(e) => setFilters({ ...filters, customerName: e.target.value.trim() })}
                                     />
                                 </div>
-                                <div className="col-md-6 mt-4">
+                                <div className="col-md-4 mt-4">
                                     <h6 className="me-2 fw-bold text-center">Customer Email</h6>
                                     <input
                                         type="email"
@@ -400,6 +402,18 @@ export default function OrdersManagment() {
                                         placeholder="Pleae Enter Customer Email"
                                         onChange={(e) => setFilters({ ...filters, email: e.target.value.trim() })}
                                     />
+                                </div>
+                                <div className="col-md-4 mt-4">
+                                    <h6 className="me-2 fw-bold text-center">Checkout Status</h6>
+                                    <select
+                                        className="select-order-status form-select"
+                                        onChange={(e) => setFilters({ ...filters, checkoutStatus: e.target.value })}
+                                    >
+                                        <option value="" hidden>Pleae Enter Checkout Status</option>
+                                        <option value="">All</option>
+                                        <option value="Checkout Incomplete">Checkout Incomplete</option>
+                                        <option value="Checkout Successfull">Checkout Successfull</option>
+                                    </select>
                                 </div>
                             </div>
                             {!isGetOrders && <button
