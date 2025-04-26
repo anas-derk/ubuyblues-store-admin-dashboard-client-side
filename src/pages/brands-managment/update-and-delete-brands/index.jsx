@@ -225,7 +225,7 @@ export default function UpdateAndDeleteBrands() {
                     let successTimeout = setTimeout(async () => {
                         setSuccessChangeBrandImageMsg("");
                         setSelectedBrandImageIndex(-1);
-                        setAllBrandsInsideThePage((await getAllBrandsInsideThePage(currentPage, pageSize, getFilteringString(filters))).data);
+                        setAllBrandsInsideThePage((await getAllBrandsInsideThePage(currentPage, pageSize, getFilteringString(filters))).data.brands);
                         clearTimeout(successTimeout);
                     }, 1500);
                 } else {
