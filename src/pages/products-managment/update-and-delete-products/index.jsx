@@ -466,6 +466,7 @@ export default function UpdateAndDeleteProducts() {
                     startDiscountPeriod: allProductsInsideThePage[productIndex].startDiscountPeriod,
                     endDiscountPeriod: allProductsInsideThePage[productIndex].endDiscountPeriod,
                     discountInOfferPeriod: Number(allProductsInsideThePage[productIndex].discountInOfferPeriod),
+                    offerDescriptionBase: allProductsInsideThePage[productIndex].offerDescriptionBase,
                     offerDescription: allProductsInsideThePage[productIndex].offerDescription,
                 }, {
                     headers: {
@@ -727,10 +728,24 @@ export default function UpdateAndDeleteProducts() {
                                                         <input
                                                             type="text"
                                                             placeholder="Enter New Offer Description"
-                                                            defaultValue={product.offerDescription}
-                                                            className={`form-control d-block mx-auto p-2 border-2 offer-description-field ${formValidationErrors["name"] && productIndex === selectedProductIndex ? "border-danger mb-3" : "mb-2"}`}
-                                                            onChange={(e) => changeProductData(productIndex, "offerDescription", e.target.value.trim())}
+                                                            defaultValue={product.offerDescriptionBase}
+                                                            className={`form-control d-block mx-auto p-2 border-2 offer-description-field ${formValidationErrors["offerDescriptionBase"] && productIndex === selectedProductIndex ? "border-danger mb-3" : "mb-2"}`}
+                                                            onChange={(e) => changeProductData(productIndex, "offerDescriptionBase", e.target.value.trim())}
                                                         />
+                                                        <hr />
+                                                        {getLanguagesInfoList("offerDescription").map((el) => (
+                                                            <div key={el.fullLanguageName}>
+                                                                <h6 className="fw-bold">In {el.fullLanguageName} :</h6>
+                                                                <input
+                                                                    type="text"
+                                                                    placeholder={`Enter New Offer Description In ${el.fullLanguageName}`}
+                                                                    className={`form-control d-block mx-auto p-2 border-2 offer-description-field ${formValidationErrors[el.formField] && productIndex === selectedProductIndex ? "border-danger mb-3" : "mb-4"}`}
+                                                                    defaultValue={product.offerDescription[el.internationalLanguageCode]}
+                                                                    onChange={(e) => changeProductData(productIndex, "offerDescription", e.target.value.trim(), el.internationalLanguageCode)}
+                                                                />
+                                                                {formValidationErrors[el.formField] && productIndex === selectedProductIndex && <FormFieldErrorBox errorMsg={formValidationErrors[el.formField]} />}
+                                                            </div>
+                                                        ))}
                                                         {formValidationErrors["offerDescription"] && productIndex === selectedProductIndex && <FormFieldErrorBox errorMsg={formValidationErrors["offerDescription"]} />}
                                                     </section>
                                                 </div>
