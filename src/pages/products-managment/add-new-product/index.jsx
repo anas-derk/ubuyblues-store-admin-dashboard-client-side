@@ -266,6 +266,7 @@ export default function AddNewProduct() {
                         });
                         setSearchedCategoryName("");
                         setSearchedCategories([]);
+                        setSelectedCategories([]);
                         setSearchedCountry("");
                         setFilteredCountryList([]);
                         setSelectedCountriesList([]);
