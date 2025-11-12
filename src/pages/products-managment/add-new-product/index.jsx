@@ -62,9 +62,11 @@ export default function AddNewProduct() {
 
     const productGalleryImagesFilesElementRef = useRef();
 
-    const allCountries = Object.keys(countries)
+    const allCountries = Object.keys(countries);
 
     const [countryList, setCountryList] = useState(allCountries);
+
+    const [searchedCountry, setSearchedCountry] = useState("");
 
     const [filteredCountryList, setFilteredCountryList] = useState(allCountries);
 
@@ -264,7 +266,8 @@ export default function AddNewProduct() {
                         });
                         setSearchedCategoryName("");
                         setSearchedCategories([]);
-                        setSelectedCategories([]);
+                        setSearchedCountry("");
+                        setFilteredCountryList([]);
                         setSelectedCountriesList([]);
                         productImageFileElementRef.current.value = "";
                         threeDProductImageFileElementRef.current.value = "";
@@ -335,6 +338,7 @@ export default function AddNewProduct() {
 
     const handleSearchOfCountry = (e) => {
         const searchedCountry = e.target.value;
+        setSearchedCountry(searchedCountry);
         if (searchedCountry) {
             setFilteredCountryList(filteredCountryList.filter((country) => countries[country].name.toLowerCase().startsWith(searchedCountry.toLowerCase())));
         } else {
@@ -405,11 +409,12 @@ export default function AddNewProduct() {
                                     className="search-box form-control p-2 border-2 mb-4"
                                     placeholder="Please Enter Category Name Or Part Of This"
                                     onChange={handleGetCategoriesByName}
+                                    value={searchedCategoryName}
                                 />
                                 <ul className={`categories-list options-list bg-white border ${formValidationErrors["categories"] ? "border-danger mb-4" : "border-dark"}`}>
                                     <li className="text-center fw-bold border-bottom border-2 border-dark">Seached Categories List</li>
                                     {searchedCategories.length > 0 && searchedCategories.map((category) => (
-                                        <li key={category._id} onClick={() => handleSelectCategory(category)}>{category.name[i18n.language]} ( { category.parent?.name["en"] ?? "No Parent" } )</li>
+                                        <li key={category._id} onClick={() => handleSelectCategory(category)}>{category.name[i18n.language]} ( {category.parent?.name["en"] ?? "No Parent"} )</li>
                                     ))}
                                 </ul>
                                 {searchedCategories.length === 0 && searchedCategoryName && <p className="alert alert-danger mt-4">Sorry, Can't Find Any Related Categories Match This Name !!</p>}
@@ -454,6 +459,7 @@ export default function AddNewProduct() {
                                 className="search-box form-control p-2 border-2 mb-4"
                                 placeholder="Please Enter Your Country Name Or Part Of This"
                                 onChange={handleSearchOfCountry}
+                                value={searchedCountry}
                             />
                             <ul className="countries-list options-list bg-white border border-dark">
                                 {filteredCountryList.length > 0 ? filteredCountryList.map((countryCode) => (
