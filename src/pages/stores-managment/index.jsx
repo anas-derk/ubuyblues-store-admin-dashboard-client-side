@@ -579,7 +579,7 @@ export default function StoresManagment() {
                                                 >
                                                     Update
                                                 </button>}
-                                                {store._id !== adminInfo.storeId && <>
+                                                {!store.isMainStore && <>
                                                     {
                                                         storeIndex !== selectedStoreIndex && store.status !== "pending" &&
                                                         <button
