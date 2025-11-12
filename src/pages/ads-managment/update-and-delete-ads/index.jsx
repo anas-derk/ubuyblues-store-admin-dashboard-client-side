@@ -217,7 +217,7 @@ export default function UpdateAndDeleteAds() {
             setWaitMsg("");
             if (!result.error) {
                 setSuccessMsg("Deleting Successfull !!");
-                let successTimeout = setTimeout(async () => {
+                let successTimeout = setTimeout(() => {
                     setSuccessMsg("");
                     setSelectedAdIndex(-1);
                     if (advertisementType === "text") {
@@ -412,7 +412,7 @@ export default function UpdateAndDeleteAds() {
                                                 className="btn btn-success d-block mx-auto global-button"
                                                 disabled
                                             >{successMsg}</button>}
-                                            {errorMsg === "Sorry, Someting Went Wrong When Deleting, Please Repeate The Process !!" && selectedAdIndex === adIndex && <button
+                                            {errorMsg === "Sorry, Someting Went Wrong, Please Repeate The Process !!" && selectedAdIndex === adIndex && <button
                                                 className="btn btn-danger d-block mx-auto global-button"
                                                 disabled
                                             >{errorMsg}</button>}
