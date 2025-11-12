@@ -332,7 +332,8 @@ export default function StoresManagment() {
                 let successTimeout = setTimeout(async () => {
                     setSuccessMsg("Deleting Successfull !!");
                     setSelectedStoreIndex(-1);
-                    setAllStoresInsideThePage(allStoresInsideThePage.filter((store, index) => index !== storeIndex));
+                    setAllStoresInsideThePage((await getAllStoresInsideThePage(currentPage, pageSize, getFilteringString(filters))).data.stores);
+                    setCurrentPage(currentPage);
                     clearTimeout(successTimeout);
                 }, 3000);
             } else {
