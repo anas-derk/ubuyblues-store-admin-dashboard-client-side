@@ -192,7 +192,7 @@ export default function UpdateProductCategories({ productIdAsProperty }) {
                                 <ul className={`categories-list options-list bg-white border ${formValidationErrors["categories"] ? "border-danger mb-4" : "border-dark"}`}>
                                     <li className="text-center fw-bold border-bottom border-2 border-dark">Seached Categories List</li>
                                     {searchedCategories.length > 0 && searchedCategories.map((category) => (
-                                        <li key={category._id} onClick={() => handleSelectCategory(category)}>{category.name["en"]}</li>
+                                        <li key={category._id} onClick={() => handleSelectCategory(category)}>{category.name["en"]} ( {category.parent?.name["en"] ?? "No Parent"} )</li>
                                     ))}
                                 </ul>
                                 {searchedCategories.length === 0 && searchedCategoryName && <p className="alert alert-danger mt-4">Sorry, Can't Find Any Related Categories Match This Name !!</p>}
