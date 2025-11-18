@@ -268,6 +268,7 @@ export default function AddNewProduct() {
                         setSearchedCategories([]);
                         setSelectedCategories([]);
                         setSearchedCountry("");
+                        setCountryList(allCountries);
                         setFilteredCountryList(allCountries);
                         setSelectedCountriesList([]);
                         productImageFileElementRef.current.value = "";
