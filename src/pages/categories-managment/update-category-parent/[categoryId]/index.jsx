@@ -32,6 +32,7 @@ export default function UpdateCategoryParent({ categoryIdAsProperty }) {
 
     const [filters, setFilters] = useState({
         storeId: "",
+        name: ""
     });
 
     const [formValidationErrors, setFormValidationErrors] = useState({});
@@ -85,6 +86,7 @@ export default function UpdateCategoryParent({ categoryIdAsProperty }) {
     const getFilteringString = (filters) => {
         let filteringString = "";
         if (filters.storeId) filteringString += `storeId=${filters.storeId}&`;
+        if (filters.name) filteringString += `name=${filters.name}&`;
         if (filteringString) filteringString = filteringString.substring(0, filteringString.length - 1);
         return filteringString;
     }
@@ -93,9 +95,11 @@ export default function UpdateCategoryParent({ categoryIdAsProperty }) {
         try {
             setWaitMsg("Please Waiting To Get Categories ...");
             const searchedCategoryName = e.target.value;
+            let tempFilters = { storeId: filters.storeId, name: searchedCategoryName };
+            setFilters(tempFilters);
             setSearchedCategoryParent(searchedCategoryName);
             if (searchedCategoryName) {
-                setSearchedCategories((await getAllCategoriesInsideThePage(1, 1000, getFilteringString(filters))).data.categories);
+                setSearchedCategories((await getAllCategoriesInsideThePage(1, 1000, getFilteringString(tempFilters))).data.categories);
             } else {
                 setSearchedCategories([]);
             }
@@ -206,7 +210,7 @@ export default function UpdateCategoryParent({ categoryIdAsProperty }) {
                                 <ul className={`categories-list options-list bg-white border ${formValidationErrors["categoryParent"] ? "border-danger mb-4" : "border-dark"}`}>
                                     <li onClick={() => handleSelectCategoryParent("")}>No Parent</li>
                                     {searchedCategories.length > 0 && searchedCategories.map((category) => (
-                                        <li key={category._id} onClick={() => handleSelectCategoryParent(category)}>{category.name["en"]}</li>
+                                        <li key={category._id} onClick={() => handleSelectCategoryParent(category)}>{category.name["en"]} ({category?.parent ? category.parent.name["en"] : "No Parent"})</li>
                                     ))}
                                 </ul>
                                 {searchedCategories.length === 0 && searchedCategoryParent && <p className="alert alert-danger mt-4">Sorry, Can't Find Any Category Parent Match This Name !!</p>}
