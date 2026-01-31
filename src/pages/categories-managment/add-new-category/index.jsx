@@ -216,7 +216,7 @@ export default function AddNewCategory() {
                                 <ul className={`categories-list options-list bg-white border ${formValidationErrors["categoryParent"] ? "border-danger mb-4" : "border-dark"}`}>
                                     <li onClick={() => handleSelectCategoryParent("")}>No Parent</li>
                                     {searchedCategories.length > 0 && searchedCategories.map((category) => (
-                                        <li key={category._id} onClick={() => handleSelectCategoryParent(category)}>{category.name["en"]}</li>
+                                        <li key={category._id} onClick={() => handleSelectCategoryParent(category)}>{category.name["en"]} ({category?.parent ?? "No Parent"})</li>
                                     ))
                                     }
                                 </ul>
