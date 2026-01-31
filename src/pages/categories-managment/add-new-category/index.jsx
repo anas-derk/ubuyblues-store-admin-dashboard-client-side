@@ -34,6 +34,7 @@ export default function AddNewCategory() {
 
     const [filters, setFilters] = useState({
         storeId: "",
+        name: ""
     });
 
     const [formValidationErrors, setFormValidationErrors] = useState({});
@@ -77,6 +78,7 @@ export default function AddNewCategory() {
     const getFilteringString = (filters) => {
         let filteringString = "";
         if (filters.storeId) filteringString += `storeId=${filters.storeId}&`;
+        if (filters.name) filteringString += `name=${filters.name}&`;
         if (filteringString) filteringString = filteringString.substring(0, filteringString.length - 1);
         return filteringString;
     }
@@ -85,9 +87,11 @@ export default function AddNewCategory() {
         try {
             setWaitMsg("Please Waiting To Get Categories ...");
             const searchedCategoryName = e.target.value;
+            let tempFilters = { storeId: filters.storeId, name: searchedCategoryName };
+            setFilters(tempFilters);
             setSearchedCategoryParent(searchedCategoryName);
             if (searchedCategoryName) {
-                setSearchedCategories((await getAllCategoriesInsideThePage(1, 1000, getFilteringString(filters))).data.categories);
+                setSearchedCategories((await getAllCategoriesInsideThePage(1, 1000, getFilteringString(tempFilters))).data.categories);
             } else {
                 setSearchedCategories([]);
             }
