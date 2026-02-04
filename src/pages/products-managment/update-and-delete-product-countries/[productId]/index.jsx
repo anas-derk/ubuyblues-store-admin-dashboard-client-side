@@ -137,7 +137,7 @@ export default function UpdateProductCountries({ productIdAsProperty }) {
     const handleSearchOfCountry = (e) => {
         const searchedCountry = e.target.value;
         if (searchedCountry) {
-            setFilteredCountryList(filteredCountryList.filter((country) => countries[country].name.toLowerCase().startsWith(searchedCountry.toLowerCase())));
+            setFilteredCountryList(countryList.filter((country) => countries[country].name.toLowerCase().startsWith(searchedCountry.toLowerCase())));
         } else {
             setFilteredCountryList(countryList);
         }

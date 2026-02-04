@@ -342,7 +342,7 @@ export default function AddNewProduct() {
         const searchedCountry = e.target.value;
         setSearchedCountry(searchedCountry);
         if (searchedCountry) {
-            setFilteredCountryList(filteredCountryList.filter((country) => countries[country].name.toLowerCase().startsWith(searchedCountry.toLowerCase())));
+            setFilteredCountryList(countryList.filter((country) => countries[country].name.toLowerCase().startsWith(searchedCountry.toLowerCase())));
         } else {
             setFilteredCountryList(countryList);
         }
