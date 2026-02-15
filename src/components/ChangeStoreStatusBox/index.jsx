@@ -55,7 +55,7 @@ export default function ChangeStoreStatusBox({
             setFormValidationErrors(errorsObject);
             if (Object.keys(errorsObject).length == 0) {
                 setWaitMsg("Please Waiting ...");
-                const result = (await axios.post(`${process.env.BASE_API_URL}/stores/approve-store/${storeId}?password=${adminPassword}&language=${process.env.defaultLanguage}`, undefined,
+                const result = (await axios.post(`${process.env.BASE_API_URL}/stores/approve-store/${storeId}?password=${encodeURIComponent(adminPassword)}&language=${process.env.defaultLanguage}`, undefined,
                     {
                         headers: {
                             Authorization: localStorage.getItem(process.env.adminTokenNameInLocalStorage),
