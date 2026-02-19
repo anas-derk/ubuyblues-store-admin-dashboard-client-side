@@ -352,6 +352,7 @@ export default function AddNewProduct() {
         setCountryList(countryList.filter((country) => country !== countryCode));
         setFilteredCountryList(filteredCountryList.filter((country) => country !== countryCode));
         setSelectedCountriesList([...selectedCountriesList, countryCode]);
+        setSearchedCountry("");
     }
 
     const handleRemoveCountryFromCountryList = (countryCode) => {
