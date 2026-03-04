@@ -559,8 +559,8 @@ export default function StoresManagment() {
                                                             <input
                                                                 type="text"
                                                                 placeholder={`Enter New Store Products Type In ${el.fullLanguageName}`}
-                                                                className={`form-control d-block mx-auto p-2 border-2 store-name-field ${formValidationErrors[el.formField] && storeIndex === selectedStoreIndex ? "border-danger mb-3" : "mb-4"}`}
-                                                                defaultValue={store.name[el.internationalLanguageCode]}
+                                                                className={`form-control d-block mx-auto p-2 border-2 store-products-type-field ${formValidationErrors[el.formField] && storeIndex === selectedStoreIndex ? "border-danger mb-3" : "mb-4"}`}
+                                                                defaultValue={store.productsType[el.internationalLanguageCode]}
                                                                 onChange={(e) => changeStoreData(storeIndex, "productsType", e.target.value.trim(), el.internationalLanguageCode)}
                                                             />
                                                             {formValidationErrors[el.formField] && storeIndex === selectedStoreIndex && <FormFieldErrorBox errorMsg={formValidationErrors[el.formField]} />}
